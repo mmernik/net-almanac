@@ -1,0 +1,16 @@
+[
+  {
+    "model": "event.Event",
+    "pk": 1,
+    "fields": {
+        "name": "Physics Experiment"
+    }
+  },
+  {
+    "model": "event.Event",
+    "pk": 2,
+    "fields": {
+        "name": "Upgrade"
+    }
+  }
+]
