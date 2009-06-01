@@ -3,7 +3,7 @@
 	"model": "event.event",
 	"fields":
 	{
-		"end_time":"2009-06-01 12:21:15",
+		"end_time":"2009-06-03 15:01:01",
 		"begin_time": "2009-06-01 12:21:15",
 		"name": "experiment",
 		"description": "a physics experiment",
@@ -17,8 +17,8 @@
 	"model": "event.event",
 	"fields":
 	{
-		"end_time": "2009-06-01 12:23:18",
-		"begin_time": "2009-06-01 12:23:18",
+		"end_time": "2009-06-02 12:00:00",
+		"begin_time": "2009-06-02 20:00:00",
 		"name": "upgrade",
 		"description": "upgrading infrastructure",
 		"url":"http://www.es.net",
@@ -31,8 +31,8 @@
 	"model": "event.event",
 	"fields":
 	{
-		"end_time": "2009-06-01 12:23:18",
-		"begin_time": "2009-06-01 12:23:18",
+		"end_time": "2009-05-15 12:00:00",
+		"begin_time": "2009-05-16 12:00:00",
 		"name": "maintenance",
 		"description": "routine maintenance",
 		"url":"http://www.es.net",
