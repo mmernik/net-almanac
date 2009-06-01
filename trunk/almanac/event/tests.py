@@ -1,31 +1,51 @@
 import unittest,datetime,logging
-from event.models import Event
+from event.models import *
+from event.utils import *
 
-experiment = "experiment"
-begin_date = datetime.datetime(2008,1,1)
+TESTEVENT_NAME = "testevent"
+TESTEVENT_DESCRIPTION = "testdescription"
+TESTEVENT_URL = "testurl"
+TESTEVENT_ROUTER = "testrouter"
+TESTEVENT_IFACE = "testiface"
+
+
+TESTEVENT_BEGINDATE = datetime.datetime(2008,1,1)
+TESTEVENT_ENDDATE = datetime.datetime(2008,1,5)
+
+TESTTAG_NAME = "testtag"
 
 class EventTestCaseSetup(unittest.TestCase):
     def setUp(self):
-        #Create 2 objects and save them in the test database.
-        exp = Event(name=experiment,
-                         description="a physics experiment", 
-                         begin_time=begin_date,
-                         end_time=datetime.datetime(2008,1,10))
-        exp.save()
+        #Create another object and save it in the test database.
+        self.testevent = Event(name=TESTEVENT_NAME,
+                         description=TESTEVENT_DESCRIPTION, 
+                         begin_time=TESTEVENT_BEGINDATE,
+                         end_time=TESTEVENT_ENDDATE,
+                         url=TESTEVENT_URL, 
+                         router=TESTEVENT_ROUTER,
+                         iface=TESTEVENT_IFACE
+                         )
+        self.testevent.save()
         
-        upgrade = Event(name="upgrade",
-                         description="upgrading infrastructure", 
-                         begin_time=datetime.datetime(2008,2,5),
-                         end_time=datetime.datetime(2008,2,12))
-        upgrade.save()
+        self.testtag = Tag(name=TESTTAG_NAME)
+        self.testtag.save()
+        
+        self.ta = TagAssignment(tag=self.testtag,event=self.testevent)
+        self.ta.save()
         
     def runTest(self):
         #Sanity test
         self.assertTrue(True)
+        
+    def tearDown(self):
+        self.ta.delete()
+        self.testevent.delete()
+        self.testtag.delete()
+        
 
 class LoggingTestCase(EventTestCaseSetup):
     def runTest(self):
-        print "There should be 4 logging messages after this message"
+        print "There should be 4 logging messages after this print"
         logging.debug('this is a debug message')
         logging.info('this is an info message')
         logging.warn('this is a warning message')
@@ -33,8 +53,25 @@ class LoggingTestCase(EventTestCaseSetup):
         
 class DatabaseTestCase(EventTestCaseSetup):
     def runTest(self):
-        print "Objects in database: " + str(Event.objects.all())
-        self.assertTrue(len(Event.objects.all())==2)
-        self.assertTrue(Event.objects.all()[0].name==experiment)
-        self.assertTrue(Event.objects.all()[0].begin_time==begin_date)
+        logging.info( "Objects in database: " + str(Event.objects.all()))
+        self.assertTrue(len(Event.objects.all())==4)
         
+        #check if all data is the same as assigned.
+        testevent = Event.objects.all().get(name=TESTEVENT_NAME)
+        self.assertTrue(testevent.description==TESTEVENT_DESCRIPTION)
+        self.assertTrue(testevent.url==TESTEVENT_URL)
+        self.assertTrue(testevent.router==TESTEVENT_ROUTER)
+        self.assertTrue(testevent.iface==TESTEVENT_IFACE)
+        self.assertTrue(testevent.begin_time==TESTEVENT_BEGINDATE)
+        self.assertTrue(testevent.end_time==TESTEVENT_ENDDATE)
+        
+class TagsTestCase(EventTestCaseSetup):
+    def runTest(self):
+        testtag=Tag.objects.all().get(name=TESTTAG_NAME)
+        ta = TagAssignment.objects.all().get(tag=testtag)
+        self.assertTrue(ta.event.name==TESTEVENT_NAME)
+        
+class UtilsTestCase(EventTestCaseSetup):
+    def runTest(self):
+        self.assertTrue(len(getEvents(Tag.objects.all().get(name=TESTTAG_NAME))) == 1)
+        self.assertTrue(len(getTags(Event.objects.all().get(name=TESTEVENT_NAME))) == 1)
