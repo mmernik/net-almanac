@@ -1,16 +1,22 @@
-[
-  {
-    "model": "event.Event",
-    "pk": 1,
-    "fields": {
-        "name": "Physics Experiment"
-    }
-  },
-  {
-    "model": "event.Event",
-    "pk": 2,
-    "fields": {
-        "name": "Upgrade"
-    }
-  }
-]
+[{
+	"pk": 1,
+	"model": "event.event",
+	"fields":
+	{
+		"end_time":"2009-06-01 12:21:15",
+		"begin_time": "2009-06-01 12:21:15",
+		"name": "experiment",
+		"description": "a physics experiment"
+	}
+},
+{
+	"pk": 2,
+	"model": "event.event",
+	"fields":
+	{
+		"end_time": "2009-06-01 12:23:18",
+		"begin_time": "2009-06-01 12:23:18",
+		"name": "upgrade",
+		"description": "upgrading infrastructure"
+	}
+}]

@@ -1,0 +1,4 @@
+Some notes to run the server.
+
+Run 'python manage.py loaddata basedata.json' to load the basic data.
+
