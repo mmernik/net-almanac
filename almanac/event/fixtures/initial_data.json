@@ -1,0 +1,69 @@
+[{
+	"pk": 1,
+	"model": "event.event",
+	"fields":
+	{
+		"end_time":"2009-06-01 12:21:15",
+		"begin_time": "2009-06-01 12:21:15",
+		"name": "experiment",
+		"description": "a physics experiment",
+		"url": "http://www.lbl.gov",
+		"router": "router1",
+		"iface":"Ethernet0"
+	}
+},
+{
+	"pk": 2,
+	"model": "event.event",
+	"fields":
+	{
+		"end_time": "2009-06-01 12:23:18",
+		"begin_time": "2009-06-01 12:23:18",
+		"name": "upgrade",
+		"description": "upgrading infrastructure",
+		"url":"http://www.es.net",
+		"router":"router2",
+		"iface":"xe-0/1/0.1009"
+	}
+},
+{
+	"pk": 3,
+	"model": "event.event",
+	"fields":
+	{
+		"end_time": "2009-06-01 12:23:18",
+		"begin_time": "2009-06-01 12:23:18",
+		"name": "maintenance",
+		"description": "routine maintenance",
+		"url":"http://www.es.net",
+		"router":"router3",
+		"iface":"TenGigabitEthernet1/1"
+	}
+},
+{
+	"pk":1,
+	"model":"event.tag",
+	"fields":
+	{
+		"name":"esnet"
+	}
+},
+{
+	"pk":1,
+	"model":"event.tagassignment",
+	"fields":
+	{
+		"tag":1,
+		"event":2
+	}
+},
+{
+	"pk":2,
+	"model":"event.tagassignment",
+	"fields":
+	{
+		"tag":1,
+		"event":3
+	}
+}
+]
