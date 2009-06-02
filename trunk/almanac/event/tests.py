@@ -14,8 +14,11 @@ TESTEVENT_ENDDATE = datetime.datetime(2008,1,5)
 
 TESTTAG_NAME = "testtag"
 
+TESTLOG_STRING = 'logging test string'
+
 class EventTestCaseSetup(unittest.TestCase):
     def setUp(self):
+        logging.debug("Setting up junit test")
         #Create another object and save it in the test database.
         self.testevent = Event(name=TESTEVENT_NAME,
                          description=TESTEVENT_DESCRIPTION, 
@@ -38,6 +41,7 @@ class EventTestCaseSetup(unittest.TestCase):
         self.assertTrue(True)
         
     def tearDown(self):
+        logging.debug("tearing down junit test")
         self.ta.delete()
         self.testevent.delete()
         self.testtag.delete()
@@ -45,15 +49,25 @@ class EventTestCaseSetup(unittest.TestCase):
 
 class LoggingTestCase(EventTestCaseSetup):
     def runTest(self):
-        print "There should be 4 logging messages after this print"
-        logging.debug('this is a debug message')
-        logging.info('this is an info message')
-        logging.warn('this is a warning message')
-        logging.error('this is an error message')
+        logging.error(TESTLOG_STRING)
+        from settings import LOG_FILENAME
+        try:
+            f = open(LOG_FILENAME,'r')
+            s = 'notempty'
+            while (s != ''):
+                last = s
+                s=f.readline()
+            
+            if last.find(TESTLOG_STRING) ==-1:
+                self.assertTrue(False)
+        except IOError:
+            self.assertTrue(False)
+        finally:
+            f.close()
         
 class DatabaseTestCase(EventTestCaseSetup):
     def runTest(self):
-        logging.info( "Objects in database: " + str(Event.objects.all()))
+        logging.info( "DatabaseTestCase: Objects in database: " + str(Event.objects.all()))
         self.assertTrue(len(Event.objects.all())==4)
         
         #check if all data is the same as assigned.

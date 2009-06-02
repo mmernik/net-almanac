@@ -3,6 +3,10 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+import logging
+LOG_FILENAME = "logs/almanac_logs.out"
+LOGGING_LEVEL = logging.INFO
+
 ADMINS = (
     ('Your Name', 'your_email@domain.com'),
 )
@@ -80,8 +84,10 @@ INSTALLED_APPS = (
     'almanac.event'
 )
 
-import logging
+
 logging.basicConfig(
-    level = logging.DEBUG,
+    level = LOGGING_LEVEL,
     format = '%(asctime)s %(levelname)s %(message)s',
+    filename = LOG_FILENAME,
+    filemode = 'a'
 )
