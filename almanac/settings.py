@@ -76,12 +76,14 @@ TEMPLATE_DIRS = ('templates/'
 )
 
 INSTALLED_APPS = (
+    'tagging',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin', #added for testing
-    'almanac.event'
+    'almanac.event',
+    
 )
 
 
