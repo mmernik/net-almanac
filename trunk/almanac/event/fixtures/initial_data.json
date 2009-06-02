@@ -1,69 +1,98 @@
-[{
-	"pk": 1,
-	"model": "event.event",
-	"fields":
-	{
-		"end_time":"2009-06-03 15:01:01",
-		"begin_time": "2009-06-01 12:21:15",
-		"name": "experiment",
-		"description": "a physics experiment",
-		"url": "http://www.lbl.gov",
-		"router": "router1",
-		"iface":"Ethernet0"
-	}
-},
-{
-	"pk": 2,
-	"model": "event.event",
-	"fields":
-	{
-		"end_time": "2009-06-02 12:00:00",
-		"begin_time": "2009-06-02 20:00:00",
-		"name": "upgrade",
-		"description": "upgrading infrastructure",
-		"url":"http://www.es.net",
-		"router":"router2",
-		"iface":"xe-0/1/0.1009"
-	}
-},
-{
-	"pk": 3,
-	"model": "event.event",
-	"fields":
-	{
-		"end_time": "2009-05-15 12:00:00",
-		"begin_time": "2009-05-16 12:00:00",
-		"name": "maintenance",
-		"description": "routine maintenance",
-		"url":"http://www.es.net",
-		"router":"router3",
-		"iface":"TenGigabitEthernet1/1"
-	}
-},
-{
-	"pk":1,
-	"model":"event.tag",
-	"fields":
-	{
-		"name":"esnet"
-	}
-},
-{
-	"pk":1,
-	"model":"event.tagassignment",
-	"fields":
-	{
-		"tag":1,
-		"event":2
-	}
-},
-{
-	"pk":2,
-	"model":"event.tagassignment",
-	"fields":
-	{
-		"tag":1,
-		"event":3
-	}
-}
+[
+   {
+      "pk":1,
+      "model":"event.event",
+      "fields":{
+         "end_time":"2009-06-03 15:01:01",
+         "begin_time":"2009-06-01 12:21:15",
+         "name":"experiment",
+         "description":"a physics experiment",
+         "url":"http://www.lbl.gov",
+         "router":"router1",
+         "iface":"Ethernet0"
+      }
+   },
+   {
+      "pk":2,
+      "model":"event.event",
+      "fields":{
+         "end_time":"2009-06-02 12:00:00",
+         "begin_time":"2009-06-02 20:00:00",
+         "name":"upgrade",
+         "description":"upgrading infrastructure",
+         "url":"http://www.es.net",
+         "router":"router2",
+         "iface":"xe-0/1/0.1009"
+      }
+   },
+   {
+      "pk":3,
+      "model":"event.event",
+      "fields":{
+         "end_time":"2009-05-15 12:00:00",
+         "begin_time":"2009-05-16 12:00:00",
+         "name":"maintenance",
+         "description":"routine maintenance",
+         "url":"http://www.es.net",
+         "router":"router3",
+         "iface":"TenGigabitEthernet1/1"
+      }
+   },
+   {
+      "pk":5,
+      "model":"tagging.tag",
+      "fields":{
+         "name":"esnet"
+      }
+   },
+   {
+      "pk":2,
+      "model":"tagging.tag",
+      "fields":{
+         "name":"experiment"
+      }
+   },
+   {
+      "pk":3,
+      "model":"tagging.tag",
+      "fields":{
+         "name":"mainsite"
+      }
+   },
+   {
+      "pk":1,
+      "model":"tagging.taggeditem",
+      "fields":{
+         "tag":2,
+         "object_id":1,
+         "content_type":8
+      }
+   },
+   {
+      "pk":2,
+      "model":"tagging.taggeditem",
+      "fields":{
+         "tag":3,
+         "object_id":1,
+         "content_type":8
+      }
+   },
+   {
+      "pk":4,
+      "model":"tagging.taggeditem",
+      "fields":{
+         "tag":5,
+         "object_id":3,
+         "content_type":8
+      }
+   },
+   {
+      "pk":5,
+      "model":"tagging.taggeditem",
+      "fields":{
+         "tag":5,
+         "object_id":2,
+         "content_type":8
+      }
+   }
 ]

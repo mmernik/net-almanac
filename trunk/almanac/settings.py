@@ -5,7 +5,7 @@ TEMPLATE_DEBUG = DEBUG
 
 import logging
 LOG_FILENAME = "logs/almanac_logs.out"
-LOGGING_LEVEL = logging.INFO
+LOGGING_LEVEL = logging.DEBUG
 
 ADMINS = (
     ('Your Name', 'your_email@domain.com'),

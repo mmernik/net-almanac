@@ -1,6 +1,7 @@
 import unittest,datetime,logging
 from event.models import *
 from event.utils import *
+from tagging.models import *
 
 TESTEVENT_NAME = "testevent"
 TESTEVENT_DESCRIPTION = "testdescription"
@@ -30,11 +31,7 @@ class EventTestCaseSetup(unittest.TestCase):
                          )
         self.testevent.save()
         
-        self.testtag = Tag(name=TESTTAG_NAME)
-        self.testtag.save()
-        
-        self.ta = TagAssignment(tag=self.testtag,event=self.testevent)
-        self.ta.save()
+        self.testevent.tags=TESTTAG_NAME
         
     def runTest(self):
         #Sanity test
@@ -42,9 +39,7 @@ class EventTestCaseSetup(unittest.TestCase):
         
     def tearDown(self):
         logging.debug("tearing down junit test")
-        self.ta.delete()
         self.testevent.delete()
-        self.testtag.delete()
         
 
 class LoggingTestCase(EventTestCaseSetup):
@@ -67,11 +62,14 @@ class LoggingTestCase(EventTestCaseSetup):
         
 class DatabaseTestCase(EventTestCaseSetup):
     def runTest(self):
-        logging.info( "DatabaseTestCase: Objects in database: " + str(Event.objects.all()))
-        self.assertTrue(len(Event.objects.all())==4)
+        events = Event.objects.all()
+        
+        logging.info( "DatabaseTestCase: Objects in database: " + str(events))
         
         #check if all data is the same as assigned.
-        testevent = Event.objects.all().get(name=TESTEVENT_NAME)
+        self.assertTrue(len(events.filter(name=TESTEVENT_NAME))==1)
+        
+        testevent = events.get(name=TESTEVENT_NAME)
         self.assertTrue(testevent.description==TESTEVENT_DESCRIPTION)
         self.assertTrue(testevent.url==TESTEVENT_URL)
         self.assertTrue(testevent.router==TESTEVENT_ROUTER)
@@ -81,11 +79,15 @@ class DatabaseTestCase(EventTestCaseSetup):
         
 class TagsTestCase(EventTestCaseSetup):
     def runTest(self):
+        logging.info( "TagsTestCase: Tags in database: " + str(Tag.objects.all()))
         testtag=Tag.objects.all().get(name=TESTTAG_NAME)
-        ta = TagAssignment.objects.all().get(tag=testtag)
-        self.assertTrue(ta.event.name==TESTEVENT_NAME)
         
-class UtilsTestCase(EventTestCaseSetup):
-    def runTest(self):
-        self.assertTrue(len(getEvents(Tag.objects.all().get(name=TESTTAG_NAME))) == 1)
-        self.assertTrue(len(getTags(Event.objects.all().get(name=TESTEVENT_NAME))) == 1)
+        testevents = TaggedItem.objects.get_by_model(Event,testtag)
+        
+        self.assertTrue(len(testevents)==1)
+        self.assertTrue(testevents[0].name==TESTEVENT_NAME)
+        
+        testevent = Event.objects.all().get(name=TESTEVENT_NAME)
+        
+        self.assertTrue(len(testevent.tags)==1)
+        self.assertTrue(testevent.tags[0]==testtag)
