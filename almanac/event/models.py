@@ -18,7 +18,9 @@ class Event(models.Model):
     
 
 class Tag(models.Model):
-    name = models.CharField(max_length=MAX_LENGTH)
+    #Python will throw a sneaky error that is difficult to catch if we have two Tags
+    #of the same name.  So be sure to validate input before calling save().
+    name = models.CharField(max_length=MAX_LENGTH, unique=True)
     def __unicode__(self):
         return self.name
 
@@ -26,5 +28,4 @@ class TagAssignment(models.Model):
     event = models.ForeignKey(Event)
     tag = models.ForeignKey(Tag)
     def __unicode__(self):
-#        print self
         return str(self.event) + ", " +str(self.tag)
