@@ -1,0 +1,38 @@
+<html>
+<body>
+event detail
+
+
+{% if object %}
+<table bgcolor="black">
+    <tr bgcolor="yellow">
+        <td>id</td>
+        <td>name</td>
+        <td>description</td>
+        <td>begin time</td>
+        <td>end time</td>
+        <td>url</td>
+        <td>router</td>
+        <td>iface</td>
+        <td>tags</td>
+    </tr>
+
+    <tr bgcolor="white">
+        <td>{{object.id}}</td>
+        <td>{{object.name}}</td>
+        <td>{{object.description}}</td>
+        <td>{{object.begin_time}}</td>
+        <td>{{object.end_time}}</td>
+        <td>{{object.url}}</td>
+        <td>{{object.router}}</td>
+        <td>{{object.iface}}</td>
+        <td>{{object.tags}}</td>
+    </tr>
+    
+</table>
+{% else %}
+
+Event not found! the link was broken.
+{% endif %}
+</body>
+</html>
