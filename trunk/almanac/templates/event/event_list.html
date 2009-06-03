@@ -1,0 +1,52 @@
+<html>
+<body>
+generic view
+{% if object %}
+objectexists
+{% endif %}
+
+{% if object_list %}
+
+<table bgcolor="black">
+    <tr bgcolor="yellow">
+        <td>id</td>
+        <td>name</td>
+        <td>description</td>
+        <td>begin time</td>
+        <td>end time</td>
+        <td>url</td>
+        <td>router</td>
+        <td>iface</td>
+        <td>tags</td>
+    </tr>
+    {% for event in object_list %}
+    <tr bgcolor="white">
+        <td>{{event.id}}</td>
+        <td>{{event.name}}</td>
+        <td>{{event.description}}</td>
+        <td>{{event.begin_time}}</td>
+        <td>{{event.end_time}}</td>
+        <td>{{event.url}}</td>
+        <td>{{event.router}}</td>
+        <td>{{event.iface}}</td>
+        <td>{{event.tags}}</td>
+    </tr>
+    {% endfor %}
+</table>
+    
+    
+    {{object_list}}
+    {{object}}
+    
+    
+    
+    
+    
+    
+    
+{% else %}
+    <p>No Events are available.</p>
+{% endif %}
+
+</html>
+</body>
