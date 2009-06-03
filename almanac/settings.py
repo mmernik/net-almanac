@@ -3,6 +3,7 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+#Change these variables to customize logging
 import logging
 LOG_FILENAME = "logs/almanac_logs.out"
 LOGGING_LEVEL = logging.DEBUG

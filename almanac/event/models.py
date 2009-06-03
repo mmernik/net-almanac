@@ -6,7 +6,7 @@ MAX_LENGTH=200
 
 # Create your models here.
 class Event(models.Model):
-    name= models.CharField(max_length=MAX_LENGTH)
+    name = models.CharField(max_length=MAX_LENGTH)
     description = models.CharField(max_length=MAX_LENGTH)
     begin_time = models.DateTimeField()
     end_time = models.DateTimeField()
