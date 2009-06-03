@@ -11,8 +11,8 @@ import logging
 def index(request):
     
     logging.debug('index hit')
+    
     h = render_to_response('event/index.html',
                            {'events':Event.objects.all(),
-                            'tags':Tag.objects.all(),
-                            'ta':TagAssignment.objects.all()})
+                            'table':events})
     return h
