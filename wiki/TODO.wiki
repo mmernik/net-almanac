@@ -1,6 +1,4 @@
-#summary One-sentence summary of this page.
 
-= Introduction =
 
 Stuff TODO so we don't forget.
 
