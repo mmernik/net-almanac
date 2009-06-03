@@ -7,12 +7,3 @@ from django.shortcuts import render_to_response, get_object_or_404
 from almanac.event.models import *
 
 import logging
-
-def index(request):
-    
-    logging.debug('index hit')
-    
-    h = render_to_response('event/index.html',
-                           {'events':Event.objects.all(),
-                            'table':events})
-    return h

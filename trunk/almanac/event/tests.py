@@ -1,37 +1,38 @@
-import unittest,datetime,logging
+import unittest
+import datetime
+import logging
 from event.models import *
 from event.utils import *
 from tagging.models import *
 
-TESTEVENT_NAME = "testevent"
-TESTEVENT_DESCRIPTION = "testdescription"
-TESTEVENT_URL = "testurl"
-TESTEVENT_ROUTER = "testrouter"
-TESTEVENT_IFACE = "testiface"
+EVENT_NAME = "testevent"
+EVENT_DESCRIPTION = "testdescription"
+EVENT_URL = "testurl"
+EVENT_ROUTER = "testrouter"
+EVENT_IFACE = "testiface"
 
+EVENT_BEGINDATE = datetime.datetime(2008,1,1)
+EVENT_ENDDATE = datetime.datetime(2008,1,5)
 
-TESTEVENT_BEGINDATE = datetime.datetime(2008,1,1)
-TESTEVENT_ENDDATE = datetime.datetime(2008,1,5)
+TAG_NAME = "testtag"
 
-TESTTAG_NAME = "testtag"
-
-TESTLOG_STRING = 'logging test string'
+LOG_STRING = 'logging test string'
 
 class EventTestCaseSetup(unittest.TestCase):
     def setUp(self):
         logging.debug("Setting up junit test")
         #Create another object and save it in the test database.
-        self.testevent = Event(name=TESTEVENT_NAME,
-                         description=TESTEVENT_DESCRIPTION, 
-                         begin_time=TESTEVENT_BEGINDATE,
-                         end_time=TESTEVENT_ENDDATE,
-                         url=TESTEVENT_URL, 
-                         router=TESTEVENT_ROUTER,
-                         iface=TESTEVENT_IFACE
+        self.test_event = Event(name=EVENT_NAME,
+                         description=EVENT_DESCRIPTION, 
+                         begin_time=EVENT_BEGINDATE,
+                         end_time=EVENT_ENDDATE,
+                         url=EVENT_URL, 
+                         router=EVENT_ROUTER,
+                         iface=EVENT_IFACE
                          )
-        self.testevent.save()
+        self.test_event.save()
         
-        self.testevent.tags=TESTTAG_NAME
+        self.test_event.tags = TAG_NAME
         
     def runTest(self):
         #Sanity test
@@ -39,21 +40,21 @@ class EventTestCaseSetup(unittest.TestCase):
         
     def tearDown(self):
         logging.debug("tearing down junit test")
-        self.testevent.delete()
+        self.test_event.delete()
         
 
 class LoggingTestCase(EventTestCaseSetup):
     def runTest(self):
-        logging.error(TESTLOG_STRING)
+        logging.error(LOG_STRING)
         from settings import LOG_FILENAME
         try:
             f = open(LOG_FILENAME,'r')
             s = 'notempty'
             while (s != ''):
                 last = s
-                s=f.readline()
+                s = f.readline()
             
-            if last.find(TESTLOG_STRING) ==-1:
+            if last.find(LOG_STRING) == -1:
                 self.assertTrue(False)
         except IOError:
             self.assertTrue(False)
@@ -67,27 +68,27 @@ class DatabaseTestCase(EventTestCaseSetup):
         logging.info( "DatabaseTestCase: Objects in database: " + str(events))
         
         #check if all data is the same as assigned.
-        self.assertTrue(len(events.filter(name=TESTEVENT_NAME))==1)
+        self.assertTrue(len(events.filter(name = EVENT_NAME))==1)
         
-        testevent = events.get(name=TESTEVENT_NAME)
-        self.assertTrue(testevent.description==TESTEVENT_DESCRIPTION)
-        self.assertTrue(testevent.url==TESTEVENT_URL)
-        self.assertTrue(testevent.router==TESTEVENT_ROUTER)
-        self.assertTrue(testevent.iface==TESTEVENT_IFACE)
-        self.assertTrue(testevent.begin_time==TESTEVENT_BEGINDATE)
-        self.assertTrue(testevent.end_time==TESTEVENT_ENDDATE)
+        testevent = events.get(name = EVENT_NAME)
+        self.assertTrue(testevent.description == EVENT_DESCRIPTION)
+        self.assertTrue(testevent.url == EVENT_URL)
+        self.assertTrue(testevent.router == EVENT_ROUTER)
+        self.assertTrue(testevent.iface == EVENT_IFACE)
+        self.assertTrue(testevent.begin_time == EVENT_BEGINDATE)
+        self.assertTrue(testevent.end_time == EVENT_ENDDATE)
         
 class TagsTestCase(EventTestCaseSetup):
     def runTest(self):
         logging.info( "TagsTestCase: Tags in database: " + str(Tag.objects.all()))
-        testtag=Tag.objects.all().get(name=TESTTAG_NAME)
+        test_tag = Tag.objects.all().get(name=TAG_NAME)
         
-        testevents = TaggedItem.objects.get_by_model(Event,testtag)
+        test_events = TaggedItem.objects.get_by_model(Event,test_tag)
         
-        self.assertTrue(len(testevents)==1)
-        self.assertTrue(testevents[0].name==TESTEVENT_NAME)
+        self.assertTrue(len(test_events) == 1)
+        self.assertTrue(test_events[0].name == EVENT_NAME)
         
-        testevent = Event.objects.all().get(name=TESTEVENT_NAME)
+        test_event = Event.objects.all().get(name=EVENT_NAME)
         
-        self.assertTrue(len(testevent.tags)==1)
-        self.assertTrue(testevent.tags[0]==testtag)
+        self.assertTrue(len(test_event.tags) == 1)
+        self.assertTrue(test_event.tags[0] == test_tag)
