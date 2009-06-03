@@ -1,0 +1,13 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Stuff TODO so we don't forget.
+
+
+= TODO =
+
+
+  * Figure out how to serve CSS in development : http://docs.djangoproject.com/en/1.0/howto/static-files/
+  * Choose webserver
+  * Figure out how to deploy that CSS
