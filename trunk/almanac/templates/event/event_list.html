@@ -28,7 +28,13 @@ generic view
         <td>{{event.url}}</td>
         <td>{{event.router}}</td>
         <td>{{event.iface}}</td>
-        <td>{{event.tags}}</td>
+        <td>
+        
+        {% for tag in event.tags %}
+        	<a href="/event/tag/{{tag.name}}">{{tag.name}}</a>, &nbsp;
+        {% endfor %}
+        
+        </td>
     </tr>
     {% endfor %}
 </table>
