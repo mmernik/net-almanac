@@ -1,7 +1,6 @@
-<html>
-<body>
-generic view
+{% extends "base.html" %}
 
+{% block body %}
 {% if object_list %}
 
 <table bgcolor="black">
@@ -47,5 +46,5 @@ generic view
     <p>No Events are available.</p>
 {% endif %}
 
-</html>
-</body>
+
+{% endblock %}
