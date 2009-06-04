@@ -1,8 +1,15 @@
 <html>
 <head>
-<title>Almanac</title>
+<title>Almanac {% block subtitle %} {% endblock %}</title>
 </head>
 <body>
+
+{% block navigate %}
+<a href="/event"> Home </a>
+{% endblock %}
+
+<br />
+
 {% block body %}
 Nothing here!
 {% endblock %}
