@@ -2,13 +2,18 @@
 
 {% block subtitle %} : Tag Detail {% endblock %}
 
+{% block navigate %} : <a href="/event/tag">Tags</a> : {{tag.name}}{% endblock %}
+
 {% block body %}
 tag detail!
 <br />
 
 {{tag.name}}
 <br/>
-{{events}}
+
+{%for event in events%}
+<a href="/event/{{event.id}}">{{event.name}}</a>,
+{% endfor %}
 </body>
 </html>
 
