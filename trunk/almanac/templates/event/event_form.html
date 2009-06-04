@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Event Form {% endblock %}
+
+{% block navigate %} : Create New Event {% endblock %}
+
+{% block body %} 
+<form action="/event/create/" method="post">
+<p>{{ form.name.label_tag }} {{ form.name }}</p>
+<p>{{ form.description.label_tag }} {{ form.description }}</p>
+<p>{{ form.url.label_tag }} {{ form.url }}</p>
+<p>{{ form.router.label_tag }} {{ form.router }}</p>
+<p>{{ form.iface.label_tag }} {{ form.iface }}</p>
+<p>{{ form.begin_time.label_tag }} {{ form.begin_time }}</p>
+<p>{{ form.end_time.label_tag }} {{ form.end_time }}</p>
+
+<input type="submit" value="Submit new event">
+
+<br />
+
+Please use YYYY-MM-DD format. <br />
+
+Data: {{ form.data }} <br />
+Errors: {{ form.errors }} <br />
+</form>
+{% endblock %}
+
