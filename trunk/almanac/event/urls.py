@@ -14,6 +14,12 @@ tags_dict = {
 urlpatterns = patterns('',
     (r'^$', 'django.views.generic.list_detail.object_list',info_dict),
     (r'^(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict),
-    (r'^tag/(?P<tag_name>\w+)/$', 'almanac.event.views.tag'),
+    
+    (r'^tag/$', 'django.views.generic.list_detail.object_list',
+        {'template_name':'event/tag_list.html',
+         'queryset':Tag.objects.all()}),
+         
+    (r'^tag/(?P<tag_name>\w+)/$',
+      'almanac.event.views.tag')
     
 )

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Tag List {% endblock %}
+
+{% block navigate %} : Tags {% endblock %}
+
+{% block body %} 
+
+{% if object_list %}
+	Tag list:
+	{% for tag in object_list %}
+		<a href="/event/tag/{{tag.name}}"> {{tag.name}} </a>,
+	{% endfor %}
+
+{% else %}
+		No tags found.
+{% endif %}
+
+{% endblock %}
+

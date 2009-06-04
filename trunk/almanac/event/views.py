@@ -17,3 +17,5 @@ def tag(request,tag_name):
     return render_to_response('event/tag_detail.html',
                               {'tag':tag,
                                'events':events})
+    
+    
