@@ -2,10 +2,10 @@
 
 {% block subtitle %} : Event Form {% endblock %}
 
-{% block navigate %} : Create New Event {% endblock %}
+{% block navigate %} : Create Or Update Event {% endblock %}
 
 {% block body %} 
-<form action="/event/create/" method="post">
+<form action="" method="post">
 <p>{{ form.name.label_tag }} {{ form.name }}</p>
 <p>{{ form.description.label_tag }} {{ form.description }}</p>
 <p>{{ form.url.label_tag }} {{ form.url }}</p>
@@ -14,7 +14,7 @@
 <p>{{ form.begin_time.label_tag }} {{ form.begin_time }}</p>
 <p>{{ form.end_time.label_tag }} {{ form.end_time }}</p>
 
-<input type="submit" value="Submit new event">
+<input type="submit" value="Submit">
 
 <br />
 
