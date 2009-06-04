@@ -15,6 +15,10 @@ urlpatterns = patterns('',
     (r'^$', 'django.views.generic.list_detail.object_list',info_dict),
     (r'^(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict),
     
+    (r'^(?P<object_id>\d+)/update/$', 
+     'django.views.generic.create_update.update_object', 
+     {'form_class':EventForm}),
+    
     (r'^create/$',
      'django.views.generic.create_update.create_object',
      {'form_class':EventForm}),
