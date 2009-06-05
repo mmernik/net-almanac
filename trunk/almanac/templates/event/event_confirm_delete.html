@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Event Delete Confirm {% endblock %}
+
+{% block navigate %} : Delete Event {% endblock %}
+
+{% block body %} 
+Delete event named: {{object.name}}?
+<form action="" method="post">
+	<input type="submit" value="Submit">
+</form>
+{% endblock %}
+
