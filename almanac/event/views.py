@@ -11,7 +11,9 @@ import logging
 import datetime
 
 def tag(request,tag_id):
-    logging.debug('view tag hit')
+    logger = logging.getLogger('view tag')
+    
+    logger.debug('hit')
     tag = Tag.objects.get(id=tag_id)
     events = TaggedItem.objects.get_by_model(Event,tag)
     
@@ -20,25 +22,17 @@ def tag(request,tag_id):
                                'events':events})
     
     
-def tag_update(request,object_id):
-    logging.debug("view tag_update hit")
-    
-    event = Event.objects.get(id=object_id)
-    
-    return render_to_response('event/event_detail.html',
-            {'object':event})
-    
 def create_event(request):
-    logging.info('view create_event hit')
+    logger = logging.getLogger('view create_event')
     
-    logging.info('request.method='+request.method)
+    logger.info('hit')
+    
+    logger.info('request.method='+request.method)
     
     form = EventForm()
     
     events = Event.objects.all()
     if request.method == 'GET':
-
-        
         return render_to_response('event/event_form.html',
                                   {'form':form,
                                    'form_table':form.as_table()})       
@@ -47,12 +41,9 @@ def create_event(request):
     elif request.method == 'POST':
         
         try:
+            logger.info('trying to create new event...')
             post_data = request._get_post()
             validate_post(post_data)
-            
-            logging.debug(dir(request))
-            logging.debug(request._get_post()['name'])
-            
             
             new_event = Event(name=post_data['name'],
                               description=post_data['description'],
@@ -65,14 +56,15 @@ def create_event(request):
                               url=post_data['url'],
                               router=post_data['router'],
                               iface=post_data['iface'])
-        
+            
+            logger.info('trying to save new event...')
             new_event.save()
-        
+            logger.info('save successful! event added: ' + new_event.name)
             return render_to_response('event/event_list.html',
                                       {'object_list':events})
         except ValueError, e:
             
-            logging.info('view create_event: bad user input')
+            logger.info('bad user input')
             return render_to_response('event/event_form.html',
                                       {'form':form,
                                        'form_table':form.as_table(),
@@ -80,23 +72,24 @@ def create_event(request):
         
         except Exception, e:
             
-            error_message = ('exception occurred in view create_event: ' +
-                             str(type(e)) + ': ' +
+            error_message = (str(type(e)) + ': ' +
                              e.message)
             
-            logging.info('exception occurred in view create_event: ' + error_message)
+            logger.info(error_message)
             return render_to_response('event/event_form.html',
                                       {'form':form,
                                        'form_table':form.as_table(),
                                        'error':error_message})
         else:
-            logging.error('unexpected error occurred during view create_event')
+            logger.error('unexpected error!')
             
         
 def update_event(request,object_id):
-    logging.info('view update_event hit')
     
-    logging.info('request.method='+request.method)
+    logger = logging.getLogger('view update_event')
+    logger.info('hit')
+    
+    logger.info('request.method='+request.method)
     
     event = Event.objects.get(id=object_id)
     events = Event.objects.all()
@@ -110,7 +103,6 @@ def update_event(request,object_id):
         
     elif request.method == 'POST':
         
-        logging.debug(request._get_post()['name'])
         return render_to_response('event/event_list.html',
                                   {'object_list':events})
         
