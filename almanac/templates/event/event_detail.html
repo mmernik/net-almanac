@@ -32,10 +32,7 @@
     
 </table>
 
-<a href="/event/{{object.id}}/update">Update this event</a>
+<a href="/event/{{object.id}}/update">Update this event</a> <br />
 
-<form action="tag_update/" method="post">
-<input type="text" name="end_time" value="2000-10-12 00:00:00" id="id_end_time" />
-<input type="submit" value="Update tags">
-</form>
+<a href="/event/{{object.id}}/delete">Delete this event</a> <br />
 {% endblock %}

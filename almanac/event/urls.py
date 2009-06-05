@@ -12,15 +12,22 @@ tags_dict = {
 
 
 urlpatterns = patterns('',
+    #Default homepage displays a list.
     (r'^$', 'django.views.generic.list_detail.object_list',info_dict),
+    
+    #Various options for a specific event.
     (r'^(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict),
     
     (r'^(?P<object_id>\d+)/update/$', 
      'almanac.event.views.update_event'),
+     
+    (r'^(?P<object_id>\d+)/delete/$', 
+     'django.views.generic.create_update.delete_object',
+     {'model': Event,
+      'post_delete_redirect':'/event/'}),
     
-    (r'^(?P<object_id>\d+)/tag_update/$',
-     'almanac.event.views.tag_update'),
     
+    #Other stuff
     (r'^create/$',
      'almanac.event.views.create_event'),
     
@@ -30,7 +37,5 @@ urlpatterns = patterns('',
          
     (r'^tag/(?P<tag_id>\w+)/$',
       'almanac.event.views.tag')
-    
-    
     
 )
