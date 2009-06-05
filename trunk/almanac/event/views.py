@@ -60,8 +60,9 @@ def create_event(request):
             logger.info('trying to save new event...')
             new_event.save()
             logger.info('save successful! event added: ' + new_event.name)
-            return render_to_response('event/event_list.html',
-                                      {'object_list':events})
+            return HttpResponseRedirect('/event/')
+        
+        
         except ValueError, e:
             
             logger.info('bad user input')
