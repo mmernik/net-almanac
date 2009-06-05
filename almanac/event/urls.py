@@ -16,19 +16,21 @@ urlpatterns = patterns('',
     (r'^(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict),
     
     (r'^(?P<object_id>\d+)/update/$', 
-     'django.views.generic.create_update.update_object', 
-     {'form_class':EventForm}),
+     'almanac.event.views.update_event'),
+    
+    (r'^(?P<object_id>\d+)/tag_update/$',
+     'almanac.event.views.tag_update'),
     
     (r'^create/$',
-     'django.views.generic.create_update.create_object',
-     {'form_class':EventForm}),
+     'almanac.event.views.create_event'),
     
     (r'^tag/$', 'django.views.generic.list_detail.object_list',
         {'template_name':'event/tag_list.html',
          'queryset':Tag.objects.all()}),
          
-    (r'^tag/(?P<tag_name>\w+)/$',
+    (r'^tag/(?P<tag_id>\w+)/$',
       'almanac.event.views.tag')
+    
     
     
 )
