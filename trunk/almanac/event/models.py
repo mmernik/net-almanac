@@ -1,7 +1,9 @@
 from django.db import models
+from django import forms
 from django.forms import ModelForm
 
 import tagging
+import logging
 
 
 MAX_LENGTH=200
@@ -21,13 +23,17 @@ class Event(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return "/event/"+str(self.id)
+        return "/event/"+str(self.id) + "/"
 
 class EventForm(ModelForm):
+    #TODO: add date widget
+    tags = forms.CharField(max_length=MAX_LENGTH)
+    
     class Meta:
         model = Event
 
 try:
+    logging.info('Loading models for a new instance.  Registering models')
     tagging.register(Event)
 except tagging.AlreadyRegistered:
     # Dev Note: Not sure the right way to register a model for tagging b/c it
