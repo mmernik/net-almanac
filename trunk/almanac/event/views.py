@@ -57,14 +57,18 @@ def create_event(request):
                               router=post_data['router'],
                               iface=post_data['iface'])
             
+            
             logger.info('trying to save new event...')
             new_event.save()
             logger.info('save successful! event added: ' + new_event.name)
+            
+            logger.info('setting tags on new event')
+            new_event.tags=post_data['tags']
             return HttpResponseRedirect('/event/')
         
         
         except ValueError, e:
-            
+            #TODO: include old user input
             logger.info('bad user input')
             return render_to_response('event/event_form.html',
                                       {'form':form,
