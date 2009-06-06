@@ -27,6 +27,7 @@ class Event(models.Model):
         return "/event/"+str(self.id) + "/"
 
 class EventForm(ModelForm):
+    #NOTE: we need to manually set tags
     tags = forms.CharField(max_length=MAX_LENGTH)
     
     class Meta:
@@ -34,6 +35,7 @@ class EventForm(ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(EventForm,self).__init__(*args,**kwargs)
+
         #TODO: import the javascript for this to work
 #        self.fields['begin_time'].widget = widgets.AdminSplitDateTime()
 #        self.fields['end_time'].widget = widgets.AdminSplitDateTime()
