@@ -48,11 +48,11 @@ def create_event(request):
             new_event = Event(name=post_data['name'],
                               description=post_data['description'],
                               #TODO: get these later, maybe use Django input widgets
-                              #begin_time=post_data['begin_time'],
-                              #end_time=post_data['end_time'],
+                              begin_time=post_data['begin_time'],
+                              end_time=post_data['end_time'],
                               
-                              begin_time=datetime.datetime(2008,1,1),
-                              end_time=datetime.datetime(2008,1,2),
+                              #begin_time=datetime.datetime(2008,1,1),
+                              #end_time=datetime.datetime(2008,1,2),
                               url=post_data['url'],
                               router=post_data['router'],
                               iface=post_data['iface'])
