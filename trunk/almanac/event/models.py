@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from django.forms import ModelForm
+from django.contrib.admin import widgets
 
 import tagging
 import logging
@@ -26,11 +27,16 @@ class Event(models.Model):
         return "/event/"+str(self.id) + "/"
 
 class EventForm(ModelForm):
-    #TODO: add date widget
     tags = forms.CharField(max_length=MAX_LENGTH)
     
     class Meta:
         model = Event
+        
+    def __init__(self, *args, **kwargs):
+        super(EventForm,self).__init__(*args,**kwargs)
+        #These next two don't seem to do what I want them to do.
+#        self.fields['begin_time'].widget = widgets.AdminSplitDateTime()
+#        self.fields['end_time'].widget = widgets.AdminSplitDateTime()
 
 try:
     logging.info('Loading models for a new instance.  Registering models')
