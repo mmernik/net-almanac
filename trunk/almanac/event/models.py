@@ -34,7 +34,7 @@ class EventForm(ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(EventForm,self).__init__(*args,**kwargs)
-        #These next two don't seem to do what I want them to do.
+        #TODO: import the javascript for this to work
 #        self.fields['begin_time'].widget = widgets.AdminSplitDateTime()
 #        self.fields['end_time'].widget = widgets.AdminSplitDateTime()
 
