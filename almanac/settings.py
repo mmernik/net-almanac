@@ -90,7 +90,7 @@ INSTALLED_APPS = (
 
 logging.basicConfig(
     level = LOGGING_LEVEL,
-    format = '%(asctime)s %(levelname)s %(name)s: %(message)s',
+    format = '%(asctime)s %(levelname)s [%(name)s]: %(message)s',
     filename = LOG_FILENAME,
     filemode = 'a'
 )
