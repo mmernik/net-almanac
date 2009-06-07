@@ -110,13 +110,13 @@ def update_event(request,object_id):
             post_data = request._get_post()
             validate_post(post_data)
             
-            event.name = name=post_data['name']
-            event.description = description=post_data['description']
-            event.begin_time = begin_time=post_data['begin_time']
-            event.end_time = end_time=post_data['end_time']
-            event.url = url=post_data['url']
-            event.router = router=post_data['router']
-            event.iface = iface=post_data['iface']
+            event.name = post_data['name']
+            event.description = post_data['description']
+            event.begin_time = post_data['begin_time']
+            event.end_time = post_data['end_time']
+            event.url = post_data['url']
+            event.router = post_data['router']
+            event.iface = post_data['iface']
             
             
             logger.debug('trying to save event...')
