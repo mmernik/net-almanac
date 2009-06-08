@@ -22,9 +22,7 @@ urlpatterns = patterns('',
      'almanac.event.views.update_event'),
      
     (r'^(?P<object_id>\d+)/delete/$', 
-     'django.views.generic.create_update.delete_object',
-     {'model': Event,
-      'post_delete_redirect':'/event/'}),
+     'almanac.event.views.delete_event'),
     
     
     #Other stuff
