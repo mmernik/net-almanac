@@ -32,7 +32,6 @@ def create_event(request):
     
     form = EventForm()
     
-    events = Event.objects.all()
     if request.method == 'GET':
         return render_to_response('event/event_form.html',
                                   {'form':form,
@@ -93,7 +92,10 @@ def update_event(request,object_id):
     logger.info('hit')
     logger.debug('request.method='+request.method)
     
-    event = Event.objects.get(id=object_id)
+    event = get_event_by_id(object_id)
+    if event == None:
+        raise Http404
+    
     form = EventForm(instance=event)
     
     #We need to manually set tags.
@@ -160,7 +162,9 @@ def delete_event(request,object_id):
     logger.info('hit')
     logger.debug('request.method='+request.method)
     
-    event = Event.objects.get(id=object_id)
+    event = get_event_by_id(object_id)
+    if event == None:
+        raise Http404
     
     if request.method == 'GET':
         
@@ -194,9 +198,10 @@ def validate_post(post_data):
     if post_data['router']=='':
         raise ValueError('router cannot be empty')
     
-    
-    
-    
-    
-    
-    
+def get_event_by_id(event_id):
+    #returns an event or None if none exists.
+    try:
+        event = Event.objects.get(id=event_id)
+        return event
+    except:
+        return None
