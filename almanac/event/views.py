@@ -23,6 +23,7 @@ def tag(request,tag_id):
     
     
 def create_event(request):
+    #a GET request returns a new form, and a POST request attempts to create a new event
     logger = logging.getLogger('view create_event')
     
     logger.info('hit')
@@ -86,6 +87,7 @@ def create_event(request):
             
         
 def update_event(request,object_id):
+    #a GET request returns a new form, and a POST request attempts to edit an event
     logger = logging.getLogger('view update_event')
     
     logger.info('hit')
@@ -93,6 +95,7 @@ def update_event(request,object_id):
     
     event = Event.objects.get(id=object_id)
     form = EventForm(instance=event)
+    
     #We need to manually set tags.
     form.initial['tags'] = tagging.utils.edit_string_for_tags(event.tags)
     if request.method == 'GET':
@@ -106,7 +109,7 @@ def update_event(request,object_id):
     elif request.method == 'POST':
         
         try:
-            logger.debug('trying to update an event...')
+            logger.debug('trying to update an event ' + event.name)
             post_data = request._get_post()
             validate_post(post_data)
             
@@ -150,6 +153,35 @@ def update_event(request,object_id):
         else:
             logger.error('unexpected error!')
         
+def delete_event(request,object_id):
+    #a GET request gives a confirmation page, and a POST request deletes and redirects
+    logger = logging.getLogger('view delete_event')
+    
+    logger.info('hit')
+    logger.debug('request.method='+request.method)
+    
+    event = Event.objects.get(id=object_id)
+    
+    if request.method == 'GET':
+        
+        return render_to_response('event/event_confirm_delete.html',
+                                  {'event':event,})
+        
+    elif request.method == 'POST':
+        
+        
+        logger.debug('deleting event: ' + event.name)
+        
+        #we need to delete tags because they are not automatically deleted with delete()
+        event.tags = ""
+            
+        event.delete()
+        
+        logger.info('delete successful! event delete: ' + event.name)
+        
+        return HttpResponseRedirect('/event/')
+    
+
 def validate_post(post_data):
     if post_data['name']=='':
         raise ValueError('name cannot be empty')
