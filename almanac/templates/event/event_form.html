@@ -1,12 +1,12 @@
+{# This is the parent of event_create.html and event_update.html #}
+
 {% extends "base.html" %}
 
-{% block subtitle %} : Event Form {% endblock %}
 
 {% block head %}
 {{ form.media }}
 {% endblock %}
 
-{% block navigate %} : {{ type }} Event {% endblock %}
 
 {% block body %} 
 <form action="" method="post">
@@ -26,8 +26,8 @@ Please use [HH:MM[:ss[.uuuuuu]]] for the time. <br />
 Data: {{ form.data }} <br />
 Errors: {{ error }} <br />
 
-<A HREF="http://www.tarrget.info/calendar/scw.htm">
+<h6><A HREF="http://www.tarrget.info/calendar/scw.htm">
  Simple Calendar Widget by Anthony Garrett
-</A>
+</A></h6>
 {% endblock %}
 
