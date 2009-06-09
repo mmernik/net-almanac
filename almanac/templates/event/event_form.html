@@ -2,21 +2,32 @@
 
 {% block subtitle %} : Event Form {% endblock %}
 
-{% block navigate %} : Create Or Update Event {% endblock %}
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block navigate %} : {{ type }} Event {% endblock %}
 
 {% block body %} 
 <form action="" method="post">
 	<table>
 		{{ form_table }}
 	</table>
+	
+	<br />
+	<br />
+	
 	<input type="submit" value="Submit">
 </form>
 <br />
 
-Please use YYYY-MM-DD [HH:MM[:ss[.uuuuuu]]] format for the date. <br />
+Please use YYYY-MM-DD format for the date. <br />
+Please use [HH:MM[:ss[.uuuuuu]]] for the time. <br />
 Data: {{ form.data }} <br />
 Errors: {{ error }} <br />
 
-
+<A HREF="http://www.tarrget.info/calendar/scw.htm">
+ Simple Calendar Widget by Anthony Garrett
+</A>
 {% endblock %}
 
