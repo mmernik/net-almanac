@@ -65,7 +65,7 @@ def create_event(request):
             new_event.tags=post_data['tags']
             return HttpResponseRedirect('/event/')
         
-        except Exception, e:
+        except ValueError, e:
             
             error_message = (str(type(e)) + ': ' +
                              e.message)
@@ -135,20 +135,10 @@ def update_event(request,object_id):
             #TODO: include old user input
             logger.info('bad user input')
             return render_to_response('event/event_form.html',
-                                      {'form':form,
+                                      {'type': 'Update',
+                                       'form':form,
                                        'form_table':form.as_table(),
                                        'error':e.message})
-        
-        except Exception, e:
-            
-            error_message = (str(type(e)) + ': ' +
-                             e.message)
-            
-            logger.info(error_message)
-            return render_to_response('event/event_form.html',
-                                      {'form':form,
-                                       'form_table':form.as_table(),
-                                       'error':error_message})
         else:
             logger.error('unexpected error!')
         
@@ -196,17 +186,23 @@ def validate_post(post_data):
     if post_data['router']=='':
         raise ValueError('router cannot be empty')
     
+    begin_datetime = None
+    end_datetime = None
+    
     try:
         begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
-        d = dateutil.parser.parse(begin_datetime_string)
+        begin_datetime = dateutil.parser.parse(begin_datetime_string)
     except:
         raise ValueError('invalid date format for begin date')
     
     try:
         end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
-        d = dateutil.parser.parse(end_datetime_string)
+        end_datetime = dateutil.parser.parse(end_datetime_string)
     except:
         raise ValueError('invalid date format for begin date')
+    
+    if end_datetime < begin_datetime:
+        raise ValueError('the end date is before the begin date')
     
 def get_event_by_id(event_id):
     #returns an event or None if none exists.
