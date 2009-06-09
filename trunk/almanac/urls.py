@@ -7,5 +7,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('',
     
     (r'^event/', include('almanac.event.urls')),
-    
+    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': 'media'}),
+
 )

@@ -9,6 +9,7 @@ from tagging.models import *
 
 import logging
 import datetime
+import dateutil.parser
 
 def tag(request,tag_id):
     logger = logging.getLogger('view tag')
@@ -27,16 +28,14 @@ def create_event(request):
     logger = logging.getLogger('view create_event')
     
     logger.info('hit')
-    
     logger.debug('request.method='+request.method)
-    
     form = EventForm()
     
     if request.method == 'GET':
         return render_to_response('event/event_form.html',
-                                  {'form':form,
-                                   'form_table':form.as_table()})       
-
+                                  {'type': 'Create',
+                                   'form':form,
+                                   'form_table':form.as_table()})
         
     elif request.method == 'POST':
         
@@ -45,10 +44,14 @@ def create_event(request):
             post_data = request._get_post()
             validate_post(post_data)
             
+            begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
+            end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
+            
+            
             new_event = Event(name=post_data['name'],
                               description=post_data['description'],
-                              begin_time=post_data['begin_time'],
-                              end_time=post_data['end_time'],
+                              begin_datetime=dateutil.parser.parse(begin_datetime_string),
+                              end_datetime=dateutil.parser.parse(end_datetime_string),
                               url=post_data['url'],
                               router=post_data['router'],
                               iface=post_data['iface'])
@@ -62,15 +65,6 @@ def create_event(request):
             new_event.tags=post_data['tags']
             return HttpResponseRedirect('/event/')
         
-        
-        except ValueError, e:
-            #TODO: include old user input
-            logger.info('bad user input')
-            return render_to_response('event/event_form.html',
-                                      {'form':form,
-                                       'form_table':form.as_table(),
-                                       'error':e.message})
-        
         except Exception, e:
             
             error_message = (str(type(e)) + ': ' +
@@ -78,7 +72,8 @@ def create_event(request):
             
             logger.warning(error_message)
             return render_to_response('event/event_form.html',
-                                      {'form':form,
+                                      {'type':'Create',
+                                       'form':form,
                                        'form_table':form.as_table(),
                                        'error':error_message})
         else:
@@ -98,13 +93,12 @@ def update_event(request,object_id):
     
     form = EventForm(instance=event)
     
-    #We need to manually set tags.
-    form.initial['tags'] = tagging.utils.edit_string_for_tags(event.tags)
     if request.method == 'GET':
         
         
         return render_to_response('event/event_form.html',
-                                  {'form':form,
+                                  {'type': 'Update',
+                                   'form':form,
                                    'form_table':form.as_table()})       
 
         
@@ -117,12 +111,15 @@ def update_event(request,object_id):
             
             event.name = post_data['name']
             event.description = post_data['description']
-            event.begin_time = post_data['begin_time']
-            event.end_time = post_data['end_time']
             event.url = post_data['url']
             event.router = post_data['router']
             event.iface = post_data['iface']
             
+            begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
+            event.begin_datetime = dateutil.parser.parse(begin_datetime_string)
+            
+            end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
+            event.end_datetime = dateutil.parser.parse(end_datetime_string)
             
             logger.debug('trying to save event...')
             event.save()
@@ -172,8 +169,6 @@ def delete_event(request,object_id):
                                   {'event':event,})
         
     elif request.method == 'POST':
-        
-        
         logger.debug('deleting event: ' + event.name)
         
         #we need to delete tags because they are not automatically deleted with delete()
@@ -187,6 +182,9 @@ def delete_event(request,object_id):
     
 
 def validate_post(post_data):
+    logger = logging.getLogger('validate_post')
+    logger.debug('checking data')
+    
     if post_data['name']=='':
         raise ValueError('name cannot be empty')
     if post_data['description']=='':
@@ -197,6 +195,18 @@ def validate_post(post_data):
         raise ValueError('iface cannot be empty')
     if post_data['router']=='':
         raise ValueError('router cannot be empty')
+    
+    try:
+        begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
+        d = dateutil.parser.parse(begin_datetime_string)
+    except:
+        raise ValueError('invalid date format for begin date')
+    
+    try:
+        end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
+        d = dateutil.parser.parse(end_datetime_string)
+    except:
+        raise ValueError('invalid date format for begin date')
     
 def get_event_by_id(event_id):
     #returns an event or None if none exists.

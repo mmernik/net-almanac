@@ -11,8 +11,8 @@ EVENT_URL = "testurl"
 EVENT_ROUTER = "testrouter"
 EVENT_IFACE = "testiface"
 
-EVENT_BEGINDATE = datetime.datetime(2008,1,1)
-EVENT_ENDDATE = datetime.datetime(2008,1,5)
+EVENT_BEGINDATETIME = datetime.datetime(2008,1,1)
+EVENT_ENDDATETIME = datetime.datetime(2008,1,5)
 
 TAG_NAME = "testtag"
 
@@ -24,8 +24,8 @@ class EventTestCaseSetup(unittest.TestCase):
         #Create another object and save it in the test database.
         self.test_event = Event(name=EVENT_NAME,
                          description=EVENT_DESCRIPTION, 
-                         begin_time=EVENT_BEGINDATE,
-                         end_time=EVENT_ENDDATE,
+                         begin_datetime=EVENT_BEGINDATETIME,
+                         end_datetime=EVENT_ENDDATETIME,
                          url=EVENT_URL, 
                          router=EVENT_ROUTER,
                          iface=EVENT_IFACE
@@ -75,8 +75,8 @@ class DatabaseTestCase(EventTestCaseSetup):
         self.assertTrue(testevent.url == EVENT_URL)
         self.assertTrue(testevent.router == EVENT_ROUTER)
         self.assertTrue(testevent.iface == EVENT_IFACE)
-        self.assertTrue(testevent.begin_time == EVENT_BEGINDATE)
-        self.assertTrue(testevent.end_time == EVENT_ENDDATE)
+        self.assertTrue(testevent.begin_datetime == EVENT_BEGINDATETIME)
+        self.assertTrue(testevent.end_datetime == EVENT_ENDDATETIME)
         
 class TagsTestCase(EventTestCaseSetup):
     def runTest(self):

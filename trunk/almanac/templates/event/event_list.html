@@ -24,8 +24,8 @@
         	<a href="/event/{{event.id}}">{{event.name}}</a>
         </td>
         <td>{{event.description}}</td>
-        <td>{{event.begin_time}}</td>
-        <td>{{event.end_time}}</td>
+        <td>{{event.begin_datetime}}</td>
+        <td>{{event.end_datetime}}</td>
         <td>{{event.url}}</td>
         <td>{{event.router}}</td>
         <td>{{event.iface}}</td>
@@ -43,7 +43,7 @@
     
     <a href="/event/tag"> View all tags</a> <br/>
     
-    <a href="/event/create"> Make new Object</a> <br/>
+    <a href="/event/create"> Make new Event</a> <br/>
     
     
 {% else %}
