@@ -32,9 +32,8 @@ def create_event(request):
     form = EventForm()
     
     if request.method == 'GET':
-        return render_to_response('event/event_form.html',
-                                  {'type': 'Create',
-                                   'form':form,
+        return render_to_response('event/event_create.html',
+                                  {'form':form,
                                    'form_table':form.as_table()})
         
     elif request.method == 'POST':
@@ -70,10 +69,9 @@ def create_event(request):
             error_message = (str(type(e)) + ': ' +
                              e.message)
             
-            logger.warning(error_message)
-            return render_to_response('event/event_form.html',
-                                      {'type':'Create',
-                                       'form':form,
+            logger.info(error_message)
+            return render_to_response('event/event_create.html',
+                                      {'form':form,
                                        'form_table':form.as_table(),
                                        'error':error_message})
         else:
@@ -96,8 +94,8 @@ def update_event(request,object_id):
     if request.method == 'GET':
         
         
-        return render_to_response('event/event_form.html',
-                                  {'type': 'Update',
+        return render_to_response('event/event_update.html',
+                                  {'event': event,
                                    'form':form,
                                    'form_table':form.as_table()})       
 
@@ -134,11 +132,13 @@ def update_event(request,object_id):
         except ValueError, e:
             #TODO: include old user input
             logger.info('bad user input')
-            return render_to_response('event/event_form.html',
-                                      {'type': 'Update',
+            error_message = (str(type(e)) + ': ' +
+                             e.message)
+            return render_to_response('event/event_update.html',
+                                      {'event': event,
                                        'form':form,
                                        'form_table':form.as_table(),
-                                       'error':e.message})
+                                       'error':error_message})     
         else:
             logger.error('unexpected error!')
         

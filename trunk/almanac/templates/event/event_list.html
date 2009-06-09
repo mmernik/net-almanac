@@ -30,11 +30,13 @@
         <td>{{event.router}}</td>
         <td>{{event.iface}}</td>
         <td>
-        
-        {% for tag in event.tags %}
-        	<a href="/event/tag/{{tag.id}}">{{tag.name}}</a>, &nbsp;
-        {% endfor %}
-        
+        {% if event.tags %}
+        	{% for tag in event.tags %}
+        		<a href="/event/tag/{{tag.id}}/">{{tag.name}}</a>, 
+        	{% endfor %}
+        {% else %}
+        	None
+        {% endif %}
         </td>
     </tr>
     {% endfor %}

@@ -5,16 +5,15 @@
 {% block navigate %} : <a href="/event/tag">Tags</a> : {{tag.name}}{% endblock %}
 
 {% block body %}
-tag detail!
-<br />
 
-{{tag.name}}
-<br/>
 
+{% if events %}
+Events with this tag: 
 {%for event in events%}
 <a href="/event/{{event.id}}">{{event.name}}</a>,
 {% endfor %}
-</body>
-</html>
+{% else %}
+No events under this tag.
+{% endif %}
 
 {% endblock %}

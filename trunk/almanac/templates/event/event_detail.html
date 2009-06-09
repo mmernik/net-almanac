@@ -2,7 +2,7 @@
 
 {% block subtitle %} : Event Detail {% endblock %}
 
-{% block navigate %} : <a href="/event/{{object.id}}"> {{object.name}} </a> {% endblock %}
+{% block navigate %} : <a href="/event/{{object.id}}">{{object.name}}</a> {% endblock %}
 
 {% block body %}
 <table bgcolor="black">
@@ -27,7 +27,15 @@
         <td>{{object.url}}</td>
         <td>{{object.router}}</td>
         <td>{{object.iface}}</td>
-        <td>{{object.tags}}</td>
+        <td>
+        {% if object.tags %}
+        	{% for tag in object.tags %}
+        		<a href="/event/tag/{{tag.id}}/">{{tag.name}}</a>, 
+        	{% endfor %}
+        {% else %}
+        	None
+        {% endif %}
+        </td>
     </tr>
     
 </table>

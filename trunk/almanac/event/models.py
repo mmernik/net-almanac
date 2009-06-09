@@ -47,6 +47,7 @@ class EventForm(ModelForm):
         js = ('/site_media/scw.js',)
         
     def __init__(self, *args, **kwargs):
+        #One static variable here is self.instance, which is the event this Form should model.
         super(EventForm,self).__init__(*args,**kwargs)
         
         logger = logging.getLogger('EventForm')
@@ -54,8 +55,7 @@ class EventForm(ModelForm):
         self.fields['begin_date'].widget = forms.TextInput(attrs={'onclick':'scwShow(this,event);'})
         self.fields['end_date'].widget = forms.TextInput(attrs={'onclick':'scwShow(this,event);'})
         
-        logger.info(tagging.utils.edit_string_for_tags(self.instance.tags))
-        logger.info("self.instance: " + str(self.instance.name))
+        logger.debug('constructing new EventForm')
         
         self.initial['tags'] = tagging.utils.edit_string_for_tags(self.instance.tags)
         if (self.instance.name != ''):
