@@ -11,6 +11,8 @@ import logging
 import datetime
 import dateutil.parser
 
+JSON_MIME = 'application/json'
+
 def tag(request,tag_id):
     logger = logging.getLogger('view tag')
     
@@ -22,7 +24,21 @@ def tag(request,tag_id):
                               {'tag':tag,
                                'events':events})
     
+
+def list_events(request):
+    logger = logging.getLogger('view list_events')
     
+    logger.info('hit')
+    
+    events = Event.objects.all()
+    
+    if is_json_request(request):
+        logger.debug('request for json list of all objects')
+        return HttpResponse('some json data',mimetype=JSON_MIME)
+    else:
+        return render_to_response('event/event_list.html',
+                                  {'object_list':events})
+
 def create_event(request):
     #a GET request returns a new form, and a POST request attempts to create a new event
     logger = logging.getLogger('view create_event')
@@ -62,7 +78,7 @@ def create_event(request):
             
             logger.debug('setting tags on new event')
             new_event.tags=post_data['tags']
-            return HttpResponseRedirect('/event/')
+            return HttpResponseRedirect('/event/' + str(event.id))
         
         except ValueError, e:
             
@@ -81,6 +97,8 @@ def create_event(request):
 def update_event(request,object_id):
     #a GET request returns a new form, and a POST request attempts to edit an event
     logger = logging.getLogger('view update_event')
+
+    logger.debug(dir(request))
     
     logger.info('hit')
     logger.debug('request.method='+request.method)
@@ -91,17 +109,17 @@ def update_event(request,object_id):
     
     form = EventForm(instance=event)
     
-    if request.method == 'GET':
-        
-        
+    if is_json_request(request):
+        logger.debug('request for json object')
+        return HttpResponse('some json data',mimetype=JSON_MIME)
+    
+    elif request.method == 'GET':
         return render_to_response('event/event_update.html',
                                   {'event': event,
                                    'form':form,
                                    'form_table':form.as_table()})       
-
         
     elif request.method == 'POST':
-        
         try:
             logger.debug('trying to update an event ' + event.name)
             post_data = request._get_post()
@@ -126,7 +144,7 @@ def update_event(request,object_id):
             logger.debug('setting tags on updated event')
             event.tags=post_data['tags']
             
-            return HttpResponseRedirect('/event/')
+            return HttpResponseRedirect('/event/' + str(event.id))
         
         
         except ValueError, e:
@@ -211,3 +229,13 @@ def get_event_by_id(event_id):
         return event
     except:
         return None
+    
+def is_json_request(request):
+    logging.warn(str(request.META.keys()))
+    
+    if request.META.has_key('HTTP_ACCEPT'):
+        return (request.META["HTTP_ACCEPT"].find(JSON_MIME) != -1)
+    else:
+        logging.warn('request has no header HTTP_ACCEPT')
+        return False
+ 

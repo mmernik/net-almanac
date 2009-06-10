@@ -13,7 +13,8 @@ tags_dict = {
 
 urlpatterns = patterns('',
     #Default homepage displays a list.
-    (r'^$', 'django.views.generic.list_detail.object_list',info_dict),
+    (r'^$', 
+     'almanac.event.views.list_events'),
     
     #Various options for a specific event.
     (r'^(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict),
