@@ -31,3 +31,9 @@ Run 'python manage.py runserver' to run the server.  Navigate to
 http://localhost:8000/event/
 
 to view the homepage.
+
+
+** Interfacing with programs **
+
+If the http header "accept" contains the string "application/json", then we
+will return a JSON response.  Otherwise it will return the HTML response.

@@ -1,6 +1,10 @@
 import unittest
 import datetime
 import logging
+import urllib2
+
+
+from django.test.client import Client
 from event.models import *
 from event.utils import *
 from tagging.models import *
@@ -17,6 +21,9 @@ EVENT_ENDDATETIME = datetime.datetime(2008,1,5)
 TAG_NAME = "testtag"
 
 LOG_STRING = 'logging test string'
+
+HTML_MIME = 'text/html'
+JSON_MIME = 'application/json'
 
 class EventTestCaseSetup(unittest.TestCase):
     def setUp(self):
@@ -92,3 +99,19 @@ class TagsTestCase(EventTestCaseSetup):
         
         self.assertTrue(len(test_event.tags) == 1)
         self.assertTrue(test_event.tags[0] == test_tag)
+        
+class HTMLResponseTestCase(EventTestCaseSetup):
+    def runTest(self):
+        #some sanity HTML tests
+        c = Client()
+        response = c.get('/event/')
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.has_header('content-type'))
+        self.assertTrue(response._headers['content-type'][1].find(HTML_MIME) != -1)
+        self.assertTrue(response.content.find('<html>') != -1)
+        
+        
+class JSONResponseTestCase(EventTestCaseSetup):
+    def runTest(self):
+        pass
+        

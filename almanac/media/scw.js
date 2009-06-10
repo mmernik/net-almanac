@@ -291,7 +291,7 @@
     // scwWeekStart determines the start of the week in the display
     // Set it to: 0 (Zero) for Sunday, 1 (One) for Monday etc..
 
-    var scwWeekStart       =    1;
+    var scwWeekStart       =    0;
 
     // The week start day for the display is taken as the week start
     // for week numbering.  This ensures that only one week number
