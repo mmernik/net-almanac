@@ -32,12 +32,12 @@ class EventForm(ModelForm):
     
     #NOTE: we need to manually set tags and dates
     
-    begin_date = forms.CharField(max_length=MAX_LENGTH)
-    begin_time = forms.CharField(max_length=MAX_LENGTH)
-    end_date = forms.CharField(max_length=MAX_LENGTH)
-    end_time = forms.CharField(max_length=MAX_LENGTH)
+    begin_date = forms.DateField()
+    begin_time = forms.TimeField()
+    end_date = forms.DateField()
+    end_time = forms.TimeField()
     
-    tags = forms.CharField(max_length=MAX_LENGTH)
+    tags = forms.CharField(max_length=MAX_LENGTH, required=False)
     
     class Meta:
         model = Event

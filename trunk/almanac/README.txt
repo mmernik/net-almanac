@@ -1,32 +1,16 @@
 Some notes to run the server. 
 
 Dependencies are:
+python v2.5
 django v1.0
-tags v0.3
-twill v0.9
 
 
 ** Installation Instructions **
 Before you run, you need to install django v1.0: 
 http://www.djangoproject.com/download/
-and tags v0.3:
-http://code.google.com/p/django-tagging/
-To install v0.3 of tags, you must sync to the latest branch (do not download 
-the installer).  Use the command:
- 
-svn checkout http://django-tagging.googlecode.com/svn/trunk/ django-tagging-read-only
 
-To get the code.  The revision number that Almanac was made for is 155.  
-Follow directions and copy it into your Python site-packages directory (on 
-Mac OS X, it is /Library/Python/2.5/site-packages/, for cygwin it is in 
-/lib/python/site-packages').  This is the same directory where django is
-installed.
-
-twill v0.9 is needed for running tests.  It is available here:
-http://twill.idyll.org/
-
-You might need to install dateutils depending on the version of python you have.  
-Get it here:
+You might need to install dateutils depending on the version of python that 
+you have.  Get it here:
 
 http://labix.org/python-dateutil
 
@@ -51,3 +35,16 @@ to view the homepage.
 
 If the http header "accept" contains the string "application/json", then we
 will return a JSON response.  Otherwise it will return the HTML response.
+
+
+** licensing stuff, credits **
+
+This project uses several open-source projects:
+django v1.0
+http://www.djangoproject.com/
+
+django tagging library v0.3
+http://code.google.com/p/django-tagging/
+
+twill v0.9
+http://twill.idyll.org/
