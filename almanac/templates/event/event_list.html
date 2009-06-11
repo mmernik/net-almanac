@@ -3,7 +3,7 @@
 {% block subtitle %} : Event List {% endblock %}
 
 {% block body %}
-{% if object_list %}
+{% if event_list %}
 
 <table bgcolor="black">
     <tr bgcolor="yellow">
@@ -17,7 +17,7 @@
         <td>iface</td>
         <td>tags</td>
     </tr>
-    {% for event in object_list %}
+    {% for event in event_list %}
     <tr bgcolor="white">
         <td>{{event.id}}</td>
         <td>
@@ -30,13 +30,7 @@
         <td>{{event.router}}</td>
         <td>{{event.iface}}</td>
         <td>
-        {% if event.tags %}
-        	{% for tag in event.tags %}
-        		<a href="/event/tag/{{tag.id}}/">{{tag.name}}</a>, 
-        	{% endfor %}
-        {% else %}
-        	None
-        {% endif %}
+			{{event.tags}}
         </td>
     </tr>
     {% endfor %}

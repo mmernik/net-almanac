@@ -9,9 +9,11 @@
 
 {% if events %}
 Events with this tag: 
+<ul>
 {%for event in events%}
-<a href="/event/{{event.id}}">{{event.name}}</a>,
+<li><a href="/event/{{event.id}}">{{event.name}}</a></li>
 {% endfor %}
+</ul>
 {% else %}
 No events under this tag.
 {% endif %}

@@ -28,7 +28,10 @@ EVENT_IFACE = "testiface"
 EVENT_BEGINDATETIME = datetime.datetime(2008,1,1)
 EVENT_ENDDATETIME = datetime.datetime(2008,1,5)
 
-TAG_NAME = "testtag"
+
+TAG_NAME_1 = 'testtag1'
+TAG_NAME_2 = 'testtag2'
+TAG_STRING = TAG_NAME_1 + ', ' + TAG_NAME_2
 
 LOG_STRING = 'logging test string'
 
@@ -49,11 +52,11 @@ class EventTestCaseSetup(unittest.TestCase):
                          end_datetime=EVENT_ENDDATETIME,
                          url=EVENT_URL, 
                          router=EVENT_ROUTER,
-                         iface=EVENT_IFACE
+                         iface=EVENT_IFACE,
+                         tags=TAG_STRING
                          )
         self.test_event.save()
         
-        self.test_event.tags = TAG_NAME
         
         
     def tearDown(self):
@@ -103,7 +106,7 @@ class TagsTestCase(EventTestCaseSetup):
     def runTest(self):
         logger = logging.getLogger('TagsTestCase')
         logger.info( "Tags in database: " + str(Tag.objects.all()))
-        test_tag = Tag.objects.all().get(name=TAG_NAME)
+        test_tag = Tag.objects.all().get(name=TAG_NAME_1)
         
         test_events = TaggedItem.objects.get_by_model(Event,test_tag)
         
@@ -112,8 +115,8 @@ class TagsTestCase(EventTestCaseSetup):
         
         test_event = Event.objects.all().get(name=EVENT_NAME)
         
-        self.assertTrue(len(test_event.tags) == 1)
-        self.assertTrue(test_event.tags[0] == test_tag)
+        self.assertTrue(len(Tag.objects.get_for_object(test_event)) == 2)
+        self.assertTrue(test_event.tags == TAG_STRING)
         
 class HTMLResponseTestCase(EventTestCaseSetup):
     def runTest(self):
@@ -148,6 +151,11 @@ class TwillTestCaseSetup(unittest.TestCase):
 
 class JSONTestCase(TwillTestCaseSetup):
     def runTest(self):
+        """
+        Note we cannot connect to the twill server using urllib2.
+        Also, we cannot verify the header content in a twill response.
+        """
+        
         logger = logging.getLogger("JSONTestCase")
         url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/'
         twill_quiet()
@@ -163,11 +171,13 @@ class JSONTestCase(TwillTestCaseSetup):
         logger.debug('JSON data:' + tc.show())
         tc.notfind("html") 
         tc.find('"name": "experiment"') #data from the fixture formatted by default serializer
+        tc.find('"tags": "esnet"')
         
         url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
         logger.info('accessing ' + url)
         tc.go(url)
         tc.notfind("html")
         tc.find('"name": "experiment"') 
+        tc.notfind('"tags": "esnet"') 
         
         

@@ -11,6 +11,7 @@ from tagging.models import *
 import logging
 import datetime
 import dateutil.parser
+import tagging
 
 JSON_MIME = 'application/json'
 
@@ -40,7 +41,7 @@ def list_events(request):
         return HttpResponse(json_data,mimetype=JSON_MIME)
     else:
         return render_to_response('event/event_list.html',
-                                  {'object_list':events})
+                                  {'event_list':events})
 
 def create_event(request):
     #a GET request returns a new form, and a POST request attempts to create a new event
@@ -71,6 +72,7 @@ def create_event(request):
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
             end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
             
+            tags_string = format_tag_string(post_data['tags'])
             
             new_event = Event(name=post_data['name'],
                               description=post_data['description'],
@@ -78,16 +80,15 @@ def create_event(request):
                               end_datetime=dateutil.parser.parse(end_datetime_string),
                               url=post_data['url'],
                               router=post_data['router'],
-                              iface=post_data['iface'])
+                              iface=post_data['iface'],
+                              tags = tags_string)
             
             
             logger.debug('trying to save new event...')
             new_event.save()
             logger.info('save successful! event added: ' + new_event.name)
             
-            logger.debug('setting tags on new event')
-            new_event.tags=post_data['tags']
-            return HttpResponseRedirect('/event/' + str(event.id))
+            return HttpResponseRedirect('/event/' + str(new_event.id))
         
         except ValueError, e:
             
@@ -106,8 +107,6 @@ def create_event(request):
 def update_event(request,object_id):
     #a GET request returns a new form, and a POST request attempts to edit an event
     logger = logging.getLogger('view update_event')
-
-    logger.debug(dir(request))
     
     logger.info('hit')
     logger.debug('request.method='+request.method)
@@ -150,6 +149,8 @@ def update_event(request,object_id):
             
             end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
             event.end_datetime = dateutil.parser.parse(end_datetime_string)
+            
+            event.tags = format_tag_string(post_data['tags'])
             
             logger.debug('trying to save event...')
             event.save()
@@ -215,7 +216,8 @@ def detail_event(request,object_id):
     
     else:
         return render_to_response('event/event_detail.html',
-                                  {'event':event})
+                                  {'event':event,
+                                   'tags':Tag.objects.get_for_object(event)})
 
 def validate_post(post_data):
     logger = logging.getLogger('validate_post')
@@ -250,6 +252,10 @@ def validate_post(post_data):
     if end_datetime < begin_datetime:
         raise ValueError('the end date is before the begin date')
     
+    for tag in tagging.utils.parse_tag_input(post_data['tags']):
+        if tag.find(',') != -1:
+            raise ValueError('a tag may not contain a comma')
+    
 def get_event_by_id(event_id):
     #returns an event or None if none exists.
     logger = logging.getLogger('get_event_by_id')
@@ -273,3 +279,6 @@ def is_json_request(request):
         logger.warn('request has no header HTTP_ACCEPT')
         return False
  
+def format_tag_string(tags_string):
+    logger = logging.getLogger('format_tag_string')
+    return ', '.join(tagging.utils.parse_tag_input(tags_string))
