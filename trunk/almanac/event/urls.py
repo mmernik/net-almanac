@@ -17,7 +17,8 @@ urlpatterns = patterns('',
      'almanac.event.views.list_events'),
     
     #Various options for a specific event.
-    (r'^(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', info_dict),
+    (r'^(?P<object_id>\d+)/$', 
+     'almanac.event.views.detail_event'),
     
     (r'^(?P<object_id>\d+)/update/$', 
      'almanac.event.views.update_event'),

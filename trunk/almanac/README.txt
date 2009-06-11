@@ -1,5 +1,12 @@
-Some notes to run the server.
+Some notes to run the server. 
 
+Dependencies are:
+django v1.0
+tags v0.3
+twill v0.9
+
+
+** Installation Instructions **
 Before you run, you need to install django v1.0: 
 http://www.djangoproject.com/download/
 and tags v0.3:
@@ -15,12 +22,19 @@ Mac OS X, it is /Library/Python/2.5/site-packages/, for cygwin it is in
 /lib/python/site-packages').  This is the same directory where django is
 installed.
 
+twill v0.9 is needed for running tests.  It is available here:
+http://twill.idyll.org/
+
 You might need to install dateutils depending on the version of python you have.  
 Get it here:
 
 http://labix.org/python-dateutil
 
 and put it in the same directory as tags.
+
+
+
+** Running Instructions **
 
 Run 'python manage.py syncdb' to sync the database and load the data.  Note 
 this command will overwrite your local database, or create a new one if there

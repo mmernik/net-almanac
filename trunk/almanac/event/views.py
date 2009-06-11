@@ -2,6 +2,7 @@ from django.http import Http404
 from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core import serializers
 from django.shortcuts import render_to_response, get_object_or_404
 
 from almanac.event.models import *
@@ -33,8 +34,10 @@ def list_events(request):
     events = Event.objects.all()
     
     if is_json_request(request):
+        #return serialized objects.
         logger.debug('request for json list of all objects')
-        return HttpResponse('some json data',mimetype=JSON_MIME)
+        json_data = serializers.serialize('json',events)
+        return HttpResponse(json_data,mimetype=JSON_MIME)
     else:
         return render_to_response('event/event_list.html',
                                   {'object_list':events})
@@ -187,7 +190,23 @@ def delete_event(request,object_id):
         logger.info('delete successful! event delete: ' + event.name)
         
         return HttpResponseRedirect('/event/')
+
+def detail_event(request,object_id):
+    #displays data about one object.  
+    logger = logging.getLogger('view detail_event')
+    logger.info('hit')
+    event = get_event_by_id(object_id)
+    logger.debug('requesting data for event: ' + event.name)
     
+    if is_json_request(request):
+        logger.debug('request for individual json object')
+        json_data = serializers.serialize('json',[event])
+        logger.debug('serialized object: ' + json_data)
+        return HttpResponse(json_data, mimetype=JSON_MIME)
+    
+    else:
+        return render_to_response('event/event_detail.html',
+                                  {'event':event})
 
 def validate_post(post_data):
     logger = logging.getLogger('validate_post')
@@ -231,11 +250,12 @@ def get_event_by_id(event_id):
         return None
     
 def is_json_request(request):
-    logging.warn(str(request.META.keys()))
+    logger = logging.getLogger('is_json_request')
     
     if request.META.has_key('HTTP_ACCEPT'):
+        logger.info('request.META["HTTP_ACCEPT"]: ' + request.META["HTTP_ACCEPT"])
         return (request.META["HTTP_ACCEPT"].find(JSON_MIME) != -1)
     else:
-        logging.warn('request has no header HTTP_ACCEPT')
+        logger.warn('request has no header HTTP_ACCEPT')
         return False
  

@@ -2,12 +2,22 @@ import unittest
 import datetime
 import logging
 import urllib2
-
+import os
+import time
 
 from django.test.client import Client
 from event.models import *
 from event.utils import *
 from tagging.models import *
+
+import twill
+from twill import commands as tc
+from twill.shell import TwillCommandLoop
+from django.test import TestCase
+from django.core.servers.basehttp import AdminMediaHandler
+from django.core.handlers.wsgi import WSGIHandler
+from StringIO import StringIO
+
 
 EVENT_NAME = "testevent"
 EVENT_DESCRIPTION = "testdescription"
@@ -25,9 +35,13 @@ LOG_STRING = 'logging test string'
 HTML_MIME = 'text/html'
 JSON_MIME = 'application/json'
 
+TEST_PORT = 47630 #some random port I picked
+
+
 class EventTestCaseSetup(unittest.TestCase):
     def setUp(self):
-        logging.debug("Setting up junit test")
+        logger = logging.getLogger('EventTestCaseSetup')
+        logger.debug("setting up junit test")
         #Create another object and save it in the test database.
         self.test_event = Event(name=EVENT_NAME,
                          description=EVENT_DESCRIPTION, 
@@ -41,14 +55,12 @@ class EventTestCaseSetup(unittest.TestCase):
         
         self.test_event.tags = TAG_NAME
         
-    def runTest(self):
-        #Sanity test
-        self.assertTrue(True)
         
     def tearDown(self):
-        logging.debug("tearing down junit test")
+        logger = logging.getLogger('EventTestCaseSetup')
+        logger.debug("tearing down junit test")
         self.test_event.delete()
-        
+      
 
 class LoggingTestCase(EventTestCaseSetup):
     def runTest(self):
@@ -70,9 +82,11 @@ class LoggingTestCase(EventTestCaseSetup):
         
 class DatabaseTestCase(EventTestCaseSetup):
     def runTest(self):
+        
+        logger = logging.getLogger('DatabaseTestCase')
         events = Event.objects.all()
         
-        logging.info( "DatabaseTestCase: Objects in database: " + str(events))
+        logger.info( "Objects in database: " + str(events))
         
         #check if all data is the same as assigned.
         self.assertTrue(len(events.filter(name = EVENT_NAME))==1)
@@ -87,7 +101,8 @@ class DatabaseTestCase(EventTestCaseSetup):
         
 class TagsTestCase(EventTestCaseSetup):
     def runTest(self):
-        logging.info( "TagsTestCase: Tags in database: " + str(Tag.objects.all()))
+        logger = logging.getLogger('TagsTestCase')
+        logger.info( "Tags in database: " + str(Tag.objects.all()))
         test_tag = Tag.objects.all().get(name=TAG_NAME)
         
         test_events = TaggedItem.objects.get_by_model(Event,test_tag)
@@ -102,7 +117,7 @@ class TagsTestCase(EventTestCaseSetup):
         
 class HTMLResponseTestCase(EventTestCaseSetup):
     def runTest(self):
-        #some sanity HTML tests
+        #some sanity HTML tests not using twill but the provided test client
         c = Client()
         response = c.get('/event/')
         self.assertTrue(response.status_code == 200)
@@ -110,8 +125,49 @@ class HTMLResponseTestCase(EventTestCaseSetup):
         self.assertTrue(response._headers['content-type'][1].find(HTML_MIME) != -1)
         self.assertTrue(response.content.find('<html>') != -1)
         
-        
-class JSONResponseTestCase(EventTestCaseSetup):
+
+
+def twill_setup():
+    app = AdminMediaHandler(WSGIHandler())
+    twill.add_wsgi_intercept("127.0.0.1", TEST_PORT, lambda: app)
+
+def twill_teardown():
+    twill.remove_wsgi_intercept('127.0.0.1', TEST_PORT)
+
+
+def twill_quiet():
+    twill.set_output(StringIO())
+
+
+class TwillTestCaseSetup(unittest.TestCase):
+    def setUp(self):
+        twill_setup()
+    
+    def twill_teardown(self):
+        twill_teardown()
+
+class JSONTestCase(TwillTestCaseSetup):
     def runTest(self):
-        pass
+        logger = logging.getLogger("JSONTestCase")
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/'
+        twill_quiet()
+        logger.info('accessing ' + url)
+        tc.go(url)
+        tc.find("html") # sanity check that this is a html request.
+        
+        tc.clear_extra_headers()
+        tc.add_extra_header('Accept',JSON_MIME)
+        
+        logger.info('accessing ' + url)
+        tc.go(url)
+        logger.debug('JSON data:' + tc.show())
+        tc.notfind("html") 
+        tc.find('"name": "experiment"') #data from the fixture formatted by default serializer
+        
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
+        logger.info('accessing ' + url)
+        tc.go(url)
+        tc.notfind("html")
+        tc.find('"name": "experiment"') 
+        
         

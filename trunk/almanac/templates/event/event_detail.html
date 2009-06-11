@@ -2,7 +2,7 @@
 
 {% block subtitle %} : Event Detail {% endblock %}
 
-{% block navigate %} : <a href="/event/{{object.id}}">{{object.name}}</a> {% endblock %}
+{% block navigate %} : <a href="/event/{{event.id}}">{{event.name}}</a> {% endblock %}
 
 {% block body %}
 <table bgcolor="black">
@@ -19,17 +19,17 @@
     </tr>
 
     <tr bgcolor="white">
-        <td>{{object.id}}</td>
-        <td>{{object.name}}</td>
-        <td>{{object.description}}</td>
-        <td>{{object.begin_datetime}}</td>
-        <td>{{object.end_datetime}}</td>
-        <td>{{object.url}}</td>
-        <td>{{object.router}}</td>
-        <td>{{object.iface}}</td>
+        <td>{{event.id}}</td>
+        <td>{{event.name}}</td>
+        <td>{{event.description}}</td>
+        <td>{{event.begin_datetime}}</td>
+        <td>{{event.end_datetime}}</td>
+        <td>{{event.url}}</td>
+        <td>{{event.router}}</td>
+        <td>{{event.iface}}</td>
         <td>
-        {% if object.tags %}
-        	{% for tag in object.tags %}
+        {% if event.tags %}
+        	{% for tag in event.tags %}
         		<a href="/event/tag/{{tag.id}}/">{{tag.name}}</a>, 
         	{% endfor %}
         {% else %}
@@ -40,7 +40,7 @@
     
 </table>
 
-<a href="/event/{{object.id}}/update">Update this event</a> <br />
+<a href="/event/{{event.id}}/update">Update this event</a> <br />
 
-<a href="/event/{{object.id}}/delete">Delete this event</a> <br />
+<a href="/event/{{event.id}}/delete">Delete this event</a> <br />
 {% endblock %}
