@@ -60,6 +60,12 @@ def create_event(request):
         try:
             logger.debug('trying to create new event...')
             post_data = request._get_post()
+            
+            form = EventForm(request.POST)
+            if form.is_valid():
+                logger.debug('form is valid')
+            else:
+                logger.debug('form is not valid')
             validate_post(post_data)
             
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
@@ -107,8 +113,6 @@ def update_event(request,object_id):
     logger.debug('request.method='+request.method)
     
     event = get_event_by_id(object_id)
-    if event == None:
-        raise Http404
     
     form = EventForm(instance=event)
     
@@ -126,6 +130,13 @@ def update_event(request,object_id):
         try:
             logger.debug('trying to update an event ' + event.name)
             post_data = request._get_post()
+            
+            form = EventForm(request.POST)
+            if form.is_valid():
+                logger.debug('form is valid')
+            else:
+                logger.debug('form is not valid')
+            
             validate_post(post_data)
             
             event.name = post_data['name']
@@ -171,8 +182,6 @@ def delete_event(request,object_id):
     logger.debug('request.method='+request.method)
     
     event = get_event_by_id(object_id)
-    if event == None:
-        raise Http404
     
     if request.method == 'GET':
         
@@ -243,11 +252,16 @@ def validate_post(post_data):
     
 def get_event_by_id(event_id):
     #returns an event or None if none exists.
+    logger = logging.getLogger('get_event_by_id')
+    event = None
     try:
         event = Event.objects.get(id=event_id)
-        return event
-    except:
-        return None
+    except Event.DoesNotExist:
+        raise Http404
+    except Event.MultipleObjectsReturned:
+        logger.error('unexpected error raised: multiple objects have one id')
+        raise Http404 
+    return event
     
 def is_json_request(request):
     logger = logging.getLogger('is_json_request')
