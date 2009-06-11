@@ -48,3 +48,6 @@ http://code.google.com/p/django-tagging/
 
 twill v0.9
 http://twill.idyll.org/
+
+Simple Calendar Widget by Anthony Garrett
+http://www.tarrget.info/calendar/scw.htm
