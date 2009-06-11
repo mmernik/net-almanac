@@ -8,10 +8,11 @@
 
 {% if object_list %}
 	Tag list:
+	<ul>
 	{% for tag in object_list %}
-		<a href="/event/tag/{{tag.id}}">{{tag.name}}</a>,
+		<li><a href="/event/tag/{{tag.id}}">{{tag.name}}</a></li>
 	{% endfor %}
-
+	</ul>
 {% else %}
 		No tags found.
 {% endif %}

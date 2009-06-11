@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django.contrib.admin import widgets
 
 import tagging
+from tagging.fields import TagField
 import logging
 import datetime
 
@@ -22,6 +23,8 @@ class Event(models.Model):
     router = models.CharField(max_length=MAX_LENGTH)
     iface = models.CharField(max_length=MAX_LENGTH)
     
+    tags = TagField()
+    
     def __unicode__(self):
         return self.name
     
@@ -37,7 +40,6 @@ class EventForm(ModelForm):
     end_date = forms.DateField()
     end_time = forms.TimeField()
     
-    tags = forms.CharField(max_length=MAX_LENGTH, required=False)
     
     class Meta:
         model = Event
@@ -57,7 +59,6 @@ class EventForm(ModelForm):
         
         logger.debug('constructing new EventForm')
         
-        self.initial['tags'] = tagging.utils.edit_string_for_tags(self.instance.tags)
         if (self.instance.name != ''):
             self.initial['begin_date'] = self.instance.begin_datetime.strftime("%Y-%m-%d") 
             self.initial['begin_time'] = self.instance.begin_datetime.strftime("%H:%M:%S")
@@ -75,12 +76,12 @@ class EventForm(ModelForm):
 
         
 
-try:
-    logging.info('Loading models for a new instance.  Registering models')
-    tagging.register(Event)
-except tagging.AlreadyRegistered:
-    # Dev Note: Not sure the right way to register a model for tagging b/c it
-    # raises this error if registered more than once. We end up registering
-    # the first time during "manage.py syncdb" and then a second time when
-    # actually attempting to run the site.
-    pass
+#try:
+#    logging.info('Loading models for a new instance.  Registering models')
+#    tagging.register(Event)
+#except tagging.AlreadyRegistered:
+#    # Dev Note: Not sure the right way to register a model for tagging b/c it
+#    # raises this error if registered more than once. We end up registering
+#    # the first time during "manage.py syncdb" and then a second time when
+#    # actually attempting to run the site.
+#    pass

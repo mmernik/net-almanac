@@ -9,7 +9,8 @@
          "description":"a physics experiment",
          "url":"http://www.lbl.gov",
          "router":"router1",
-         "iface":"Ethernet0"
+         "iface":"Ethernet0",
+         "tags":"lbnl, experiment"
       }
    },
    {
@@ -22,7 +23,8 @@
          "description":"upgrading infrastructure",
          "url":"http://www.es.net",
          "router":"router2",
-         "iface":"xe-0/1/0.1009"
+         "iface":"xe-0/1/0.1009",
+         "tags":"esnet"
       }
    },
    {
@@ -35,7 +37,8 @@
          "description":"routine maintenance",
          "url":"http://www.es.net",
          "router":"router3",
-         "iface":"TenGigabitEthernet1/1"
+         "iface":"TenGigabitEthernet1/1",
+         "tags":"esnet"
       }
    }
 ]
