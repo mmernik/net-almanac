@@ -14,6 +14,9 @@ import dateutil.parser
 import tagging
 
 JSON_MIME = 'application/json'
+TEXT_MIME = 'text/plain'
+
+HTTP_BAD_REQUEST = 400
 
 def tag(request,tag_id):
     logger = logging.getLogger('view tag')
@@ -67,7 +70,7 @@ def create_event(request):
                 logger.debug('form is valid')
             else:
                 logger.debug('form is not valid')
-            validate_post(post_data)
+                raise ValueError('invalid data in form')
             
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
             end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
@@ -83,6 +86,7 @@ def create_event(request):
                               iface=post_data['iface'],
                               tags = tags_string)
             
+            validate_event(new_event) #raises ValueError
             
             logger.debug('trying to save new event...')
             new_event.save()
@@ -117,7 +121,56 @@ def update_event(request,object_id):
     
     if is_json_request(request):
         logger.debug('request for json object')
-        return HttpResponse('some json data',mimetype=JSON_MIME)
+        
+        logger.debug('request.method: ' + request.method)
+        
+        if (request.method =='POST'):
+            post_data = request.POST
+            
+            logger.info(post_data.keys())
+            
+            deserialized_event = None
+            try:
+                logger.debug('parsing json')
+                deserialized_event = parse_json_request(post_data['data'])
+                validate_event(deserialized_event) #raises ValueError
+                
+                if (deserialized_event.id != int(object_id)):
+                    logger.debug('deserialized_event.id: ' + str(deserialized_event.id))
+                    logger.debug('object_id: ' + str(object_id))
+                    
+                    error_str = 'id does not match with request URL'
+                    logger.info(error_str)
+                    return make_bad_request_http_response(error_str)
+                
+                logger.debug('trying to save edited event...')
+                deserialized_event.save()
+                logger.info('event saved!')
+                
+            except ValueError, e:
+                #bad json format or not validated
+                logger.info('ValueError: ' + str(e))
+                return make_bad_request_http_response(str(e))
+            except DeserializationError, e:
+                #some error with fields
+                logger.info('DeserializationError: ' + str(e))
+                return make_bad_request_http_response(str(e))
+            except ValidationError, e:
+                #some bad input on a field (probably a date)
+                logger.info('ValidationError: ' + str(e))
+                return make_bad_request_http_response(str(e))
+            except FieldDoesNotExist, e:
+                logger.info('FieldDoesNotExist: ' + str(e))
+                return make_bad_request_http_response(str(e))
+            except Exception, e:
+                logger.error('unexpected exception encountered: ' + str(e))
+            
+            #now verify the event data is good.
+
+            
+            return HttpResponse('event updated',mimetype=TEXT_MIME)
+        else:
+            return HttpResponse('POST data required',mimetype=TEXT_MIME,status=501) #'not implemented' status code
     
     elif request.method == 'GET':
         return render_to_response('event/event_update.html',
@@ -131,12 +184,15 @@ def update_event(request,object_id):
             post_data = request._get_post()
             
             form = EventForm(request.POST)
+            logger.debug(str(post_data.__class__))
+            logger.debug(str(post_data))
+            
             if form.is_valid():
                 logger.debug('form is valid')
             else:
                 logger.debug('form is not valid')
+                raise ValueError('form is not valid')
             
-            validate_post(post_data)
             
             event.name = post_data['name']
             event.description = post_data['description']
@@ -151,6 +207,8 @@ def update_event(request,object_id):
             event.end_datetime = dateutil.parser.parse(end_datetime_string)
             
             event.tags = format_tag_string(post_data['tags'])
+            
+            validate_event(event) #raises ValueError
             
             logger.debug('trying to save event...')
             event.save()
@@ -218,43 +276,39 @@ def detail_event(request,object_id):
         return render_to_response('event/event_detail.html',
                                   {'event':event,
                                    'tags':Tag.objects.get_for_object(event)})
-
-def validate_post(post_data):
-    logger = logging.getLogger('validate_post')
-    logger.debug('checking data')
+        
+def validate_event(event):
+    """
+    Always call this before saving an event!
     
-    if post_data['name']=='':
+    raises ValueError when there is some inconsistency
+    """
+    logger = logging.getLogger('validate_event')
+    logger.debug('checking event with name: ' + event.name)
+    
+    if is_empty_or_space(event.name):
         raise ValueError('name cannot be empty')
-    if post_data['description']=='':
+    if is_empty_or_space(event.description):
         raise ValueError('description cannot be empty')
-    if post_data['url']=='':
+    if is_empty_or_space(event.url):
         raise ValueError('url cannot be empty')
-    if post_data['iface']=='':
+    if is_empty_or_space(event.iface):
         raise ValueError('iface cannot be empty')
-    if post_data['router']=='':
-        raise ValueError('router cannot be empty')
+    if is_empty_or_space(event.router):
+        raise ValueError('name router be empty')
     
-    begin_datetime = None
-    end_datetime = None
-    
-    try:
-        begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
-        begin_datetime = dateutil.parser.parse(begin_datetime_string)
-    except:
-        raise ValueError('invalid date format for begin date')
-    
-    try:
-        end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
-        end_datetime = dateutil.parser.parse(end_datetime_string)
-    except:
-        raise ValueError('invalid date format for begin date')
-    
-    if end_datetime < begin_datetime:
-        raise ValueError('the end date is before the begin date')
-    
-    for tag in tagging.utils.parse_tag_input(post_data['tags']):
+    logger.debug('parsing tags')
+    for tag in tagging.utils.parse_tag_input(event.tags):
+        #normally commas are delimiters, but if they are between double-quotes they become tags
         if tag.find(',') != -1:
             raise ValueError('a tag may not contain a comma')
+    
+    logger.debug('checking datetime')
+    if event.end_datetime < event.begin_datetime:
+        raise ValueError('the end date is before the begin date')
+    
+def is_empty_or_space(input_string):
+    return (input_string == None or input_string == '' or input_string.isspace())
     
 def get_event_by_id(event_id):
     #returns an event or None if none exists.
@@ -280,5 +334,30 @@ def is_json_request(request):
         return False
  
 def format_tag_string(tags_string):
+    """
+    Takes in some user-inputted tag string and formats it into a pretty comma-delimited string.
+    """
     logger = logging.getLogger('format_tag_string')
     return ', '.join(tagging.utils.parse_tag_input(tags_string))
+
+
+def parse_json_request(json_string):
+    """
+    raises:
+    """
+    logger = logging.getLogger('parse_json_request')
+    
+    logger.debug('post_data: ' + json_string)
+    
+    event = None
+    
+    logger.debug('deserializing post data...')
+    gen = serializers.deserialize('json', json_string)
+    event = gen.next().object
+    
+    
+    return event
+
+def make_bad_request_http_response(error_string):
+    return HttpResponse(error_string,mimetype=TEXT_MIME,status=HTTP_BAD_REQUEST)
+                

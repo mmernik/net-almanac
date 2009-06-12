@@ -132,7 +132,7 @@ class HTMLResponseTestCase(EventTestCaseSetup):
 
 def twill_setup():
     app = AdminMediaHandler(WSGIHandler())
-    twill.add_wsgi_intercept("127.0.0.1", TEST_PORT, lambda: app)
+    twill.add_wsgi_intercept('127.0.0.1', TEST_PORT, lambda: app)
 
 def twill_teardown():
     twill.remove_wsgi_intercept('127.0.0.1', TEST_PORT)
@@ -152,7 +152,7 @@ class TwillTestCaseSetup(unittest.TestCase):
 class JSONTestCase(TwillTestCaseSetup):
     def runTest(self):
         """
-        Note we cannot connect to the twill server using urllib2.
+        Note we cannot connect to the twill server using urllib2 or any other third party client.
         Also, we cannot verify the header content in a twill response.
         """
         
@@ -179,5 +179,22 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.notfind("html")
         tc.find('"name": "experiment"') 
         tc.notfind('"tags": "esnet"') 
+        
+        
+class JSONPOSTTestCase(TwillTestCaseSetup):
+    def runTesT(self):
+        logger = logging.getLogger("JSONPOSTTestCase")
+        from testdata import bad_json_strings, good_json_string
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/update/'
+        tc.clear_extra_headers()
+        tc.add_extra_header('Accept',JSON_MIME)
+        
+        logger.info('accessing ' + url)
+        tc.go(url)
+        tc.code(501) #not implemented
+        #actual edit not yet implemented: twill doesn't support
+        
+        
+        
         
         
