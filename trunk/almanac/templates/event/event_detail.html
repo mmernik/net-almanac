@@ -2,7 +2,7 @@
 
 {% block subtitle %} : Event Detail {% endblock %}
 
-{% block navigate %} : <a href="/event/{{event.id}}">{{event.name}}</a> {% endblock %}
+{% block navigate %} : <a href="/event/{{event.id}}/">{{event.name}}</a> {% endblock %}
 
 {% block body %}
 <table bgcolor="black">
@@ -42,7 +42,7 @@
     
 </table>
 
-<a href="/event/{{event.id}}/update">Update this event</a> <br />
+<a href="/event/{{event.id}}/update/">Update this event</a> <br />
 
-<a href="/event/{{event.id}}/delete">Delete this event</a> <br />
+<a href="/event/{{event.id}}/delete/">Delete this event</a> <br />
 {% endblock %}

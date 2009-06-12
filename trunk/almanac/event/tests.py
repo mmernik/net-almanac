@@ -179,10 +179,7 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.notfind("html")
         tc.find('"name": "experiment"') 
         tc.notfind('"tags": "esnet"') 
-        
-        
-class JSONPOSTTestCase(TwillTestCaseSetup):
-    def runTesT(self):
+                
         logger = logging.getLogger("JSONPOSTTestCase")
         from testdata import bad_json_strings, good_json_string
         url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/update/'
@@ -193,8 +190,6 @@ class JSONPOSTTestCase(TwillTestCaseSetup):
         tc.go(url)
         tc.code(501) #not implemented
         #actual edit not yet implemented: twill doesn't support
-        
-        
         
         
         
