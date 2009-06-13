@@ -36,6 +36,17 @@ urlpatterns = patterns('',
          'queryset':Tag.objects.all()}),
          
     (r'^tag/(?P<tag_id>\w+)/$',
-      'almanac.event.views.tag')
+      'almanac.event.views.tag'),
+      
+      
+    #date-based views
+    (r'^date/$',
+     'almanac.event.views.view_by_date'),
+    
+    (r'^date/(?P<year>\d{4})/$',
+     'almanac.event.views.view_by_year'),
+     
+    (r'^date/(?P<year>\d{4})/(?P<month>\d{2})/$',
+     'almanac.event.views.view_by_month'),
     
 )

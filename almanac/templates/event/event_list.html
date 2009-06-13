@@ -35,16 +35,20 @@
     </tr>
     {% endfor %}
 </table>
+
+{% else %}
+    <p>No Events are available.</p>
+{% endif %}
     
+    {% block extra_buttons %}
+    
+    <a href="/event/date/">View by Dates</a> <br/>
     
     <a href="/event/tag/"> View all tags</a> <br/>
     
     <a href="/event/create/"> Make new Event</a> <br/>
     
+    {% endblock %}
     
-{% else %}
-    <p>No Events are available.</p>
-{% endif %}
-
 
 {% endblock %}

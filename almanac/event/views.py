@@ -277,6 +277,62 @@ def detail_event(request,object_id):
                                   {'event':event,
                                    'tags':Tag.objects.get_for_object(event)})
         
+
+
+def view_by_year(request,year):
+    logger = logging.getLogger('view view_by_year')
+    logger.info('hit')
+    year_int = int(year)
+    event_list = Event.objects.filter(begin_datetime__year=year)
+    logger.debug('event_list: ' + str(event_list))
+    return render_to_response('event/event_by_year.html',
+                              {'event_list':event_list,
+                               'year':year,
+                               'next_year':year_int+1,
+                               'last_year':year_int-1,
+                               })
+    
+def view_by_month(request,year,month):
+    logger = logging.getLogger('view view_by_month')
+    logger.info('hit')
+    year_int = int(year)
+    month_int = int(month)
+    
+    if (month_int < 1) or (month_int > 12):
+        raise Http404
+    
+    next_month = None #strings with encoding YYYY/MM
+    last_month = None
+    
+    if (month_int==12):
+        next_month = str(year_int+1) + '/01'
+    else:
+        next_month = str(year_int) + '/' + extend_int_string(str(month_int+1))
+        
+    if (month_int==1):
+        last_month = str(year_int-1) + '/12'
+    else:
+        last_month = str(year_int) + '/' + extend_int_string(str(month_int-1))
+        
+    logger.debug('next_month: ' + next_month)
+        
+    event_list = Event.objects.filter(begin_datetime__year=year_int,
+                                      begin_datetime__month=month_int)
+    
+    logger.debug('event_list: ' + str(event_list))
+    
+    return render_to_response('event/event_by_month.html',
+                              {'event_list':event_list,
+                               'year':year,
+                               'month':month,
+                               'next_month':next_month,
+                               'last_month':last_month,
+                               })
+        
+def view_by_date(request):
+    #default date view, direct to all events this year.
+    return HttpResponseRedirect('/event/date/' + str(datetime.date.today().year) + '/')
+
 def validate_event(event):
     """
     Always call this before saving an event!
@@ -327,7 +383,7 @@ def is_json_request(request):
     logger = logging.getLogger('is_json_request')
     
     if request.META.has_key('HTTP_ACCEPT'):
-        logger.info('request.META["HTTP_ACCEPT"]: ' + request.META["HTTP_ACCEPT"])
+        #logger.info('request.META["HTTP_ACCEPT"]: ' + request.META["HTTP_ACCEPT"])
         return (request.META["HTTP_ACCEPT"].find(JSON_MIME) != -1)
     else:
         logger.warn('request has no header HTTP_ACCEPT')
@@ -343,7 +399,7 @@ def format_tag_string(tags_string):
 
 def parse_json_request(json_string):
     """
-    raises:
+    raises:  ValueError,  DeserializationError, ValidationError, FieldDoesNotExist
     """
     logger = logging.getLogger('parse_json_request')
     
@@ -360,4 +416,10 @@ def parse_json_request(json_string):
 
 def make_bad_request_http_response(error_string):
     return HttpResponse(error_string,mimetype=TEXT_MIME,status=HTTP_BAD_REQUEST)
+
+def extend_int_string(input_string):
+    if (len(input_string) == 1):
+        return '0' + input_string
+    else:
+        return input_string
                 
