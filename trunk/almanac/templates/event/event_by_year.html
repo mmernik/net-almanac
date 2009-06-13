@@ -1,0 +1,12 @@
+{% extends "event/event_list.html" %}
+
+{% block subtitle %} : Event by Year {% endblock %}
+
+{% block navigate %} : Event by Year {{year}} {% endblock %}
+
+{% block extra_buttons %}
+<a href="/event/date/{{last_year}}/">Go to {{last_year}}</a> <br />
+<a href="/event/date/{{next_year}}/">Go to {{next_year}}</a> <br />
+
+<a href="/event/date/{{year}}/01/">View by Month</a>
+{% endblock %}
