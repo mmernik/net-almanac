@@ -7,7 +7,6 @@ import time
 
 from django.test.client import Client
 from event.models import *
-from event.utils import *
 from tagging.models import *
 
 import twill
@@ -18,6 +17,10 @@ from django.core.servers.basehttp import AdminMediaHandler
 from django.core.handlers.wsgi import WSGIHandler
 from StringIO import StringIO
 
+import wsgi_intercept.httplib2_intercept
+wsgi_intercept.httplib2_intercept.install()
+import wsgi_intercept
+import httplib2
 
 EVENT_NAME = "testevent"
 EVENT_DESCRIPTION = "testdescription"
@@ -141,6 +144,19 @@ def twill_teardown():
 def twill_quiet():
     twill.set_output(StringIO())
 
+class TestWSGI(unittest.TestCase):
+    def setUp(self):
+        app = AdminMediaHandler(WSGIHandler())
+        wsgi_intercept.add_wsgi_intercept('127.0.0.1', TEST_PORT, lambda: app)
+
+    def tearDown(self):
+        wsgi_intercept.remove_wsgi_intercept()
+
+    def testFoo(self):
+        h = httplib2.Http()
+        response, content = h.request("http://127.0.0.1:%d/event/" % TEST_PORT)
+        print response
+        print content
 
 class TwillTestCaseSetup(unittest.TestCase):
     def setUp(self):
@@ -190,6 +206,5 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.go(url)
         tc.code(501) #not implemented
         #actual edit not yet implemented: twill doesn't support
-        
         
         
