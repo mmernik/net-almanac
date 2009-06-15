@@ -13,6 +13,7 @@ import twill
 from twill import commands as tc
 from twill.shell import TwillCommandLoop
 from django.test import TestCase
+from django.core import serializers
 from django.core.servers.basehttp import AdminMediaHandler
 from django.core.handlers.wsgi import WSGIHandler
 from StringIO import StringIO
@@ -42,6 +43,9 @@ HTML_MIME = 'text/html'
 JSON_MIME = 'application/json'
 
 HTTP_BAD_REQUEST = 400
+HTTP_NOT_FOUND = 404
+HTTP_NOT_IMPLEMENTED = 501
+HTTP_OK = 200
 
 TEST_PORT = 47630 #some random port I picked
 
@@ -128,7 +132,7 @@ class HTMLResponseTestCase(EventTestCaseSetup):
         #some sanity HTML tests not using twill but the provided test client
         c = Client()
         response = c.get('/event/')
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.status_code == HTTP_OK)
         self.assertTrue(response.has_header('content-type'))
         self.assertTrue(response._headers['content-type'][1].find(HTML_MIME) != -1)
         self.assertTrue(response.content.find('<html>') != -1)
@@ -151,8 +155,7 @@ class TestWSGI(unittest.TestCase):
         
         url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
         
-        from event.testdata import bad_json_strings, json_headers
-        
+        from event.testdata import bad_json_strings, json_headers, NEW_DESCRIPTION, good_json_string
         
         for input in bad_json_strings:
             logger.info('accessing: ' + url)
@@ -160,6 +163,39 @@ class TestWSGI(unittest.TestCase):
             
             self.assertTrue(response.status == HTTP_BAD_REQUEST)
             logger.info('got expected error message: ' + content)
+            
+        logger.info('get current description')
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        get_event = serializers.deserialize('json',content).next().object
+        self.assertTrue(get_event.description != NEW_DESCRIPTION)
+        
+        logger.info('putting new description in place')
+        response, content = h.request(url, 'PUT', good_json_string, headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        
+        logger.info('checking for new description')
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        get_event = serializers.deserialize('json',content).next().object
+        self.assertTrue(get_event.description == NEW_DESCRIPTION)
+        
+    def testDelete(self):
+        logger = logging.getLogger("TestWSGI testDelete")
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/3/'
+        
+        h = httplib2.Http()
+        
+        events = Event.objects.all()
+        
+        from event.testdata import json_headers
+        logger.info('accessing with DELETE: ' + url)
+        response, content = h.request(url,'DELETE', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_NOT_FOUND)
         
 
 def twill_quiet():

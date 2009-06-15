@@ -1,4 +1,3 @@
-Some notes to run the server. 
 
 Some notes to run the server. 
 
@@ -54,6 +53,49 @@ to view the homepage.
 If the http header "accept" contains the string "application/json", then we
 will return a JSON response.  Otherwise it will return the HTML response.
 
+The API for JSON objects-
+A typical JSON event example is below.  Note that we do not need to use a
+pretty format if not convenient:
+<begin JSON>
+[{
+	  "pk":1,
+	  "model":"event.event",
+	  "fields":{
+		     "iface":"Ethernet0",
+		     "name":"experiment",
+		     "tags":"lbnl, experiment",
+		     "url":"http://www.lbl.gov",
+		     "end_datetime":"2009-06-03 15:01:01",
+		     "begin_datetime":"2009-06-01 12:21:15",
+		     "router":"router1",
+		     "description":"a physics experiment"
+	  }
+}]
+<end JSON>
+
+"pk": the object's id in the database.  It must be an integer and unique.
+
+"model": the name of the object request.  Only "event.event" is implemented
+so far
+
+"name": a name for the event.  Must be a non-empty string (does not need to
+be unique).
+
+"iface": the interface.  Must be a non-empty string.
+
+"url": a URL link for more information.  Must be a non-empty string.
+
+"router": the router where the event occurs.  Must be a non-empty string.
+
+"description": a human-readable description of the event.  Must be a 
+non-empty string.
+
+"tags": a comma-delimited list of tags.  The server will automatically put
+any input string into this format.
+
+"begin_datetime" and "end_datetime": ISO 8601-formatted dates using
+YYYY-MM-DD HH:MM:SS.  If the input string isn't as precise, the server will
+generate the rest.  The end datetime cannot be before the begin datetime.
 
 ** licensing stuff, credits **
 
