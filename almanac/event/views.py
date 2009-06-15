@@ -17,6 +17,7 @@ JSON_MIME = 'application/json'
 TEXT_MIME = 'text/plain'
 
 HTTP_BAD_REQUEST = 400
+HTTP_NOT_IMPLEMENTED = 501
 
 def tag(request,tag_id):
     logger = logging.getLogger('view tag')
@@ -216,12 +217,11 @@ def detail_event(request,object_id):
         if request.method == 'GET':
             logger.debug('got GET request for individual json object')
             json_data = serializers.serialize('json',[event])
-            logger.debug('serialized object: ' + json_data)
+            #logger.debug('serialized object: ' + json_data)
             return HttpResponse(json_data, mimetype=JSON_MIME)
         elif request.method == 'PUT':
             logger.info('got PUT request')
-            logger.info(dir(request))
-            logger.info('request.raw_post_data: ' + request.raw_post_data)
+            #logger.debug('request.raw_post_data: ' + request.raw_post_data)
             deserialized_event = None
             try:
                 logger.debug('parsing json')
@@ -240,34 +240,29 @@ def detail_event(request,object_id):
                 logger.info('event saved!')
                 
             except ValueError, e:
-                #bad json format or not validated
+                #bad format
                 error_str = 'ValueError: ' + str(e)
-                logger.info(error_str)
-                return make_bad_request_http_response(error_str)
-            except ValidationError, e:
-                #some bad input on a field (probably a date)
-                error_str = 'ValidationError: ' + str(e)
-                logger.info(error_str)
-                return make_bad_request_http_response(error_str)
-            except FieldDoesNotExist, e:
-                error_str = 'FieldDoesNotExist: ' + str(e)
                 logger.info(error_str)
                 return make_bad_request_http_response(error_str)
             except Exception, e:
                 logger.error('unexpected exception encountered: ' + str(e))
             
-            
             return HttpResponse('event updated',mimetype=TEXT_MIME)
-        
+
+        elif (request.method == 'DELETE'):
+            
+            
+            logger.info('got DELETE request...deleting selected event: ' + event.name)
+                   
+            event.delete()
+            
+            return HttpResponse('event deleted',mimetype=TEXT_MIME) 
+   
         elif (request.method =='POST'):
             #not implemented
             logger.debug('got POST request...dropping')
-            return HttpResponse('POST not supported',mimetype=TEXT_MIME,status=501) #'not implemented' status code
-            
-            
-        elif (request.method == 'DELETE'):
-            logger.debug('got DELETE request...dropping')
-            return HttpResponse('DELETE not implemented yet',mimetype=TEXT_MIME,status=501) #'not implemented' status code
+            return HttpResponse('POST not supported at this URL',mimetype=TEXT_MIME,status=HTTP_NOT_IMPLEMENTED) #'not implemented' status code
+
     
     else:
         return render_to_response('event/event_detail.html',
@@ -405,12 +400,12 @@ def parse_json_request(json_string):
     raises:  ValueError
     """
     logger = logging.getLogger('parse_json_request')
-    logger.debug('json_string: ' + json_string)
+    #logger.debug('json_string: ' + json_string)
     
     event = None
     logger.debug('deserializing post data...')
     gen = serializers.deserialize('json', json_string)
-    logger.info('done deserializing')
+    logger.debug('done deserializing')
     try:
         event = gen.next().object
     except Exception, e:

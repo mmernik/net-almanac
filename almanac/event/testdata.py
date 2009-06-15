@@ -10,6 +10,10 @@ bad_json_strings = ('aaaa', #not a JSON strong
                     '[{"pk": 1, "model": "event.event", "fields": {"iface": "Ethernet0", "name": "experiment", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-03 15:01:01", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": "a physics experiment", "owner": "andy"}}]', #extra field
                     
                     )
-good_json_string = '[{"pk": 1, "model": "event.event", "fields": {"iface": "Ethernet0", "name": "experiment", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-05 15:01:03", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": "a laser experiment"}}]' #edits end_datetime and description
+
+NEW_DESCRIPTION = 'a laser experiment'
+
+good_json_string = '[{"pk": 1, "model": "event.event", "fields": {"iface": "Ethernet0", "name": "experiment", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-05 15:01:03", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": "' + NEW_DESCRIPTION + '"}}]' #edits end_datetime and description
+
 
 json_headers = {'accept':'application/json'}

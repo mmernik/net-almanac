@@ -1,0 +1,29 @@
+#some stuff that helps to debug the command line
+
+from event.models import *
+from tagging.models import *
+import tagging
+import datetime
+import time
+import os
+import urllib2
+import twill
+from django.core import serializers
+from django.http import QueryDict
+import httplib2
+
+events = Event.objects.all()
+e = events[0]
+f = EventForm(instance=e)
+http = httplib2.Http()
+
+from event.testdata import *
+
+JSON_MIME = 'application/json'
+
+url = 'http://127.0.0.1:8000/event/1/update/'
+json_string = serializers.serialize('json',[e])
+
+e=Event(name='1',description='2',begin_datetime=datetime.datetime.now(),end_datetime=datetime.datetime.now(),url='3',router='4',iface='5',tags='')
+
+
