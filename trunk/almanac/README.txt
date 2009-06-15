@@ -23,16 +23,17 @@ Mac OS X, it is /Library/Python/2.5/site-packages/, for cygwin it is in
 /lib/python/site-packages').  This is the same directory where django is
 installed.
 
-twill v0.9 is needed for running tests.  It is available here:
+twill v0.9  and httplib2 are needed for running tests.  They are available
+here:
 http://twill.idyll.org/
+http://code.google.com/p/httplib2/
 
-You might need to install dateutils depending on the version of python you have.  
-Get it here:
+You might need to install dateutils depending on the version of python you
+have.  Get it here:
 
 http://labix.org/python-dateutil
 
 and put it in the same directory as tags.
-
 
 
 ** Running Instructions **
@@ -76,7 +77,7 @@ pretty format if not convenient:
 "pk": the object's id in the database.  It must be an integer and unique.
 
 "model": the name of the object request.  Only "event.event" is implemented
-so far
+so far.
 
 "name": a name for the event.  Must be a non-empty string (does not need to
 be unique).
@@ -90,8 +91,9 @@ be unique).
 "description": a human-readable description of the event.  Must be a 
 non-empty string.
 
-"tags": a comma-delimited list of tags.  The server will automatically put
-any input string into this format.
+"tags": a comma-delimited list of tags.  The server will automatically parse
+any input string into this format.  See tagging documentation for more detail
+on this.
 
 "begin_datetime" and "end_datetime": ISO 8601-formatted dates using
 YYYY-MM-DD HH:MM:SS.  If the input string isn't as precise, the server will
@@ -102,12 +104,20 @@ generate the rest.  The end datetime cannot be before the begin datetime.
 This project uses several open-source projects:
 django v1.0
 http://www.djangoproject.com/
+BSD license
 
 django tagging library v0.3
 http://code.google.com/p/django-tagging/
+MIT License
 
 twill v0.9
 http://twill.idyll.org/
+MIT License
 
 Simple Calendar Widget by Anthony Garrett
 http://www.tarrget.info/calendar/scw.htm
+GNU Lesser General Public License
+
+HttpLib2
+http://code.google.com/p/httplib2/
+MIT License
