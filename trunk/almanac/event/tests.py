@@ -7,6 +7,7 @@ import time
 
 from django.test.client import Client
 from event.models import *
+from event.testdata import bad_json_strings, json_headers, NEW_DESCRIPTION, good_json_string
 from tagging.models import *
 
 import twill
@@ -147,15 +148,34 @@ class TestWSGI(unittest.TestCase):
 
     def tearDown(self):
         wsgi_intercept.remove_wsgi_intercept()
+        
+class TestDelete(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestDelete")
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/3/'
+        
+        h = httplib2.Http()
+        
+        events = Event.objects.all()
+        
+        logger.info('accessing with DELETE: ' + url)
+        response, content = h.request(url,'DELETE', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_NOT_FOUND)
 
-    def testPut(self):
-        logger = logging.getLogger("TestWSGI testPut")
+
+class TestPut(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestPut")
         
         h = httplib2.Http()
         
         url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
         
-        from event.testdata import bad_json_strings, json_headers, NEW_DESCRIPTION, good_json_string
+        
         
         for input in bad_json_strings:
             logger.info('accessing: ' + url)
@@ -179,24 +199,17 @@ class TestWSGI(unittest.TestCase):
         self.assertTrue(response.status == HTTP_OK)
         get_event = serializers.deserialize('json',content).next().object
         self.assertTrue(get_event.description == NEW_DESCRIPTION)
+
+class Test404(TestWSGI):
         
-    def testDelete(self):
-        logger = logging.getLogger("TestWSGI testDelete")
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/3/'
-        
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI Test404")
         h = httplib2.Http()
-        
-        events = Event.objects.all()
-        
-        from event.testdata import json_headers
-        logger.info('accessing with DELETE: ' + url)
-        response, content = h.request(url,'DELETE', headers=json_headers)
-        self.assertTrue(response.status == HTTP_OK)
-        
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/8/'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_NOT_FOUND)
-        
+    
 
 def twill_quiet():
     twill.set_output(StringIO())
@@ -239,7 +252,4 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.notfind("html")
         tc.find('"name": "experiment"') 
         tc.notfind('"tags": "esnet"') 
-                
-        #actual edit not yet implemented: twill doesn't support
-        
         
