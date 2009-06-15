@@ -111,68 +111,13 @@ def create_event(request):
 def update_event(request,object_id):
     #a GET request returns a new form, and a POST request attempts to edit an event
     logger = logging.getLogger('view update_event')
-    
     logger.info('hit')
     logger.debug('request.method='+request.method)
     
     event = get_event_by_id(object_id)
-    
     form = EventForm(instance=event)
     
-    if is_json_request(request):
-        logger.debug('request for json object')
-        
-        logger.debug('request.method: ' + request.method)
-        
-        if (request.method =='POST'):
-            post_data = request.POST
-            
-            logger.info(post_data.keys())
-            
-            deserialized_event = None
-            try:
-                logger.debug('parsing json')
-                deserialized_event = parse_json_request(post_data['data'])
-                validate_event(deserialized_event) #raises ValueError
-                
-                if (deserialized_event.id != int(object_id)):
-                    logger.debug('deserialized_event.id: ' + str(deserialized_event.id))
-                    logger.debug('object_id: ' + str(object_id))
-                    
-                    error_str = 'id does not match with request URL'
-                    logger.info(error_str)
-                    return make_bad_request_http_response(error_str)
-                
-                logger.debug('trying to save edited event...')
-                deserialized_event.save()
-                logger.info('event saved!')
-                
-            except ValueError, e:
-                #bad json format or not validated
-                logger.info('ValueError: ' + str(e))
-                return make_bad_request_http_response(str(e))
-            except DeserializationError, e:
-                #some error with fields
-                logger.info('DeserializationError: ' + str(e))
-                return make_bad_request_http_response(str(e))
-            except ValidationError, e:
-                #some bad input on a field (probably a date)
-                logger.info('ValidationError: ' + str(e))
-                return make_bad_request_http_response(str(e))
-            except FieldDoesNotExist, e:
-                logger.info('FieldDoesNotExist: ' + str(e))
-                return make_bad_request_http_response(str(e))
-            except Exception, e:
-                logger.error('unexpected exception encountered: ' + str(e))
-            
-            #now verify the event data is good.
-
-            
-            return HttpResponse('event updated',mimetype=TEXT_MIME)
-        else:
-            return HttpResponse('POST data required',mimetype=TEXT_MIME,status=501) #'not implemented' status code
-    
-    elif request.method == 'GET':
+    if request.method == 'GET':
         return render_to_response('event/event_update.html',
                                   {'event': event,
                                    'form':form,
@@ -267,10 +212,62 @@ def detail_event(request,object_id):
     logger.debug('requesting data for event: ' + event.name)
     
     if is_json_request(request):
-        logger.debug('request for individual json object')
-        json_data = serializers.serialize('json',[event])
-        logger.debug('serialized object: ' + json_data)
-        return HttpResponse(json_data, mimetype=JSON_MIME)
+        
+        if request.method == 'GET':
+            logger.debug('got GET request for individual json object')
+            json_data = serializers.serialize('json',[event])
+            logger.debug('serialized object: ' + json_data)
+            return HttpResponse(json_data, mimetype=JSON_MIME)
+        elif request.method == 'PUT':
+            logger.info('got PUT request')
+            logger.info(dir(request))
+            logger.info('request.raw_post_data: ' + request.raw_post_data)
+            deserialized_event = None
+            try:
+                logger.debug('parsing json')
+                deserialized_event = parse_json_request(request.raw_post_data)
+                
+                validate_event(deserialized_event) #raises ValueError
+                
+                if (deserialized_event.id != int(object_id)):
+                    logger.debug('deserialized_event.id: ' + str(deserialized_event.id))
+                    logger.debug('object_id: ' + str(object_id))
+                    error_str = 'id does not match with request URL'
+                    logger.info(error_str)
+                    return make_bad_request_http_response(error_str)
+                logger.debug('trying to save edited event...')
+                deserialized_event.save()
+                logger.info('event saved!')
+                
+            except ValueError, e:
+                #bad json format or not validated
+                error_str = 'ValueError: ' + str(e)
+                logger.info(error_str)
+                return make_bad_request_http_response(error_str)
+            except ValidationError, e:
+                #some bad input on a field (probably a date)
+                error_str = 'ValidationError: ' + str(e)
+                logger.info(error_str)
+                return make_bad_request_http_response(error_str)
+            except FieldDoesNotExist, e:
+                error_str = 'FieldDoesNotExist: ' + str(e)
+                logger.info(error_str)
+                return make_bad_request_http_response(error_str)
+            except Exception, e:
+                logger.error('unexpected exception encountered: ' + str(e))
+            
+            
+            return HttpResponse('event updated',mimetype=TEXT_MIME)
+        
+        elif (request.method =='POST'):
+            #not implemented
+            logger.debug('got POST request...dropping')
+            return HttpResponse('POST not supported',mimetype=TEXT_MIME,status=501) #'not implemented' status code
+            
+            
+        elif (request.method == 'DELETE'):
+            logger.debug('got DELETE request...dropping')
+            return HttpResponse('DELETE not implemented yet',mimetype=TEXT_MIME,status=501) #'not implemented' status code
     
     else:
         return render_to_response('event/event_detail.html',
@@ -340,6 +337,12 @@ def validate_event(event):
     raises ValueError when there is some inconsistency
     """
     logger = logging.getLogger('validate_event')
+    
+    
+    if (event.__class__ != Event):
+        logger.info('object is not of type Event')
+        raise ValueError('object is not of type Event')
+    
     logger.debug('checking event with name: ' + event.name)
     
     if is_empty_or_space(event.name):
@@ -399,19 +402,21 @@ def format_tag_string(tags_string):
 
 def parse_json_request(json_string):
     """
-    raises:  ValueError,  DeserializationError, ValidationError, FieldDoesNotExist
+    raises:  ValueError
     """
     logger = logging.getLogger('parse_json_request')
-    
-    logger.debug('post_data: ' + json_string)
+    logger.debug('json_string: ' + json_string)
     
     event = None
-    
     logger.debug('deserializing post data...')
     gen = serializers.deserialize('json', json_string)
-    event = gen.next().object
-    
-    
+    logger.info('done deserializing')
+    try:
+        event = gen.next().object
+    except Exception, e:
+        error_string = 'error deserializing object: ' + str(e)
+        logger.info(error_string)
+        raise ValueError(error_string)
     return event
 
 def make_bad_request_http_response(error_string):
@@ -422,4 +427,5 @@ def extend_int_string(input_string):
         return '0' + input_string
     else:
         return input_string
-                
+
+
