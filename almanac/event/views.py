@@ -17,6 +17,7 @@ JSON_MIME = 'application/json'
 TEXT_MIME = 'text/plain'
 
 HTTP_BAD_REQUEST = 400
+HTTP_SERVER_ERROR = 500
 HTTP_NOT_IMPLEMENTED = 501
 
 def tag(request,tag_id):
@@ -40,9 +41,49 @@ def list_events(request):
     
     if is_json_request(request):
         #return serialized objects.
-        logger.debug('request for json list of all objects')
-        json_data = serializers.serialize('json',events)
-        return HttpResponse(json_data,mimetype=JSON_MIME)
+        logger.debug('json request')
+        if request.method == 'GET':
+            json_data = serializers.serialize('json',events)
+            return HttpResponse(json_data,mimetype=JSON_MIME)
+        elif request.method == 'POST':
+            logger.debug('request to POST new event object')
+            
+            deserialized_event = None
+            try:
+                logger.debug('parsing json')
+                deserialized_event = parse_json_request(request.raw_post_data)
+                
+                validate_event(deserialized_event) #raises ValueError
+                
+                filtered_list = Event.objects.filter(id=deserialized_event.id)
+                if (filtered_list):
+                    logger.debug('deserialized_event.id: ' + str(deserialized_event.id))
+                    logger.debug('other event: ' + str(filtered_list))
+                    assert len(filtered_list) == 1
+                    error_str = 'id is already taken by another event'
+                    logger.info(error_str)
+                    return make_bad_request_http_response(error_str)
+                logger.debug('trying to save new event...')
+                deserialized_event.save()
+                logger.info('event saved!')
+                
+            except ValueError, e:
+                #bad format
+                error_str = 'ValueError: ' + str(e)
+                logger.info(error_str)
+                return make_bad_request_http_response(error_str)
+            except Exception, e:
+                logger.error('unexpected exception encountered: ' + str(e))
+                return HttpResponse('unexpected exception encountered: ' + str(e),
+                                    status=HTTP_SERVER_ERROR)
+            
+            return HttpResponse('new event successfully saved',
+                                mimetype=TEXT_MIME)
+        else:
+            return HttpResponse('request type not supported at this URL',
+                                mimetype=TEXT_MIME,
+                                status=HTTP_NOT_IMPLEMENTED)
+        
     else:
         return render_to_response('event/event_list.html',
                                   {'event_list':events})
@@ -76,7 +117,6 @@ def create_event(request):
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
             end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
             
-            tags_string = format_tag_string(post_data['tags'])
             
             new_event = Event(name=post_data['name'],
                               description=post_data['description'],
@@ -85,7 +125,7 @@ def create_event(request):
                               url=post_data['url'],
                               router=post_data['router'],
                               iface=post_data['iface'],
-                              tags = tags_string)
+                              tags = post_data['tags'])
             
             validate_event(new_event) #raises ValueError
             
@@ -261,7 +301,9 @@ def detail_event(request,object_id):
         elif (request.method =='POST'):
             #not implemented
             logger.debug('got POST request...dropping')
-            return HttpResponse('POST not supported at this URL',mimetype=TEXT_MIME,status=HTTP_NOT_IMPLEMENTED) #'not implemented' status code
+            return HttpResponse('POST not supported at this URL',
+                                mimetype=TEXT_MIME,
+                                status=HTTP_NOT_IMPLEMENTED) 
 
     
     else:
@@ -356,6 +398,8 @@ def validate_event(event):
         #normally commas are delimiters, but if they are between double-quotes they become tags
         if tag.find(',') != -1:
             raise ValueError('a tag may not contain a comma')
+        
+    event.tags = format_tag_string(event.tags)
     
     logger.debug('checking datetime')
     if event.end_datetime < event.begin_datetime:

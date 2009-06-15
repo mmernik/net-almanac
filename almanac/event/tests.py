@@ -7,7 +7,7 @@ import time
 
 from django.test.client import Client
 from event.models import *
-from event.testdata import bad_json_strings, json_headers, NEW_DESCRIPTION, good_json_string
+from event.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_string, json_headers
 from tagging.models import *
 
 import twill
@@ -95,7 +95,6 @@ class LoggingTestCase(EventTestCaseSetup):
         
 class DatabaseTestCase(EventTestCaseSetup):
     def runTest(self):
-        
         logger = logging.getLogger('DatabaseTestCase')
         events = Event.objects.all()
         
@@ -139,8 +138,6 @@ class HTMLResponseTestCase(EventTestCaseSetup):
         self.assertTrue(response.content.find('<html>') != -1)
         
 
-
-
 class TestWSGI(unittest.TestCase):
     def setUp(self):
         app = AdminMediaHandler(WSGIHandler())
@@ -170,12 +167,8 @@ class TestDelete(TestWSGI):
 class TestPut(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI TestPut")
-        
         h = httplib2.Http()
-        
         url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
-        
-        
         
         for input in bad_json_strings:
             logger.info('accessing: ' + url)
@@ -201,7 +194,6 @@ class TestPut(TestWSGI):
         self.assertTrue(get_event.description == NEW_DESCRIPTION)
 
 class Test404(TestWSGI):
-        
     def runTest(self):
         logger = logging.getLogger("TestWSGI Test404")
         h = httplib2.Http()
@@ -209,6 +201,29 @@ class Test404(TestWSGI):
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_NOT_FOUND)
+        
+class TestPost(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestPost")
+        h = httplib2.Http()
+        
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/'
+        logger.info('accessing with POST with bad string: ' + url)
+        response, content = h.request(url,'POST', bad_create_string, headers=json_headers)
+        self.assertTrue(response.status == HTTP_BAD_REQUEST)
+        logger.info('got expected error message: ' + content)
+        
+        logger.info('accessing with POST with good string: ' + url)
+        response, content = h.request(url,'POST', good_create_string, headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        
+        #The 'good' string is now bad since there is now an object with that ID
+        logger.info('accessing with POST with bad string: ' + url)
+        response, content = h.request(url,'POST', good_create_string, headers=json_headers) 
+        self.assertTrue(response.status == HTTP_BAD_REQUEST)
+        logger.info('got expected error message: ' + content)
+        
+        
     
 
 def twill_quiet():
