@@ -1,22 +1,29 @@
 <html>
 <head>
-<title>Almanac {% block subtitle %} {% endblock %}</title>
-{% block head %}{% endblock %}
+<title>Almanac </title>
+<link rel="stylesheet" type="text/css" href="/site_media/global.css" />
+<link rel="stylesheet" type="text/css" href="/site_media/layout.css" />
+{% block head %}
+{% endblock %}
 </head>
-<body>
-<h2> Almanac</h2>
+<body >
+<div id="content">
+	<h1 > Almanac{% block subtitle %} {% endblock %}</h1>
 
-	<div style="background-color:#D0D0D0">
+	<div id="header">
 	Navigate: <a href="/event/">Home</a>
 	{% block navigate %}
 	
 	{% endblock %}
 	
 	</div>
-	<div>
+	
+	<div >
 	{% block body %}
 	Nothing here!
 	{% endblock %}
+	</div>
+	
 	</div>
 </body>
 </html>
