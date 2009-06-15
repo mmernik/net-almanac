@@ -41,6 +41,8 @@ LOG_STRING = 'logging test string'
 HTML_MIME = 'text/html'
 JSON_MIME = 'application/json'
 
+HTTP_BAD_REQUEST = 400
+
 TEST_PORT = 47630 #some random port I picked
 
 
@@ -133,16 +135,6 @@ class HTMLResponseTestCase(EventTestCaseSetup):
         
 
 
-def twill_setup():
-    app = AdminMediaHandler(WSGIHandler())
-    twill.add_wsgi_intercept('127.0.0.1', TEST_PORT, lambda: app)
-
-def twill_teardown():
-    twill.remove_wsgi_intercept('127.0.0.1', TEST_PORT)
-
-
-def twill_quiet():
-    twill.set_output(StringIO())
 
 class TestWSGI(unittest.TestCase):
     def setUp(self):
@@ -152,18 +144,34 @@ class TestWSGI(unittest.TestCase):
     def tearDown(self):
         wsgi_intercept.remove_wsgi_intercept()
 
-    def testFoo(self):
+    def testPut(self):
+        logger = logging.getLogger("TestWSGI testPut")
+        
         h = httplib2.Http()
-        response, content = h.request("http://127.0.0.1:%d/event/" % TEST_PORT)
-        print response
-        print content
+        
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
+        
+        from event.testdata import bad_json_strings, json_headers
+        
+        
+        for input in bad_json_strings:
+            logger.info('accessing: ' + url)
+            response, content = h.request(url, 'PUT', input, headers=json_headers)
+            
+            self.assertTrue(response.status == HTTP_BAD_REQUEST)
+            logger.info('got expected error message: ' + content)
+        
 
+def twill_quiet():
+    twill.set_output(StringIO())
+    
 class TwillTestCaseSetup(unittest.TestCase):
     def setUp(self):
-        twill_setup()
+        app = AdminMediaHandler(WSGIHandler())
+        twill.add_wsgi_intercept('127.0.0.1', TEST_PORT, lambda: app)
     
     def twill_teardown(self):
-        twill_teardown()
+        twill.remove_wsgi_intercept('127.0.0.1', TEST_PORT)
 
 class JSONTestCase(TwillTestCaseSetup):
     def runTest(self):
@@ -196,15 +204,6 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.find('"name": "experiment"') 
         tc.notfind('"tags": "esnet"') 
                 
-        logger = logging.getLogger("JSONPOSTTestCase")
-        from testdata import bad_json_strings, good_json_string
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/update/'
-        tc.clear_extra_headers()
-        tc.add_extra_header('Accept',JSON_MIME)
-        
-        logger.info('accessing ' + url)
-        tc.go(url)
-        tc.code(501) #not implemented
         #actual edit not yet implemented: twill doesn't support
         
         
