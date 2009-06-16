@@ -358,12 +358,11 @@ def view_by_month(request,year,month):
     else:
         last_month = '%04d/%02d' % (year_int, month_int-1)
         
-    logger.debug('next_month: ' + next_month)
         
     event_list = Event.objects.filter(begin_datetime__year=year_int,
                                       begin_datetime__month=month_int)
     
-    logger.debug('event_list: ' + str(event_list))
+    month_str = datetime.date(2000, month_int, 1).strftime('%B')
     
     return render_to_response('event/event_by_month.html',
                               {'event_list':event_list,
@@ -371,6 +370,9 @@ def view_by_month(request,year,month):
                                'month':month,
                                'next_month':next_month,
                                'last_month':last_month,
+                               'next_year':year_int+1,
+                               'last_year':year_int-1,
+                               'month_str':month_str
                                })
         
 def view_by_date(request):
