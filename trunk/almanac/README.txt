@@ -82,22 +82,39 @@ so far.
 "name": a name for the event.  Must be a non-empty string (does not need to
 be unique).
 
-"iface": the interface.  Must be a non-empty string.
+"iface": the interface.  Can be any string.
 
-"url": a URL link for more information.  Must be a non-empty string.
+"url": a URL link for more information.  Can be any string.
 
-"router": the router where the event occurs.  Must be a non-empty string.
+"router": the router where the event occurs.  Can be any string.
 
-"description": a human-readable description of the event.  Must be a 
-non-empty string.
+"description": a human-readable description of the event.  Must be a non-empty
+string.
 
 "tags": a comma-delimited list of tags.  The server will automatically parse
 any input string into this format.  See tagging documentation for more detail
 on this.
 
 "begin_datetime" and "end_datetime": ISO 8601-formatted dates using
-YYYY-MM-DD HH:MM:SS.  If the input string isn't as precise, the server will
+YYYY-MM-DD [HH:MM:SS].  If the input string isn't as precise, the server will
 generate the rest.  The end datetime cannot be before the begin datetime.
+
+URLs where JSON requests are accepted.  The header "accept" must contain the
+JSON MIME "application/json" or the server will render HTML.
+
+   -URL /event/
+      -POST creates a new object from JSON object in request
+         -You must provide an unused id
+      -GET returns all known objects as JSON
+      
+   -URL /event/<id>/
+      -PUT updates the object in the db from the JSON object in request
+         -The id in the request must match the id in the URL
+      -DELETE deletes the object from the db
+      -GET returns a single JSON object
+      
+   -URL /event/tags/<id>/
+      -GET returns all objects with this tag in JSON
 
 ** licensing stuff, credits **
 
