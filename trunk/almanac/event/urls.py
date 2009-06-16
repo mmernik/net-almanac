@@ -33,6 +33,9 @@ urlpatterns = patterns('',
     
     (r'^tag/$', 
      'almanac.event.views.tag_list'),
+    
+    (r'^tag/clean/$', 
+     'almanac.event.views.tag_clean'),
          
     (r'^tag/(?P<tag_id>\w+)/$',
       'almanac.event.views.tag'),

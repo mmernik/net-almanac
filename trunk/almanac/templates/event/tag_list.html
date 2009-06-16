@@ -4,6 +4,16 @@
 
 {% block navigate %} : <a href="/event/tag/">Tags</a> {% endblock %}
 
+
+{% block head %}
+<script language="jscript" type="text/javascript">
+function confirm_clean()
+{
+confirm ("Are you sure you want to delete all unused tags?");
+}
+</script>
+{% endblock %}
+
 {% block body %} 
 
 {% if tag_list %}
@@ -16,6 +26,10 @@
 {% else %}
 		No tags found.
 {% endif %}
+
+<form action="/event/tag/clean/" method="post">
+<input type="submit" onclick="return confirm_clean()" value="Clean Unused Tags" />
+</form>
 
 {% endblock %}
 
