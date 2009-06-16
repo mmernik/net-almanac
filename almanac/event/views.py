@@ -388,12 +388,6 @@ def validate_event(event):
         raise ValueError('name cannot be empty')
     if is_empty_or_space(event.description):
         raise ValueError('description cannot be empty')
-    if is_empty_or_space(event.url):
-        raise ValueError('url cannot be empty')
-    if is_empty_or_space(event.iface):
-        raise ValueError('iface cannot be empty')
-    if is_empty_or_space(event.router):
-        raise ValueError('name router be empty')
     
     logger.debug('parsing tags')
     for tag in tagging.utils.parse_tag_input(event.tags):

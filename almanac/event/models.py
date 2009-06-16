@@ -32,9 +32,7 @@ class Event(models.Model):
         return "/event/"+str(self.id) + "/"
 
 class EventForm(ModelForm):
-    
-    #NOTE: we need to manually set tags and dates
-    
+    #NOTE: we need to manually set date
     begin_date = forms.DateField()
     begin_time = forms.TimeField()
     end_date = forms.DateField()
@@ -43,6 +41,7 @@ class EventForm(ModelForm):
     
     class Meta:
         model = Event
+        #These are split up into two fields, one for date and one for time.
         exclude = ('begin_datetime','end_datetime',)
         
     class Media:
@@ -53,11 +52,14 @@ class EventForm(ModelForm):
         super(EventForm,self).__init__(*args,**kwargs)
         
         logger = logging.getLogger('EventForm')
+        logger.debug('constructing new EventForm')
+        
+        self.fields['url'].required = False
+        self.fields['router'].required = False
+        self.fields['iface'].required = False
         
         self.fields['begin_date'].widget = forms.TextInput(attrs={'onclick':'scwShow(this,event);'})
         self.fields['end_date'].widget = forms.TextInput(attrs={'onclick':'scwShow(this,event);'})
-        
-        logger.debug('constructing new EventForm')
         
         if (self.instance.name != ''):
             self.initial['begin_date'] = self.instance.begin_datetime.strftime("%Y-%m-%d") 
@@ -73,15 +75,4 @@ class EventForm(ModelForm):
             self.initial['end_time'] = DEFAULT_TIME
         
         
-
         
-
-#try:
-#    logging.info('Loading models for a new instance.  Registering models')
-#    tagging.register(Event)
-#except tagging.AlreadyRegistered:
-#    # Dev Note: Not sure the right way to register a model for tagging b/c it
-#    # raises this error if registered more than once. We end up registering
-#    # the first time during "manage.py syncdb" and then a second time when
-#    # actually attempting to run the site.
-#    pass
