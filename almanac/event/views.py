@@ -351,12 +351,12 @@ def view_by_month(request,year,month):
     if (month_int==12):
         next_month = str(year_int+1) + '/01'
     else:
-        next_month = str(year_int) + '/' + extend_int_string(str(month_int+1))
+        next_month = '%04d/%02d' % (year_int, month_int+1)
         
     if (month_int==1):
         last_month = str(year_int-1) + '/12'
     else:
-        last_month = str(year_int) + '/' + extend_int_string(str(month_int-1))
+        last_month = '%04d/%02d' % (year_int, month_int-1)
         
     logger.debug('next_month: ' + next_month)
         
@@ -464,12 +464,6 @@ def parse_json_request(json_string):
 
 def make_bad_request_http_response(error_string):
     return HttpResponse(error_string,mimetype=TEXT_MIME,status=HTTP_BAD_REQUEST)
-
-def extend_int_string(input_string):
-    if (len(input_string) == 1):
-        return '0' + input_string
-    else:
-        return input_string
 
 def tag_compare(tag1, tag2):
     if tag1.frequency > tag2.frequency:
