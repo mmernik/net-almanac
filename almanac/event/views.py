@@ -474,15 +474,10 @@ def tag_compare(tag1, tag2):
         return 1
     
 def get_all_tags_with_frequency():
-    iterator = Tag.objects.iterator()
     to_return = []
-    while True:
-        try:
-            next_tag = iterator.next()
-            next_tag.frequency = get_tag_frequency(next_tag)
-            to_return.append(next_tag)
-        except StopIteration:
-            break
+    for tag in Tag.objects.iterator():
+        tag.frequency = get_tag_frequency(tag)
+        to_return.append(tag)
     return to_return
 
 def get_tag_frequency(tag):
