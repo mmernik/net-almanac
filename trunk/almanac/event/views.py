@@ -40,11 +40,13 @@ def tag_list(request):
     logger = logging.getLogger('view tag_list')
     
     logger.debug('hit')
-    tags = Tag.objects.all()
-    return render_to_response('event/tag_list.html',
-                              {'tag_list':tags,
-                               })
+    tags_list = get_all_as_list(Tag)
+        
+    tags_list.sort(tag_compare)
     
+    return render_to_response('event/tag_list.html',
+                              {'tag_list':tags_list,})
+
 
 def list_events(request):
     logger = logging.getLogger('view list_events')
@@ -476,3 +478,25 @@ def extend_int_string(input_string):
         return input_string
 
 
+                               
+
+def tag_compare(tag1, tag2):
+    tag1_num = len(TaggedItem.objects.get_by_model(Event,tag1))
+    tag2_num = len(TaggedItem.objects.get_by_model(Event,tag2))
+    if tag1_num > tag2_num:
+        return -1
+    elif tag1_num == tag2_num:
+        return 0
+    else:
+        return 1
+    
+def get_all_as_list(model):
+    iterator = model.objects.iterator()
+    to_return = []
+    while True:
+        try:
+            to_return.append(iterator.next())
+        except StopIteration:
+            break
+    return to_return
+    
