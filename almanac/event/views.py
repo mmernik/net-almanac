@@ -42,6 +42,14 @@ def tag_list(request):
     tags_list.sort(tag_compare)
     return render_to_response('event/tag_list.html',
                               {'tag_list':tags_list,})
+    
+def tag_clean(request):
+    #deletes all unused tags
+    if request.method == 'POST':
+        for tag in Tag.objects.all():
+            if get_tag_frequency(tag) == 0:
+                tag.delete()
+    return HttpResponseRedirect('/event/tag/')
 
 def list_events(request):
     logger = logging.getLogger('view list_events')
@@ -141,7 +149,7 @@ def create_event(request):
             new_event.save()
             logger.info('save successful! event added: ' + new_event.name)
             
-            return HttpResponseRedirect('/event/' + str(new_event.id))
+            return HttpResponseRedirect('/event/' + str(new_event.id) + '/')
         
         except ValueError, e:
             
@@ -211,7 +219,7 @@ def update_event(request,object_id):
             logger.debug('setting tags on updated event')
             event.tags=post_data['tags']
             
-            return HttpResponseRedirect('/event/' + str(event.id))
+            return HttpResponseRedirect('/event/' + str(event.id) + '/')
         
         
         except ValueError, e:
@@ -477,9 +485,12 @@ def get_all_tags_with_frequency():
     while True:
         try:
             next_tag = iterator.next()
-            next_tag.frequency = len(TaggedItem.objects.get_by_model(Event,next_tag))
+            next_tag.frequency = get_tag_frequency(next_tag)
             to_return.append(next_tag)
         except StopIteration:
             break
     return to_return
+
+def get_tag_frequency(tag):
+    return len(TaggedItem.objects.get_by_model(Event,tag))
     
