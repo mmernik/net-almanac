@@ -23,7 +23,6 @@ HTTP_NOT_IMPLEMENTED = 501
 def tag(request,tag_id):
     #filters objects by tags, then returns.  Only supports GET
     logger = logging.getLogger('view tag')
-    
     logger.debug('hit')
     tag = Tag.objects.get(id=tag_id)
     events = TaggedItem.objects.get_by_model(Event,tag)
@@ -38,15 +37,11 @@ def tag(request,tag_id):
 def tag_list(request):
     #only supports GET.  Orders tags by the most common
     logger = logging.getLogger('view tag_list')
-    
     logger.debug('hit')
-    tags_list = get_all_as_list(Tag)
-        
+    tags_list = get_all_tags_with_frequency()
     tags_list.sort(tag_compare)
-    
     return render_to_response('event/tag_list.html',
                               {'tag_list':tags_list,})
-
 
 def list_events(request):
     logger = logging.getLogger('view list_events')
@@ -118,11 +113,9 @@ def create_event(request):
                                    'form_table':form.as_table()})
         
     elif request.method == 'POST':
-        
         try:
             logger.debug('trying to create new event...')
             post_data = request._get_post()
-            
             form = EventForm(request.POST)
             if form.is_valid():
                 logger.debug('form is valid')
@@ -132,7 +125,6 @@ def create_event(request):
             
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
             end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
-            
             
             new_event = Event(name=post_data['name'],
                               description=post_data['description'],
@@ -477,25 +469,22 @@ def extend_int_string(input_string):
     else:
         return input_string
 
-
-                               
-
 def tag_compare(tag1, tag2):
-    tag1_num = len(TaggedItem.objects.get_by_model(Event,tag1))
-    tag2_num = len(TaggedItem.objects.get_by_model(Event,tag2))
-    if tag1_num > tag2_num:
+    if tag1.frequency > tag2.frequency:
         return -1
-    elif tag1_num == tag2_num:
+    elif tag1.frequency == tag2.frequency:
         return 0
     else:
         return 1
     
-def get_all_as_list(model):
-    iterator = model.objects.iterator()
+def get_all_tags_with_frequency():
+    iterator = Tag.objects.iterator()
     to_return = []
     while True:
         try:
-            to_return.append(iterator.next())
+            next_tag = iterator.next()
+            next_tag.frequency = len(TaggedItem.objects.get_by_model(Event,next_tag))
+            to_return.append(next_tag)
         except StopIteration:
             break
     return to_return
