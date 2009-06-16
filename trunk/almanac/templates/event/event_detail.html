@@ -18,7 +18,7 @@
         <th>tags</th>
     </tr>
 
-    <tr bgcolor="white">
+    <tr>
         <td>{{event.id}}</td>
         <td>{{event.name}}</td>
         <td>{{event.description}}</td>
@@ -42,7 +42,13 @@
     
 </table>
 
-<a href="/event/{{event.id}}/update/">Update this event</a> <br />
 
-<a href="/event/{{event.id}}/delete/">Delete this event</a> <br />
+{% endblock %}
+
+{% block side_options %}
+<hr />
+<a href="/event/{{event.id}}/update/">Update this event</a>
+<hr />
+<a href="/event/{{event.id}}/delete/">Delete this event</a>
+<hr />
 {% endblock %}

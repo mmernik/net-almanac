@@ -20,14 +20,20 @@
 	<input type="submit" value="Submit">
 </form>
 <br />
-<a href="/event/tag/" target="blank">See currently used tags</a> <br />
 Please use YYYY-MM-DD format for the date. <br />
 Please use [HH:MM[:ss[.uuuuuu]]] for the time. <br />
-Data: {{ form.data }} <br />
-Errors: {{ error }} <br />
-
 <h6><a target = 'blank' href="http://www.tarrget.info/calendar/scw.htm">
  Simple Calendar Widget by Anthony Garrett
 </a></h6>
 {% endblock %}
 
+{% block side_options %}
+<hr />
+<a href="/event/tag/" target="blank">See currently used tags</a> 
+<hr />
+Data: {{ form.data }} 
+<hr />
+Errors: {{ error }} 
+<hr />
+
+{% endblock %}
