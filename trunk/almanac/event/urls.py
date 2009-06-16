@@ -31,9 +31,8 @@ urlpatterns = patterns('',
     (r'^create/$',
      'almanac.event.views.create_event'),
     
-    (r'^tag/$', 'django.views.generic.list_detail.object_list',
-        {'template_name':'event/tag_list.html',
-         'queryset':Tag.objects.all()}),
+    (r'^tag/$', 
+     'almanac.event.views.tag_list'),
          
     (r'^tag/(?P<tag_id>\w+)/$',
       'almanac.event.views.tag'),
