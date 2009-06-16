@@ -138,3 +138,8 @@ GNU Lesser General Public License
 HttpLib2
 http://code.google.com/p/httplib2/
 MIT License
+
+SortTable
+http://www.kryogenix.org/code/browser/sorttable/
+MIT License
+
