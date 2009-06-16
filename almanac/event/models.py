@@ -45,7 +45,7 @@ class EventForm(ModelForm):
         exclude = ('begin_datetime','end_datetime',)
         
     class Media:
-        js = ('/site_media/scw.js',)
+        js = ('/site_media/js/scw.js',)
         
     def __init__(self, *args, **kwargs):
         #One static variable here is self.instance, which is the event this Form should model.
