@@ -42,17 +42,17 @@
 {% else %}
     <p>No Events are available.</p>
 {% endif %}
-    
-    {% block extra_buttons %}
-    More Options : <br/>
-    <ul >
-    <li><a href="/event/date/">View by Dates</a> </li> 
-   
-    <li><a href="/event/tag/"> View all tags</a> </li> 
-    
-    <li><a href="/event/create/"> Make new Event</a></li> 
-    </ul>
-    {% endblock %}
+
     
 
+{% endblock %}
+
+{% block side_options %}
+    <hr />
+    <a href="/event/date/">View by Dates</a>
+    <hr />
+    <a href="/event/tag/"> View all tags</a> 
+    <hr />
+    <a href="/event/create/"> Make new Event</a>
+    <hr />
 {% endblock %}

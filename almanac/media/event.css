@@ -1,0 +1,25 @@
+hr { height: 1px; margin: 7px 0px;}
+
+/* added by me */
+#columncontainer {
+margin:0;
+min-width:760px;
+}
+
+#columncontainer .col1 {
+float:left;
+width:75%;
+height:80%;
+background-color:#F9F9FF;
+padding:5px 5px;
+}
+
+#columncontainer .col2 {
+float:left;
+width:20%;
+margin-left:10px;
+background-color:#F9F9FF;
+height:80%;
+padding:5px 5px;
+
+}

@@ -6,7 +6,7 @@
 
 
 {% block head %}
-<script language="jscript" type="text/javascript">
+<script language="javascript" type="text/javascript">
 function confirm_clean()
 {
 confirm ("Are you sure you want to delete all unused tags?");
@@ -27,9 +27,14 @@ confirm ("Are you sure you want to delete all unused tags?");
 		No tags found.
 {% endif %}
 
-<form action="/event/tag/clean/" method="post">
-<input type="submit" onclick="return confirm_clean()" value="Clean Unused Tags" />
-</form>
+
 
 {% endblock %}
 
+{% block side_options %}
+<hr />
+<form action="/event/tag/clean/" method="post">
+<input type="submit" onclick="return confirm_clean()" value="Clean Unused Tags" />
+</form>
+<hr />
+{% endblock %}
