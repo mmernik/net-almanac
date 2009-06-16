@@ -40,5 +40,19 @@
          "iface":"TenGigabitEthernet1/1",
          "tags":"esnet"
       }
+   },
+   {
+      "pk":4,
+      "model":"event.event",
+      "fields":{
+         "end_datetime":"2009-04-15 12:00:00",
+         "begin_datetime":"2009-04-16 12:00:00",
+         "name":"maintenance",
+         "description":"routine maintenance",
+         "url":"http://www.es.net",
+         "router":"router3",
+         "iface":"TenGigabitEthernet1/1",
+         "tags":"esnet"
+      }
    }
 ]

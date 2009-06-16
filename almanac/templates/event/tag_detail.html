@@ -1,21 +1,9 @@
-{% extends "base.html" %}
+{% extends "event/event_list.html" %}
+
 
 {% block subtitle %} : Tag Detail {% endblock %}
 
 {% block navigate %} : <a href="/event/tag/">Tags</a> : {{tag.name}}{% endblock %}
 
-{% block body %}
-
-
-{% if events %}
-Events with this tag: 
-<ul>
-{%for event in events%}
-<li><a href="/event/{{event.id}}/">{{event.name}}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-No events under this tag.
-{% endif %}
-
-{% endblock %}
+{% block extra_buttons %}
+{%endblock%}

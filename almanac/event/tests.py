@@ -41,6 +41,7 @@ TAG_STRING = TAG_NAME_1 + ', ' + TAG_NAME_2
 LOG_STRING = 'logging test string'
 
 HTML_MIME = 'text/html'
+TEXT_MIME = 'text/plain'
 JSON_MIME = 'application/json'
 
 HTTP_BAD_REQUEST = 400
@@ -222,8 +223,19 @@ class TestPost(TestWSGI):
         response, content = h.request(url,'POST', good_create_string, headers=json_headers) 
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
         logger.info('got expected error message: ' + content)
+
         
+class TestTags(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestTags")
+        h = httplib2.Http()
         
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/tag/1/'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.find('"description"') != -1)
     
 
 def twill_quiet():

@@ -21,15 +21,29 @@ HTTP_SERVER_ERROR = 500
 HTTP_NOT_IMPLEMENTED = 501
 
 def tag(request,tag_id):
+    #filters objects by tags, then returns.  Only supports GET
     logger = logging.getLogger('view tag')
     
     logger.debug('hit')
     tag = Tag.objects.get(id=tag_id)
     events = TaggedItem.objects.get_by_model(Event,tag)
-    
-    return render_to_response('event/tag_detail.html',
+    if is_json_request(request):
+        json_data = serializers.serialize('json',events)
+        return HttpResponse(json_data,mimetype=JSON_MIME)
+    else:
+        return render_to_response('event/tag_detail.html',
                               {'tag':tag,
-                               'events':events})
+                               'event_list':events})
+
+def tag_list(request):
+    #only supports GET.  Orders tags by the most common
+    logger = logging.getLogger('view tag_list')
+    
+    logger.debug('hit')
+    tags = Tag.objects.all()
+    return render_to_response('event/tag_list.html',
+                              {'tag_list':tags,
+                               })
     
 
 def list_events(request):
@@ -238,9 +252,7 @@ def delete_event(request,object_id):
         
         #we need to delete tags because they are not automatically deleted with delete()
         event.tags = ""
-            
         event.delete()
-        
         logger.info('delete successful! event delete: ' + event.name)
         
         return HttpResponseRedirect('/event/')
@@ -290,12 +302,8 @@ def detail_event(request,object_id):
             return HttpResponse('event updated',mimetype=TEXT_MIME)
 
         elif (request.method == 'DELETE'):
-            
-            
-            logger.info('got DELETE request...deleting selected event: ' + event.name)
-                   
+            logger.info('got DELETE request...deleting selected event: ' + event.name)      
             event.delete()
-            
             return HttpResponse('event deleted',mimetype=TEXT_MIME) 
    
         elif (request.method =='POST'):

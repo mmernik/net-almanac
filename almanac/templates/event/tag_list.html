@@ -6,10 +6,10 @@
 
 {% block body %} 
 
-{% if object_list %}
+{% if tag_list %}
 	Tag list:
 	<ul>
-	{% for tag in object_list %}
+	{% for tag in tag_list %}
 		<li><a href="/event/tag/{{tag.id}}/">{{tag.name}}</a></li>
 	{% endfor %}
 	</ul>
