@@ -29,7 +29,7 @@ class Event(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return "/net_almanac/"+str(self.id) + "/"
+        return "/net_almanac/event/"+str(self.id) + "/"
 
 class EventForm(ModelForm):
     #NOTE: we need to manually set date

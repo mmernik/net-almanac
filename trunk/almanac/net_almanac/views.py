@@ -20,6 +20,14 @@ HTTP_BAD_REQUEST = 400
 HTTP_SERVER_ERROR = 500
 HTTP_NOT_IMPLEMENTED = 501
 
+HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this URL',
+                                            mimetype=TEXT_MIME,
+                                            status=HTTP_NOT_IMPLEMENTED)
+
+def root(request):
+    #for now, just a redirect
+    return HttpResponseRedirect('/net_almanac/event/')
+
 def tag(request,tag_name):
     #filters objects by tags, then returns.  Only supports GET
     logger = logging.getLogger('view tag')
@@ -49,7 +57,9 @@ def tag_clean(request):
         for tag in Tag.objects.all():
             if get_tag_frequency(tag) == 0:
                 tag.delete()
-    return HttpResponseRedirect('/net_almanac/tag/')
+        return HttpResponseRedirect('/net_almanac/event/tag/')
+    else:
+        return HTTPRESPONSE_NOT_IMPLEMENTED
 
 def list_events(request):
     logger = logging.getLogger('view list_events')
@@ -99,9 +109,7 @@ def list_events(request):
             return HttpResponse('new event successfully saved',
                                 mimetype=TEXT_MIME)
         else:
-            return HttpResponse('request type not supported at this URL',
-                                mimetype=TEXT_MIME,
-                                status=HTTP_NOT_IMPLEMENTED)
+            return HTTPRESPONSE_NOT_IMPLEMENTED
         
     else:
         return render_to_response('net_almanac/event_list.html',
@@ -149,7 +157,7 @@ def create_event(request):
             new_event.save()
             logger.info('save successful! event added: ' + new_event.name)
             
-            return HttpResponseRedirect('/net_almanac/' + str(new_event.id) + '/')
+            return HttpResponseRedirect('/net_almanac/event/' + str(new_event.id) + '/')
         
         except ValueError, e:
             
@@ -219,7 +227,7 @@ def update_event(request,object_id):
             logger.debug('setting tags on updated event')
             event.tags=post_data['tags']
             
-            return HttpResponseRedirect('/net_almanac/' + str(event.id) + '/')
+            return HttpResponseRedirect('/net_almanac/event/' + str(event.id) + '/')
         
         
         except ValueError, e:
@@ -257,7 +265,7 @@ def delete_event(request,object_id):
         event.delete()
         logger.info('delete successful! event delete: ' + event.name)
         
-        return HttpResponseRedirect('/net_almanac/')
+        return HttpResponseRedirect('/net_almanac/event/')
 
 def detail_event(request,object_id):
     #displays data about one object.  
@@ -377,7 +385,7 @@ def view_by_month(request,year,month):
         
 def view_by_date(request):
     #default date view, direct to all events this year.
-    return HttpResponseRedirect('/net_almanac/date/' + str(datetime.date.today().year) + '/')
+    return HttpResponseRedirect('/net_almanac/event/date/' + str(datetime.date.today().year) + '/')
 
 def validate_event(event):
     """

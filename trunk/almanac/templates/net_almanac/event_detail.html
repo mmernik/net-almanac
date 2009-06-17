@@ -2,7 +2,7 @@
 
 {% block subtitle %} : Event Detail {% endblock %}
 
-{% block navigate %} : <a href="/net_almanac/{{event.id}}/">{{event.name}}</a> {% endblock %}
+{% block navigate %} : <a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a> {% endblock %}
 
 {% block body %}
 <table >
@@ -31,7 +31,7 @@
         {% if tags %}
         <ul>
         	{% for tag in tags %}
-        		<li><a href="/net_almanac/tag/{{tag.name}}/">{{tag.name}}</a></li>
+        		<li><a href="/net_almanac/event/tag/{{tag.name}}/">{{tag.name}}</a></li>
         	{% endfor %}
         </ul>
         {% else %}
@@ -47,11 +47,11 @@
 
 {% block side_options %}
 	<hr />
-    <form action="/net_almanac/{{event.id}}/update/" method="get">
+    <form action="/net_almanac/event/{{event.id}}/update/" method="get">
     	<input type="submit" value="Update this event" />
     </form>   
     <hr /> 
-    <form action="/net_almanac/{{event.id}}/delete/" method="get">
+    <form action="/net_almanac/event/{{event.id}}/delete/" method="get">
     	<input type="submit" value="Delete this event" />
     </form>
     <hr />
