@@ -46,9 +46,13 @@
 {% endblock %}
 
 {% block side_options %}
-<hr />
-<a href="/net_almanac/{{event.id}}/update/">Update this event</a>
-<hr />
-<a href="/net_almanac/{{event.id}}/delete/">Delete this event</a>
-<hr />
+	<hr />
+    <form action="/net_almanac/{{event.id}}/update/" method="get">
+    	<input type="submit" value="Update this event" />
+    </form>   
+    <hr /> 
+    <form action="/net_almanac/{{event.id}}/delete/" method="get">
+    	<input type="submit" value="Delete this event" />
+    </form>
+    <hr />
 {% endblock %}
