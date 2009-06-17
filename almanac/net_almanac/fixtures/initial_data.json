@@ -18,7 +18,7 @@
       "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-06-02 12:00:00",
-         "begin_datetime":"2009-06-02 20:00:00",
+         "begin_datetime":"2009-06-02 10:00:00",
          "name":"upgrade",
          "description":"upgrading infrastructure",
          "url":"http://www.es.net",
@@ -32,7 +32,7 @@
       "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-05-15 12:00:00",
-         "begin_datetime":"2009-05-16 12:00:00",
+         "begin_datetime":"2009-05-14 12:00:00",
          "name":"maintenance",
          "description":"routine maintenance",
          "url":"http://www.es.net",
@@ -46,7 +46,7 @@
       "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-04-15 12:00:00",
-         "begin_datetime":"2009-04-16 12:00:00",
+         "begin_datetime":"2009-04-14 12:00:00",
          "name":"maintenance",
          "description":"routine maintenance",
          "url":"",

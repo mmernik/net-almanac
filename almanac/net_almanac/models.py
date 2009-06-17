@@ -65,8 +65,8 @@ class EventForm(ModelForm):
             self.initial['begin_date'] = self.instance.begin_datetime.strftime("%Y-%m-%d") 
             self.initial['begin_time'] = self.instance.begin_datetime.strftime("%H:%M:%S")
             
-            self.initial['end_date'] = self.instance.begin_datetime.strftime("%Y-%m-%d") 
-            self.initial['end_time'] = self.instance.begin_datetime.strftime("%H:%M:%S")
+            self.initial['end_date'] = self.instance.end_datetime.strftime("%Y-%m-%d") 
+            self.initial['end_time'] = self.instance.end_datetime.strftime("%H:%M:%S")
         else:
             self.initial['begin_date'] = datetime.date.today().strftime('%Y-%m-%d')
             self.initial['begin_time'] = DEFAULT_TIME
