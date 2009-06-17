@@ -10,7 +10,7 @@
          "url":"http://www.lbl.gov",
          "router":"router1",
          "iface":"Ethernet0",
-         "tags":"lbnl, experiment"
+         "tags":"lbnl experiment"
       }
    },
    {

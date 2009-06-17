@@ -36,7 +36,7 @@ EVENT_ENDDATETIME = datetime.datetime(2008,1,5)
 
 TAG_NAME_1 = 'testtag1'
 TAG_NAME_2 = 'testtag2'
-TAG_STRING = TAG_NAME_1 + ', ' + TAG_NAME_2
+TAG_STRING = TAG_NAME_1 + ' ' + TAG_NAME_2
 
 LOG_STRING = 'logging test string'
 
@@ -230,7 +230,7 @@ class TestTags(TestWSGI):
         logger = logging.getLogger("TestWSGI TestTags")
         h = httplib2.Http()
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/tag/1/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/tag/esnet/'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)

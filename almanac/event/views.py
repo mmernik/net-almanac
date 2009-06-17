@@ -20,19 +20,19 @@ HTTP_BAD_REQUEST = 400
 HTTP_SERVER_ERROR = 500
 HTTP_NOT_IMPLEMENTED = 501
 
-def tag(request,tag_id):
+def tag(request,tag_name):
     #filters objects by tags, then returns.  Only supports GET
     logger = logging.getLogger('view tag')
     logger.debug('hit')
-    tag = Tag.objects.get(id=tag_id)
+    tag = Tag.objects.get(name=tag_name)
     events = TaggedItem.objects.get_by_model(Event,tag)
     if is_json_request(request):
         json_data = serializers.serialize('json',events)
         return HttpResponse(json_data,mimetype=JSON_MIME)
     else:
         return render_to_response('event/tag_detail.html',
-                              {'tag':tag,
-                               'event_list':events})
+                                  {'tag':tag,
+                                   'event_list':events})
 
 def tag_list(request):
     #only supports GET.  Orders tags by the most common
@@ -300,7 +300,7 @@ def detail_event(request,object_id):
                 return make_bad_request_http_response(error_str)
             except Exception, e:
                 logger.error('unexpected exception encountered: ' + str(e))
-            
+                return HttpResponse('unexpected exception encountered: ' + str(e), status=HTTP_SERVER_ERROR)
             return HttpResponse('event updated',mimetype=TEXT_MIME)
 
         elif (request.method == 'DELETE'):
@@ -402,8 +402,8 @@ def validate_event(event):
     logger.debug('parsing tags')
     for tag in tagging.utils.parse_tag_input(event.tags):
         #normally commas are delimiters, but if they are between double-quotes they become tags
-        if tag.find(',') != -1:
-            raise ValueError('a tag may not contain a comma')
+        if not tag.isalnum():
+            raise ValueError('tags must be alphanumeric')
         
     event.tags = format_tag_string(event.tags)
     
@@ -439,10 +439,10 @@ def is_json_request(request):
  
 def format_tag_string(tags_string):
     """
-    Takes in some user-inputted tag string and formats it into a pretty comma-delimited string.
+    Takes in some user-inputted tag string and formats it into a pretty string.
     """
     logger = logging.getLogger('format_tag_string')
-    return ', '.join(tagging.utils.parse_tag_input(tags_string))
+    return ' '.join(tagging.utils.parse_tag_input(tags_string))
 
 
 def parse_json_request(json_string):

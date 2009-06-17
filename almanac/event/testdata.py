@@ -17,7 +17,7 @@ good_json_string = '[{"pk": 1, "model": "event.event", "fields": {"iface": "Ethe
 
 bad_create_string = good_json_string #bad pk, it's already in use.
 
-good_create_string = '[{"pk": 10, "model": "event.event", "fields": {"iface": "Ethernet0", "name": "gragragra", "tags": "hi, hir a a", "url": "http://www.lbl.gov", "end_datetime": "2009-06-02 12:21:15", "begin_datetime": "2008-06-11 12:21:15", "router": "router1", "description": " a"}}]'
+good_create_string = '[{"pk": 10, "model": "event.event", "fields": {"iface": "Ethernet0", "name": "gragragra", "tags": "hi hir a a", "url": "http://www.lbl.gov", "end_datetime": "2009-06-02 12:21:15", "begin_datetime": "2008-06-11 12:21:15", "router": "router1", "description": " a"}}]'
 
 
 json_headers = {'accept':'application/json'}
