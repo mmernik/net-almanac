@@ -29,7 +29,7 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
     <tr >
         <td>{{event.id}}</td>
         <td>
-        	<a href="/event/{{event.id}}/">{{event.name}}</a>
+        	<a href="/net_almanac/{{event.id}}/">{{event.name}}</a>
         </td>
         <td>{{event.description}}</td>
         <td>{{event.begin_datetime}}</td>
@@ -52,10 +52,10 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
 
 {% block side_options %}
     <hr />
-    <a href="/event/date/">View by date</a>
+    <a href="/net_almanac/date/">View by date</a>
     <hr />
-    <a href="/event/tag/"> View all tags</a> 
+    <a href="/net_almanac/tag/"> View all tags</a> 
     <hr />
-    <a href="/event/create/"> Make new Event</a>
+    <a href="/net_almanac/create/"> Make new Event</a>
     <hr />
 {% endblock %}

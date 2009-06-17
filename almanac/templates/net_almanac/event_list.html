@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% comment %}
+This is the parent of event_by_month.html, event_by_year.html, and tag_list.html.
+{% endcomment %}
+
+{% block subtitle %} : Event List {% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="/site_media/js/sorttable.js"></script>
+{% endblock %}
+
+{% block body %}
+{% if event_list %}
+
+<table class="sortable">
+    <tr >
+        <th>id</th>
+        <th>name</th>
+        <th>description</th>
+        <th>begin time</th>
+        <th>end time</th>
+        <th>url</th>
+        <th>router</th>
+        <th>iface</th>
+        <th>tags</th>
+    </tr>
+    {% for event in event_list %}
+    <tr >
+        <td>{{event.id}}</td>
+        <td>
+        	<a href="/net_almanac/{{event.id}}/">{{event.name}}</a>
+        </td>
+        <td>{{event.description}}</td>
+        <td>{{event.begin_datetime}}</td>
+        <td>{{event.end_datetime}}</td>
+        <td>{{event.url}}</td>
+        <td>{{event.router}}</td>
+        <td>{{event.iface}}</td>
+        <td>{{event.tags}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+    <p>No Events are available.</p>
+{% endif %}
+
+    
+
+{% endblock %}
+
+{% block side_options %}
+    <hr />
+    <a href="/net_almanac/date/">View by date</a>
+    <hr />
+    <a href="/net_almanac/tag/"> View all tags</a> 
+    <hr />
+    <a href="/net_almanac/create/"> Make new Event</a>
+    <hr />
+{% endblock %}

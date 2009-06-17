@@ -33,9 +33,6 @@ have.  Get it here:
 
 http://labix.org/python-dateutil
 
-and put it in the same directory as tags.
-
-
 ** Running Instructions **
 
 Run 'python manage.py syncdb' to sync the database and load the data.  Note 
@@ -44,7 +41,7 @@ is none.
 Run 'python manage.py test' to run unit tests.
 Run 'python manage.py runserver' to run the server.  Navigate to 
 
-http://localhost:8000/event/
+http://localhost:8000/net_almanac/
 
 to view the homepage.
 
@@ -60,7 +57,7 @@ pretty format if not convenient:
 <begin JSON>
 [{
 	  "pk":1,
-	  "model":"event.event",
+	  "model":"net_almanac.event",
 	  "fields":{
 		     "iface":"Ethernet0",
 		     "name":"experiment",
@@ -76,8 +73,8 @@ pretty format if not convenient:
 
 "pk": the object's id in the database.  It must be an integer and unique.
 
-"model": the name of the object request.  Only "event.event" is implemented
-so far.
+"model": the name of the object request.  Only "net_almanac.event" is 
+implemented so far.
 
 "name": a name for the event.  Must be a non-empty string (does not need to
 be unique).
@@ -102,18 +99,18 @@ generate the rest.  The end datetime cannot be before the begin datetime.
 URLs where JSON requests are accepted.  The header "accept" must contain the
 JSON MIME "application/json" or the server will render HTML.
 
-   -URL /event/
+   -URL /net_almanac/
       -POST creates a new object from JSON object in request
          -You must provide an unused id
       -GET returns all known objects as JSON
       
-   -URL /event/<id>/
+   -URL /net_almanac/<id>/
       -PUT updates the object in the db from the JSON object in request
          -The id in the request must match the id in the URL
       -DELETE deletes the object from the db
       -GET returns a single JSON object
       
-   -URL /event/tags/<tag_name>/
+   -URL /net_almanac/tags/<tag_name>/
       -GET returns all objects with this tag in JSON
 
 ** licensing stuff, credits **

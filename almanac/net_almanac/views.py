@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.shortcuts import render_to_response, get_object_or_404
 
-from almanac.event.models import *
+from almanac.net_almanac.models import *
 from tagging.models import *
 
 import logging
@@ -30,7 +30,7 @@ def tag(request,tag_name):
         json_data = serializers.serialize('json',events)
         return HttpResponse(json_data,mimetype=JSON_MIME)
     else:
-        return render_to_response('event/tag_detail.html',
+        return render_to_response('net_almanac/tag_detail.html',
                                   {'tag':tag,
                                    'event_list':events})
 
@@ -40,7 +40,7 @@ def tag_list(request):
     logger.debug('hit')
     tags_list = get_all_tags_with_frequency()
     tags_list.sort(tag_compare)
-    return render_to_response('event/tag_list.html',
+    return render_to_response('net_almanac/tag_list.html',
                               {'tag_list':tags_list,})
     
 def tag_clean(request):
@@ -49,7 +49,7 @@ def tag_clean(request):
         for tag in Tag.objects.all():
             if get_tag_frequency(tag) == 0:
                 tag.delete()
-    return HttpResponseRedirect('/event/tag/')
+    return HttpResponseRedirect('/net_almanac/tag/')
 
 def list_events(request):
     logger = logging.getLogger('view list_events')
@@ -104,7 +104,7 @@ def list_events(request):
                                 status=HTTP_NOT_IMPLEMENTED)
         
     else:
-        return render_to_response('event/event_list.html',
+        return render_to_response('net_almanac/event_list.html',
                                   {'event_list':events})
 
 def create_event(request):
@@ -116,7 +116,7 @@ def create_event(request):
     form = EventForm()
     
     if request.method == 'GET':
-        return render_to_response('event/event_create.html',
+        return render_to_response('net_almanac/event_create.html',
                                   {'form':form,
                                    'form_table':form.as_table()})
         
@@ -149,7 +149,7 @@ def create_event(request):
             new_event.save()
             logger.info('save successful! event added: ' + new_event.name)
             
-            return HttpResponseRedirect('/event/' + str(new_event.id) + '/')
+            return HttpResponseRedirect('/net_almanac/' + str(new_event.id) + '/')
         
         except ValueError, e:
             
@@ -157,7 +157,7 @@ def create_event(request):
                              e.message)
             
             logger.info(error_message)
-            return render_to_response('event/event_create.html',
+            return render_to_response('net_almanac/event_create.html',
                                       {'form':form,
                                        'form_table':form.as_table(),
                                        'error':error_message})
@@ -175,7 +175,7 @@ def update_event(request,object_id):
     form = EventForm(instance=event)
     
     if request.method == 'GET':
-        return render_to_response('event/event_update.html',
+        return render_to_response('net_almanac/event_update.html',
                                   {'event': event,
                                    'form':form,
                                    'form_table':form.as_table()})       
@@ -219,7 +219,7 @@ def update_event(request,object_id):
             logger.debug('setting tags on updated event')
             event.tags=post_data['tags']
             
-            return HttpResponseRedirect('/event/' + str(event.id) + '/')
+            return HttpResponseRedirect('/net_almanac/' + str(event.id) + '/')
         
         
         except ValueError, e:
@@ -227,7 +227,7 @@ def update_event(request,object_id):
             logger.info('bad user input')
             error_message = (str(type(e)) + ': ' +
                              e.message)
-            return render_to_response('event/event_update.html',
+            return render_to_response('net_almanac/event_update.html',
                                       {'event': event,
                                        'form':form,
                                        'form_table':form.as_table(),
@@ -246,7 +246,7 @@ def delete_event(request,object_id):
     
     if request.method == 'GET':
         
-        return render_to_response('event/event_confirm_delete.html',
+        return render_to_response('net_almanac/event_confirm_delete.html',
                                   {'event':event,})
         
     elif request.method == 'POST':
@@ -257,7 +257,7 @@ def delete_event(request,object_id):
         event.delete()
         logger.info('delete successful! event delete: ' + event.name)
         
-        return HttpResponseRedirect('/event/')
+        return HttpResponseRedirect('/net_almanac/')
 
 def detail_event(request,object_id):
     #displays data about one object.  
@@ -317,7 +317,7 @@ def detail_event(request,object_id):
 
     
     else:
-        return render_to_response('event/event_detail.html',
+        return render_to_response('net_almanac/event_detail.html',
                                   {'event':event,
                                    'tags':Tag.objects.get_for_object(event)})
         
@@ -329,7 +329,7 @@ def view_by_year(request,year):
     year_int = int(year)
     event_list = Event.objects.filter(begin_datetime__year=year)
     logger.debug('event_list: ' + str(event_list))
-    return render_to_response('event/event_by_year.html',
+    return render_to_response('net_almanac/event_by_year.html',
                               {'event_list':event_list,
                                'year':year,
                                'next_year':year_int+1,
@@ -364,7 +364,7 @@ def view_by_month(request,year,month):
     
     month_str = datetime.date(2000, month_int, 1).strftime('%B')
     
-    return render_to_response('event/event_by_month.html',
+    return render_to_response('net_almanac/event_by_month.html',
                               {'event_list':event_list,
                                'year':year,
                                'month':month,
@@ -377,7 +377,7 @@ def view_by_month(request,year,month):
         
 def view_by_date(request):
     #default date view, direct to all events this year.
-    return HttpResponseRedirect('/event/date/' + str(datetime.date.today().year) + '/')
+    return HttpResponseRedirect('/net_almanac/date/' + str(datetime.date.today().year) + '/')
 
 def validate_event(event):
     """

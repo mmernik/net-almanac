@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from event.models import *
+from net_almanac.models import *
 from tagging.models import *
 
 info_dict = {
@@ -14,41 +14,41 @@ tags_dict = {
 urlpatterns = patterns('',
     #Default homepage displays a list.
     (r'^$', 
-     'almanac.event.views.list_events'),
+     'almanac.net_almanac.views.list_events'),
     
     #Various options for a specific event.
     (r'^(?P<object_id>\d+)/$', 
-     'almanac.event.views.detail_event'),
+     'almanac.net_almanac.views.detail_event'),
     
     (r'^(?P<object_id>\d+)/update/$', 
-     'almanac.event.views.update_event'),
+     'almanac.net_almanac.views.update_event'),
      
     (r'^(?P<object_id>\d+)/delete/$', 
-     'almanac.event.views.delete_event'),
+     'almanac.net_almanac.views.delete_event'),
     
     
     #Other stuff
     (r'^create/$',
-     'almanac.event.views.create_event'),
+     'almanac.net_almanac.views.create_event'),
     
     (r'^tag/$', 
-     'almanac.event.views.tag_list'),
+     'almanac.net_almanac.views.tag_list'),
     
     (r'^tag/clean/$', 
-     'almanac.event.views.tag_clean'),
+     'almanac.net_almanac.views.tag_clean'),
          
     (r'^tag/(?P<tag_name>\w+)/$',
-      'almanac.event.views.tag'),
+      'almanac.net_almanac.views.tag'),
       
       
     #date-based views
     (r'^date/$',
-     'almanac.event.views.view_by_date'),
+     'almanac.net_almanac.views.view_by_date'),
     
     (r'^date/(?P<year>\d{4})/$',
-     'almanac.event.views.view_by_year'),
+     'almanac.net_almanac.views.view_by_year'),
      
     (r'^date/(?P<year>\d{4})/(?P<month>\d{2})/$',
-     'almanac.event.views.view_by_month'),
+     'almanac.net_almanac.views.view_by_month'),
     
 )

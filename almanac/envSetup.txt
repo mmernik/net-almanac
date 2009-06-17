@@ -1,6 +1,6 @@
 #some stuff that helps to debug the command line
 
-from event.models import *
+from net_almanac.models import *
 from tagging.models import *
 import tagging
 import datetime

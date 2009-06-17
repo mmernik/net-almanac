@@ -83,7 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin', #added for testing
-    'almanac.event',
+    'almanac.net_almanac',
     
 )
 
