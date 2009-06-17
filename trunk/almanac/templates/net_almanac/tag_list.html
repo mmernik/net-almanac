@@ -2,7 +2,7 @@
 
 {% block subtitle %} : Tag List {% endblock %}
 
-{% block navigate %} : <a href="/event/tag/">Tags</a> {% endblock %}
+{% block navigate %} : <a href="/net_almanac/tag/">Tags</a> {% endblock %}
 
 
 {% block head %}
@@ -20,7 +20,7 @@ confirm ("Are you sure you want to delete all unused tags?");
 	Tag list:
 	<ul>
 	{% for tag in tag_list %}
-		<li><a href="/event/tag/{{tag.name}}/">{{tag.name}}</a></li>
+		<li><a href="/net_almanac/tag/{{tag.name}}/">{{tag.name}}</a></li>
 	{% endfor %}
 	</ul>
 {% else %}
@@ -33,7 +33,7 @@ confirm ("Are you sure you want to delete all unused tags?");
 
 {% block side_options %}
 <hr />
-<form action="/event/tag/clean/" method="post">
+<form action="/net_almanac/tag/clean/" method="post">
 <input type="submit" onclick="return confirm_clean()" value="Clean Unused Tags" />
 </form>
 <hr />

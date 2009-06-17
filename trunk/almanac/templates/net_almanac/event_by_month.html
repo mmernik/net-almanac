@@ -1,0 +1,36 @@
+{% extends "net_almanac/event_list.html" %}
+
+{% block subtitle %} : Event by Month {% endblock %}
+
+{% block navigate %}
+ : <a href="/net_almanac/date/{{year}}/">Event by Year {{year}}</a> : Events in {{month_str}} 
+ {% endblock %}
+
+{% block side_options %}
+<hr />
+<a href="/net_almanac/date/{{last_year}}/">Go to {{last_year}}</a>
+<hr />
+<a href="/net_almanac/date/{{next_year}}/">Go to {{next_year}}</a>
+<hr />
+View by Month in {{year}}
+<table>
+<tr>
+<td><a href="/net_almanac/date/{{year}}/01">Jan</a></td>
+<td><a href="/net_almanac/date/{{year}}/02">Feb</a></td>
+<td><a href="/net_almanac/date/{{year}}/03">Mar</a></td>
+<td><a href="/net_almanac/date/{{year}}/04">Apr</a></td>
+<tr>
+<td><a href="/net_almanac/date/{{year}}/05">May</a></td>
+<td><a href="/net_almanac/date/{{year}}/06">Jun</a></td>
+<td><a href="/net_almanac/date/{{year}}/07">Jul</a></td>
+<td><a href="/net_almanac/date/{{year}}/08">Aug</a></td>
+</tr>
+<td><a href="/net_almanac/date/{{year}}/09">Sep</a></td>
+<td><a href="/net_almanac/date/{{year}}/10">Oct</a></td>
+<td><a href="/net_almanac/date/{{year}}/11">Nov</a></td>
+<td><a href="/net_almanac/date/{{year}}/12">Dec</a></td>
+</table>
+<hr />
+
+<a href="/net_almanac/date/{{year}}/">View all events in {{year}}</a>
+{% endblock %}

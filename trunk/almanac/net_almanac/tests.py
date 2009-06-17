@@ -6,8 +6,8 @@ import os
 import time
 
 from django.test.client import Client
-from event.models import *
-from event.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_string, json_headers
+from net_almanac.models import *
+from net_almanac.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_string, json_headers
 from tagging.models import *
 
 import twill
@@ -132,7 +132,7 @@ class HTMLResponseTestCase(EventTestCaseSetup):
     def runTest(self):
         #some sanity HTML tests not using twill but the provided test client
         c = Client()
-        response = c.get('/event/')
+        response = c.get('/net_almanac/')
         self.assertTrue(response.status_code == HTTP_OK)
         self.assertTrue(response.has_header('content-type'))
         self.assertTrue(response._headers['content-type'][1].find(HTML_MIME) != -1)
@@ -150,7 +150,7 @@ class TestWSGI(unittest.TestCase):
 class TestDelete(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI TestDelete")
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/3/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/3/'
         
         h = httplib2.Http()
         
@@ -169,7 +169,7 @@ class TestPut(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI TestPut")
         h = httplib2.Http()
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/1/'
         
         for input in bad_json_strings:
             logger.info('accessing: ' + url)
@@ -198,7 +198,7 @@ class Test404(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI Test404")
         h = httplib2.Http()
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/8/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/8/'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_NOT_FOUND)
@@ -208,7 +208,7 @@ class TestPost(TestWSGI):
         logger = logging.getLogger("TestWSGI TestPost")
         h = httplib2.Http()
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/'
         logger.info('accessing with POST with bad string: ' + url)
         response, content = h.request(url,'POST', bad_create_string, headers=json_headers)
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
@@ -230,7 +230,7 @@ class TestTags(TestWSGI):
         logger = logging.getLogger("TestWSGI TestTags")
         h = httplib2.Http()
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/tag/esnet/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/tag/esnet/'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -257,7 +257,7 @@ class JSONTestCase(TwillTestCaseSetup):
         """
         
         logger = logging.getLogger("JSONTestCase")
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/'
         twill_quiet()
         logger.info('accessing ' + url)
         tc.go(url)
@@ -273,7 +273,7 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.find('"name": "experiment"') #data from the fixture formatted by default serializer
         tc.find('"tags": "esnet"')
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/event/1/'
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/1/'
         logger.info('accessing ' + url)
         tc.go(url)
         tc.notfind("html")

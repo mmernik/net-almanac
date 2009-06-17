@@ -6,7 +6,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
     
-    (r'^event/', include('almanac.event.urls')),
+    (r'^net_almanac/', include('almanac.net_almanac.urls')),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': 'media'}),
 

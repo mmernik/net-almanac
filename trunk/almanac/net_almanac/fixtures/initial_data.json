@@ -1,7 +1,7 @@
 [
    {
       "pk":1,
-      "model":"event.event",
+      "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-06-03 15:01:01",
          "begin_datetime":"2009-06-01 12:21:15",
@@ -15,7 +15,7 @@
    },
    {
       "pk":2,
-      "model":"event.event",
+      "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-06-02 12:00:00",
          "begin_datetime":"2009-06-02 20:00:00",
@@ -29,7 +29,7 @@
    },
    {
       "pk":3,
-      "model":"event.event",
+      "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-05-15 12:00:00",
          "begin_datetime":"2009-05-16 12:00:00",
@@ -43,7 +43,7 @@
    },
    {
       "pk":4,
-      "model":"event.event",
+      "model":"net_almanac.event",
       "fields":{
          "end_datetime":"2009-04-15 12:00:00",
          "begin_datetime":"2009-04-16 12:00:00",
