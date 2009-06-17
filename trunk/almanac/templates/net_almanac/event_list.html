@@ -56,6 +56,8 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
     <hr />
     <a href="/net_almanac/tag/"> View all tags</a> 
     <hr />
-    <a href="/net_almanac/create/"> Make new Event</a>
+    <form action="/net_almanac/create/" method="get">
+    	<input type="submit" value="Create New Event" />
+    </form>
     <hr />
 {% endblock %}
