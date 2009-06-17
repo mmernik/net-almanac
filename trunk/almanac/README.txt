@@ -64,7 +64,7 @@ pretty format if not convenient:
 	  "fields":{
 		     "iface":"Ethernet0",
 		     "name":"experiment",
-		     "tags":"lbnl, experiment",
+		     "tags":"lbnl experiment",
 		     "url":"http://www.lbl.gov",
 		     "end_datetime":"2009-06-03 15:01:01",
 		     "begin_datetime":"2009-06-01 12:21:15",
@@ -91,9 +91,9 @@ be unique).
 "description": a human-readable description of the event.  Must be a non-empty
 string.
 
-"tags": a comma-delimited list of tags.  The server will automatically parse
+"tags": a space-delimited list of tags.  The server will automatically parse
 any input string into this format.  See tagging documentation for more detail
-on this.
+on this.  This must be alphanumeric.
 
 "begin_datetime" and "end_datetime": ISO 8601-formatted dates using
 YYYY-MM-DD [HH:MM:SS].  If the input string isn't as precise, the server will
@@ -113,7 +113,7 @@ JSON MIME "application/json" or the server will render HTML.
       -DELETE deletes the object from the db
       -GET returns a single JSON object
       
-   -URL /event/tags/<id>/
+   -URL /event/tags/<tag_name>/
       -GET returns all objects with this tag in JSON
 
 ** licensing stuff, credits **
