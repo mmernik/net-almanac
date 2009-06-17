@@ -14,41 +14,44 @@ tags_dict = {
 urlpatterns = patterns('',
     #Default homepage displays a list.
     (r'^$', 
+     'almanac.net_almanac.views.root'),
+    
+    (r'^event/$', 
      'almanac.net_almanac.views.list_events'),
     
     #Various options for a specific event.
-    (r'^(?P<object_id>\d+)/$', 
+    (r'^event/(?P<object_id>\d+)/$', 
      'almanac.net_almanac.views.detail_event'),
     
-    (r'^(?P<object_id>\d+)/update/$', 
+    (r'^event/(?P<object_id>\d+)/update/$', 
      'almanac.net_almanac.views.update_event'),
      
-    (r'^(?P<object_id>\d+)/delete/$', 
+    (r'^event/(?P<object_id>\d+)/delete/$', 
      'almanac.net_almanac.views.delete_event'),
     
     
     #Other stuff
-    (r'^create/$',
+    (r'^event/create/$',
      'almanac.net_almanac.views.create_event'),
     
-    (r'^tag/$', 
+    (r'^event/tag/$', 
      'almanac.net_almanac.views.tag_list'),
     
-    (r'^tag/clean/$', 
+    (r'^event/tag/clean/$', 
      'almanac.net_almanac.views.tag_clean'),
          
-    (r'^tag/(?P<tag_name>\w+)/$',
+    (r'^event/tag/(?P<tag_name>\w+)/$',
       'almanac.net_almanac.views.tag'),
       
       
     #date-based views
-    (r'^date/$',
+    (r'^event/date/$',
      'almanac.net_almanac.views.view_by_date'),
     
-    (r'^date/(?P<year>\d{4})/$',
+    (r'^event/date/(?P<year>\d{4})/$',
      'almanac.net_almanac.views.view_by_year'),
      
-    (r'^date/(?P<year>\d{4})/(?P<month>\d{2})/$',
+    (r'^event/date/(?P<year>\d{4})/(?P<month>\d{2})/$',
      'almanac.net_almanac.views.view_by_month'),
     
 )
