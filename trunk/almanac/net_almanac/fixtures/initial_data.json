@@ -24,7 +24,7 @@
          "url":"http://www.es.net",
          "router":"router2",
          "iface":"xe-0/1/0.1009",
-         "tags":"esnet"
+         "tags":"esnet lbnl"
       }
    },
    {

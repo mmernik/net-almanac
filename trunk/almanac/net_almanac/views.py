@@ -24,6 +24,8 @@ HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this 
                                             mimetype=TEXT_MIME,
                                             status=HTTP_NOT_IMPLEMENTED)
 
+ONE_DAY = datetime.timedelta(1)
+
 def root(request):
     #for now, just a redirect
     return HttpResponseRedirect('/net_almanac/event/')
@@ -67,6 +69,25 @@ def list_events(request):
     logger.info('hit')
     
     events = Event.objects.all()
+    
+    #filter the events if we are a GET request.
+    if request.method=='GET':
+        get_data = request.GET
+        logger.info('get parameters: ' + str(get_data))
+        #filter by tags
+        tags_list = get_data.getlist('tag')
+        if tags_list:
+            events = TaggedItem.objects.get_by_model(Event, tags_list)
+            logger.info("filtered by tags: " + str(events))
+        
+        if get_data.has_key('date'):
+            #filter by all events that fall on this date
+            date = get_data['date']
+            logger.info('filtering by date: ' + date)
+            events = events.filter(begin_datetime__lte=increment_day(date))
+            events = events.filter(end_datetime__gte=date)
+            logger.info("filtered by date: " + str(events))
+            
     
     if is_json_request(request):
         #return serialized objects.
@@ -112,6 +133,9 @@ def list_events(request):
             return HTTPRESPONSE_NOT_IMPLEMENTED
         
     else:
+        if request.method != 'GET':
+            return HTTPRESPONSE_NOT_IMPLEMENTED
+        
         return render_to_response('net_almanac/event_list.html',
                                   {'event_list':events})
 
@@ -492,4 +516,9 @@ def get_all_tags_with_frequency():
 
 def get_tag_frequency(tag):
     return len(TaggedItem.objects.get_by_model(Event,tag))
+
+def increment_day(date_string):
+    d = dateutil.parser.parse(date_string)
+    d = d + ONE_DAY
+    return d.strftime('%Y-%m-%d')
     

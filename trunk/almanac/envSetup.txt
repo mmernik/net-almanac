@@ -11,6 +11,7 @@ import twill
 from django.core import serializers
 from django.http import QueryDict
 import httplib2
+import dateutil.parser
 
 events = Event.objects.all()
 e = events[0]
@@ -21,7 +22,7 @@ from event.testdata import *
 
 JSON_MIME = 'application/json'
 
-url = 'http://127.0.0.1:8000/event/1/update/'
+url = 'http://127.0.0.1:8000/net_almanac/event/'
 json_string = serializers.serialize('json',[e])
 
 e=Event(name='1',description='2',begin_datetime=datetime.datetime.now(),end_datetime=datetime.datetime.now(),url='3',router='4',iface='5',tags='')
