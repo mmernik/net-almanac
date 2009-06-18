@@ -230,13 +230,30 @@ class TestTags(TestWSGI):
         logger = logging.getLogger("TestWSGI TestTags")
         h = httplib2.Http()
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/tag/esnet/'
+        #test one tag
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?tag=esnet'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
         self.assertTrue(response['content-type'] == JSON_MIME)
-        self.assertTrue(content.find('"description"') != -1)
-    
+        self.assertTrue(content.count('"description"') > 1)
+        
+        #test two tags
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?tag=esnet&tag=lbnl'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        #there is only one event in initial data with both these tags
+        self.assertTrue(content.count('"description"') == 1) 
+        
+        #test an unknown tag
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?tag=g484848a' #silly name
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 0)
 
 def twill_quiet():
     twill.set_output(StringIO())
