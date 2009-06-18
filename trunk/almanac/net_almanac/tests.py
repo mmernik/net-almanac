@@ -254,6 +254,46 @@ class TestTags(TestWSGI):
         self.assertTrue(response.status == HTTP_OK)
         self.assertTrue(response['content-type'] == JSON_MIME)
         self.assertTrue(content.count('"description"') == 0)
+        
+
+class TestDate(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestDate")
+        h = httplib2.Http()
+        
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-15'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 2)
+
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-16'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 1)
+        
+        #malformed date but dateutil deals with it
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-15a'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        
+        #really bad date
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-s5'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_BAD_REQUEST)
+        self.assertTrue(response['content-type'] == TEXT_MIME)
+        
+        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-02-30'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_BAD_REQUEST)
+        self.assertTrue(response['content-type'] == TEXT_MIME)
 
 def twill_quiet():
     twill.set_output(StringIO())

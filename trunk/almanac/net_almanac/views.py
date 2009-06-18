@@ -84,8 +84,18 @@ def list_events(request):
             #filter by all events that fall on this date
             date = get_data['date']
             logger.info('filtering by date: ' + date)
+            try:
+                #try parsing the date.
+                d = dateutil.parser.parse(date)
+            except ValueError, e:
+                logger.info('error parsing date: ' + date)
+                return make_bad_request_http_response(str(e))
+            except ValidationError, e:
+                logger.info(e.__class__)
+                return make_bad_request_http_response(str(e))
+            
             events = events.filter(begin_datetime__lte=increment_day(date))
-            events = events.filter(end_datetime__gte=date)
+            events = events.filter(end_datetime__gte=current_day(date))
             logger.info("filtered by date: " + str(events))
             
     
@@ -521,4 +531,8 @@ def increment_day(date_string):
     d = dateutil.parser.parse(date_string)
     d = d + ONE_DAY
     return d.strftime('%Y-%m-%d')
+
+#fixes some input errors
+def current_day(date_string):
+    return dateutil.parser.parse(date_string).strftime('%Y-%m-%d')
     
