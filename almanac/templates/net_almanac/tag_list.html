@@ -20,7 +20,7 @@ confirm ("Are you sure you want to delete all unused tags?");
 	Tag list:
 	<ul>
 	{% for tag in tag_list %}
-		<li><a href="/net_almanac/event/tag/{{tag.name}}/">{{tag.name}}</a></li>
+		<li><a href="/net_almanac/event/?tag={{tag.name}}">{{tag.name}}</a></li>
 	{% endfor %}
 	</ul>
 {% else %}
