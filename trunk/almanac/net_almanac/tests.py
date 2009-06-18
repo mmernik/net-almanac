@@ -51,6 +51,8 @@ HTTP_OK = 200
 
 TEST_PORT = 47630 #some random port I picked
 
+URL_BASE = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/'
+
 
 class EventTestCaseSetup(unittest.TestCase):
     def setUp(self):
@@ -150,7 +152,7 @@ class TestWSGI(unittest.TestCase):
 class TestDelete(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI TestDelete")
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/3/'
+        url = URL_BASE + '3/'
         
         h = httplib2.Http()
         
@@ -169,7 +171,7 @@ class TestPut(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI TestPut")
         h = httplib2.Http()
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/1/'
+        url = URL_BASE + '1/'
         
         for input in bad_json_strings:
             logger.info('accessing: ' + url)
@@ -198,7 +200,7 @@ class Test404(TestWSGI):
     def runTest(self):
         logger = logging.getLogger("TestWSGI Test404")
         h = httplib2.Http()
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/8/'
+        url = URL_BASE + '8/'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_NOT_FOUND)
@@ -208,7 +210,7 @@ class TestPost(TestWSGI):
         logger = logging.getLogger("TestWSGI TestPost")
         h = httplib2.Http()
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/'
+        url = URL_BASE
         logger.info('accessing with POST with bad string: ' + url)
         response, content = h.request(url,'POST', bad_create_string, headers=json_headers)
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
@@ -231,7 +233,7 @@ class TestTags(TestWSGI):
         h = httplib2.Http()
         
         #test one tag
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?tag=esnet'
+        url = URL_BASE + '?tag=esnet'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -239,7 +241,7 @@ class TestTags(TestWSGI):
         self.assertTrue(content.count('"description"') > 1)
         
         #test two tags
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?tag=esnet&tag=lbnl'
+        url = URL_BASE + '?tag=esnet&tag=lbnl'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -248,7 +250,7 @@ class TestTags(TestWSGI):
         self.assertTrue(content.count('"description"') == 1) 
         
         #test an unknown tag
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?tag=g484848a' #silly name
+        url = URL_BASE + '?tag=g484848a' #silly name
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -261,14 +263,14 @@ class TestDate(TestWSGI):
         logger = logging.getLogger("TestWSGI TestDate")
         h = httplib2.Http()
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-15'
+        url = URL_BASE + '?date=2000-01-15'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
         self.assertTrue(response['content-type'] == JSON_MIME)
         self.assertTrue(content.count('"description"') == 2)
 
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-16'
+        url = URL_BASE + '?date=2000-01-16'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -276,24 +278,41 @@ class TestDate(TestWSGI):
         self.assertTrue(content.count('"description"') == 1)
         
         #malformed date but dateutil deals with it
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-15a'
+        url = URL_BASE + '?date=2000-01-15a'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
         self.assertTrue(response['content-type'] == JSON_MIME)
         
-        #really bad date
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-01-s5'
+        #bad date
+        url = URL_BASE + '?date=2000-01-s5'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
         self.assertTrue(response['content-type'] == TEXT_MIME)
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/?date=2000-02-30'
+        #another bad date
+        url = URL_BASE + '?date=2000-02-30'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
         self.assertTrue(response['content-type'] == TEXT_MIME)
+        
+        #use begin//end dates
+        url = URL_BASE + '?begin_date=2000-01-01&end_date=2000-01-30'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 2)
+        
+        #no begin date: end date is ignored.
+        url = URL_BASE + '?end_date=2000-01-30'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') > 2)
 
 def twill_quiet():
     twill.set_output(StringIO())
@@ -314,7 +333,7 @@ class JSONTestCase(TwillTestCaseSetup):
         """
         
         logger = logging.getLogger("JSONTestCase")
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/'
+        url = URL_BASE
         twill_quiet()
         logger.info('accessing ' + url)
         tc.go(url)
@@ -330,7 +349,7 @@ class JSONTestCase(TwillTestCaseSetup):
         tc.find('"name": "experiment"') #data from the fixture formatted by default serializer
         tc.find('"tags": "esnet"')
         
-        url = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/1/'
+        url = URL_BASE + '1/'
         logger.info('accessing ' + url)
         tc.go(url)
         tc.notfind("html")
