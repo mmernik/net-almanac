@@ -86,18 +86,27 @@ def list_events(request):
             logger.info('filtering by date: ' + date)
             try:
                 #try parsing the date.
-                d = dateutil.parser.parse(date)
+                dateutil.parser.parse(date)
             except ValueError, e:
-                logger.info('error parsing date: ' + date)
-                return make_bad_request_http_response(str(e))
-            except ValidationError, e:
-                logger.info(e.__class__)
+                logger.info('error parsing date: ' + str(e))
                 return make_bad_request_http_response(str(e))
             
             events = events.filter(begin_datetime__lte=increment_day(date))
             events = events.filter(end_datetime__gte=current_day(date))
-            logger.info("filtered by date: " + str(events))
             
+        elif get_data.has_key('begin_date') and get_data.has_key('end_date'):
+            logger.info('has begin and end date')
+            begin_date = get_data['begin_date']
+            end_date = get_data['end_date']
+            try:
+                #try parsing the dates.
+                dateutil.parser.parse(begin_date)
+                dateutil.parser.parse(end_date)
+            except ValueError, e:
+                logger.info('error parsing dates: ' + str(e))
+                return make_bad_request_http_response(str(e))
+            events = events.filter(begin_datetime__lte=increment_day(end_date))
+            events = events.filter(end_datetime__gte=current_day(begin_date))
     
     if is_json_request(request):
         #return serialized objects.
