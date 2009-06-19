@@ -14,9 +14,10 @@ confirm ("Are you sure you want to delete this event?");
 {% endblock %}
 
 {% block body %} 
-Delete event named: {{event.name}}?
+<p align="center">Delete event named: {{event.name}}?</p>
 <form action="" method="post" onclick="return confirm_delete()">
-	<input type="submit" value="Delete">
+	<p align="center"><input type="submit" value="Delete"></p>
 </form>
+
 {% endblock %}
 
