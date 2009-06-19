@@ -40,9 +40,8 @@ urlpatterns = patterns('',
     (r'^event/tag/clean/$', 
      'almanac.net_almanac.views.tag_clean'),
          
-    (r'^event/tag/(?P<tag_name>\w+)/$',
-      'almanac.net_almanac.views.tag'),
-      
+    (r'^event/filter/$',
+      'almanac.net_almanac.views.filter'),
       
     #date-based views
     (r'^event/date/$',
