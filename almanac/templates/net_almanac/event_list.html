@@ -61,10 +61,8 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
 {% endblock %}
 
 {% block side_options %}
-    <a href="/net_almanac/event/filter/">Make a filter</a>
+    <a href="/net_almanac/event/filter/">Filter events</a>
     <hr />
-    <form action="/net_almanac/event/create/" method="get">
-    	<input type="submit" value="Create New Event" />
-    </form>
+<a href='/net_almanac/event/{{event.id}}/delete/' class="addlink">Create New Event</a>
     <hr />
 {% endblock %}

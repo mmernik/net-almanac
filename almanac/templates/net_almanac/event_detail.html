@@ -42,7 +42,7 @@
         <th>Tags</th>
         <td>
         {% if tags %}
-        <ul>
+        <ul class="description">
         	{% for tag in tags %}
         	<li>
         	<a href="/net_almanac/event/?tag={{tag.name}}" title="See other events with tag '{{tag.name}}'">{{tag.name}}</a>
@@ -66,12 +66,8 @@
 	</a>
 
 	<hr />
-    <form action="/net_almanac/event/{{event.id}}/update/" method="get">
-    	<input type="submit" value="Update this event" />
-    </form>   
+	<a href='/net_almanac/event/{{event.id}}/update/' class="changelink">Update this event</a>
     <hr /> 
-    <form action="/net_almanac/event/{{event.id}}/delete/" method="get">
-    	<input type="submit" value="Delete this event" />
-    </form>
+    <a href='/net_almanac/event/{{event.id}}/delete/' class="deletelink">Delete this event</a>
     <hr />
 {% endblock %}
