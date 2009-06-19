@@ -99,19 +99,30 @@ generate the rest.  The end datetime cannot be before the begin datetime.
 URLs where JSON requests are accepted.  The header "accept" must contain the
 JSON MIME "application/json" or the server will render HTML.
 
-   -URL /net_almanac/
-      -POST creates a new object from JSON object in request
+   -URL /net_almanac/event/
+      -POST creates a new event from the JSON object in request
          -You must provide an unused id
-      -GET returns all known objects as JSON
+      -GET returns all known events as JSON objects
       
-   -URL /net_almanac/<id>/
-      -PUT updates the object in the db from the JSON object in request
+   -URL /net_almanac/event/<id>/
+      -PUT updates the event in the db from the JSON object in request
          -The id in the request must match the id in the URL
-      -DELETE deletes the object from the db
-      -GET returns a single JSON object
+      -DELETE deletes the event from the db
+      -GET returns a single event as a JSON object
       
-   -URL /net_almanac/tags/<tag_name>/
-      -GET returns all objects with this tag in JSON
+   -URL /net_almanac/event/?tag=tag1&tag=tag2
+      -GET returns all events with 'tag1' and 'tag2'
+      
+   -URL /net_almanac/event/?date=2009-01-01
+      -GET returns all events that fall at least partially on this date
+   
+   -URL /net_almanac/event/?begin_date=2009-01-01&end_date=2009-01-31
+      -GET returns all events that fall at least partially in January
+   
+      
+Tag and date GET queries can be mixed together for more precise filtering.  
+Both the field 'begin_date' and 'end_date' are required; if one is missing the
+server will ignore the other one.
 
 ** licensing stuff, credits **
 
