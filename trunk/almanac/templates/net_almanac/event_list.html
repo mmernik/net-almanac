@@ -10,6 +10,12 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
 <script type="text/javascript" src="/site_media/js/sorttable.js"></script>
 {% endblock %}
 
+{% block navigate %}
+{% if is_custom_request %}
+	: Events {{tags_string}} {{date_string}}
+{% endif %}
+{% endblock %}
+
 {% block body %}
 {% if event_list %}
 
@@ -52,7 +58,7 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
 
 {% block side_options %}
     <hr />
-    <a href="/net_almanac/event/date/">View by date</a>
+    <a href="/net_almanac/event/filter/">Make a filter</a>
     <hr />
     <a href="/net_almanac/event/tag/"> View all tags</a> 
     <hr />

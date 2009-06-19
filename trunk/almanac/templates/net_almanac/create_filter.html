@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Create Filter {% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="/site_media/js/scw.js"></script>
+{% endblock %}
+
+
+{% block navigate %} : Create Filter {% endblock %}
+
+
+{% block body %} 
+
+<form action="/net_almanac/event/" method="GET">
+	<select multiple="TRUE" size="10" name="tag">
+		{% for tag in tag_list %}
+			<option value="{{tag.name}}">{{tag.name}}</option>
+		{% endfor %}
+	</select>
+	<hr />
+	date: <input type="text" name="date" onclick="scwShow(this,event);" />
+	<hr />
+	begin_date: <input type="text" name="begin_date" onclick="scwShow(this,event);" />
+	<hr />
+	end_date: <input type="text" name="end_date" onclick="scwShow(this,event);" />
+	<hr />
+	<input type="submit" />
+</form>
+
+{% endblock %}
+
+{% block side_options %}
+side
+{% endblock %}
+

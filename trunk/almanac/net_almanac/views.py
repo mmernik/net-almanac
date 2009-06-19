@@ -70,17 +70,27 @@ def list_events(request):
     
     events = Event.objects.all()
     
+    #These variables are used to customize the rendered HTML
+    is_custom_request = False
+    tags_list = None
+    date = None
+    begin_date = None
+    end_date = None
+    
     #filter the events if we are a GET request.
     if request.method=='GET':
         get_data = request.GET
-        logger.info('get parameters: ' + str(get_data))
+        logger.debug('get parameters: ' + str(get_data))
         #filter by tags
         tags_list = get_data.getlist('tag')
         if tags_list:
+            logger.info('tags_list: ' + str(tags_list))
+            is_custom_request = True
             events = TaggedItem.objects.get_by_model(Event, tags_list)
             logger.info("filtered by tags: " + str(events))
         
-        if get_data.has_key('date'):
+        if get_data.has_key('date') and not is_empty_or_space(get_data['date']):
+            is_custom_request = True
             #filter by all events that fall on this date
             date = get_data['date']
             logger.info('filtering by date: ' + date)
@@ -94,7 +104,11 @@ def list_events(request):
             events = events.filter(begin_datetime__lte=increment_day(date))
             events = events.filter(end_datetime__gte=current_day(date))
             
-        elif get_data.has_key('begin_date') and get_data.has_key('end_date'):
+        elif (get_data.has_key('begin_date') 
+              and get_data.has_key('end_date')
+              and not is_empty_or_space(get_data['begin_date'])
+              and not is_empty_or_space(get_data['end_date'])):
+            is_custom_request = True
             logger.info('has begin and end date')
             begin_date = get_data['begin_date']
             end_date = get_data['end_date']
@@ -155,8 +169,22 @@ def list_events(request):
         if request.method != 'GET':
             return HTTPRESPONSE_NOT_IMPLEMENTED
         
+        tags_string = ""
+        if tags_list:
+            tags_string = "with tags '" + "', '".join(tags_list) + "'"
+        
+        date_string = ""
+        if date:
+            date_string = "on " + date
+        elif begin_date:
+            date_string = "between " + begin_date + " and " + end_date
+        
         return render_to_response('net_almanac/event_list.html',
-                                  {'event_list':events})
+                                  {'event_list':events,
+                                   'is_custom_request':is_custom_request,
+                                   'tags_string':tags_string,
+                                   'date_string':date_string,
+                                   })
 
 def create_event(request):
     #a GET request returns a new form, and a POST request attempts to create a new event
@@ -372,6 +400,12 @@ def detail_event(request,object_id):
                                   {'event':event,
                                    'tags':Tag.objects.get_for_object(event)})
         
+
+def filter(request):
+    logger = logging.getLogger('view filter')
+    logger.info('hit')
+    return render_to_response('net_almanac/create_filter.html',
+                              {'tag_list':Tag.objects.all()})
 
 
 def view_by_year(request,year):
