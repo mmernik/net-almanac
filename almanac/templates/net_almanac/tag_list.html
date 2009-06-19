@@ -17,10 +17,10 @@ confirm ("Are you sure you want to delete all unused tags?");
 {% block body %} 
 
 {% if tag_list %}
-	Tag list:
+	<h4>All tags (most common listed first):</h4>
 	<ul>
 	{% for tag in tag_list %}
-		<li><a href="/net_almanac/event/?tag={{tag.name}}">{{tag.name}}</a></li>
+		<li><a href="/net_almanac/event/?tag={{tag.name}}">{{tag.name}}  ({{tag.frequency}} events)</a></li>
 	{% endfor %}
 	</ul>
 {% else %}
@@ -32,7 +32,6 @@ confirm ("Are you sure you want to delete all unused tags?");
 {% endblock %}
 
 {% block side_options %}
-<hr />
 <form action="/net_almanac/event/tag/clean/" method="post">
 <input type="submit" onclick="return confirm_clean()" value="Clean Unused Tags" />
 </form>
