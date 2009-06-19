@@ -12,12 +12,14 @@
 		{{ form_table }}
 	</table>
 	
-	<br />
-	<br />
 	
 	<input type="submit" value="Submit" />
 </form>
-<br />
+{% if error %}
+<hr /> 
+<ul class="errorlist"><li>{{error}}</li>
+{% endif %}
+<hr />
 Please use YYYY-MM-DD format for the date. <br />
 Please use [HH:MM[:ss[.uuuuuu]]] for the time. <br />
 <h6><a target = 'blank' href="http://www.tarrget.info/calendar/scw.htm">
@@ -26,12 +28,5 @@ Please use [HH:MM[:ss[.uuuuuu]]] for the time. <br />
 {% endblock %}
 
 {% block side_options %}
-<hr />
-<a href="/net_almanac/event/tag/" target="blank">See currently used tags</a> 
-<hr />
-Data: {{ form.data }} 
-<hr />
-Errors: {{ error }} 
-<hr />
 
 {% endblock %}

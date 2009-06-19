@@ -26,6 +26,8 @@ HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this 
 
 ONE_DAY = datetime.timedelta(1)
 
+INVALID_ERROR_STRING = "Submitted form is not valid"
+
 def root(request):
     #for now, just a redirect
     return HttpResponseRedirect('/net_almanac/event/')
@@ -152,9 +154,8 @@ def list_events(request):
                 
             except ValueError, e:
                 #bad format
-                error_str = 'ValueError: ' + str(e)
-                logger.info(error_str)
-                return make_bad_request_http_response(error_str)
+                logger.info('ValueError: ' + str(e))
+                return make_bad_request_http_response(str(e))
             except Exception, e:
                 logger.error('unexpected exception encountered: ' + str(e))
                 return HttpResponse('unexpected exception encountered: ' + str(e),
@@ -207,8 +208,8 @@ def create_event(request):
             if form.is_valid():
                 logger.debug('form is valid')
             else:
-                logger.debug('form is not valid')
-                raise ValueError('invalid data in form')
+                logger.debug(INVALID_ERROR_STRING)
+                raise ValueError(INVALID_ERROR_STRING)
             
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
             end_datetime_string = post_data['end_date'] + ' ' + post_data['end_time']
@@ -231,15 +232,11 @@ def create_event(request):
             return HttpResponseRedirect('/net_almanac/event/' + str(new_event.id) + '/')
         
         except ValueError, e:
-            
-            error_message = (str(type(e)) + ': ' +
-                             e.message)
-            
-            logger.info(error_message)
+            logger.info(str(e))
             return render_to_response('net_almanac/event_create.html',
                                       {'form':form,
                                        'form_table':form.as_table(),
-                                       'error':error_message})
+                                       'error':str(e)})
         else:
             logger.error('unexpected error!')
             
@@ -271,8 +268,8 @@ def update_event(request,object_id):
             if form.is_valid():
                 logger.debug('form is valid')
             else:
-                logger.debug('form is not valid')
-                raise ValueError('form is not valid')
+                logger.debug(INVALID_ERROR_STRING)
+                raise ValueError(INVALID_ERROR_STRING)
             
             
             event.name = post_data['name']
@@ -304,13 +301,11 @@ def update_event(request,object_id):
         except ValueError, e:
             #TODO: include old user input
             logger.info('bad user input')
-            error_message = (str(type(e)) + ': ' +
-                             e.message)
             return render_to_response('net_almanac/event_update.html',
                                       {'event': event,
                                        'form':form,
                                        'form_table':form.as_table(),
-                                       'error':error_message})     
+                                       'error':str(e)})     
         else:
             logger.error('unexpected error!')
         
@@ -474,27 +469,27 @@ def validate_event(event):
     
     
     if (event.__class__ != Event):
-        logger.info('object is not of type Event')
-        raise ValueError('object is not of type Event')
+        logger.info('Object is not of type Event')
+        raise ValueError('Object is not of type Event')
     
     logger.debug('checking event with name: ' + event.name)
     
     if is_empty_or_space(event.name):
-        raise ValueError('name cannot be empty')
+        raise ValueError("'name' property cannot be empty.")
     if is_empty_or_space(event.description):
-        raise ValueError('description cannot be empty')
+        raise ValueError("'description' property cannot be empty.")
     
     logger.debug('parsing tags')
     for tag in tagging.utils.parse_tag_input(event.tags):
         #normally commas are delimiters, but if they are between double-quotes they become tags
         if not tag.isalnum():
-            raise ValueError('tags must be alphanumeric')
+            raise ValueError('Tags must be alphanumeric [a-z][A-Z][0-9].')
         
     event.tags = format_tag_string(event.tags)
     
     logger.debug('checking datetime')
     if event.end_datetime < event.begin_datetime:
-        raise ValueError('the end date is before the begin date')
+        raise ValueError('The end date cannot be before the begin date.')
     
 def is_empty_or_space(input_string):
     return (input_string == None or input_string == '' or input_string.isspace())

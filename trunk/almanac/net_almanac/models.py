@@ -9,13 +9,13 @@ import logging
 import datetime
 
 
-MAX_LENGTH=200
+MAX_LENGTH=100
 
 DEFAULT_TIME = '12:00:00'
 # Create your models here.
 class Event(models.Model):
     name = models.CharField(max_length=MAX_LENGTH)
-    description = models.CharField(max_length=MAX_LENGTH)
+    description = models.CharField(max_length=500)
     begin_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     
@@ -50,9 +50,10 @@ class EventForm(ModelForm):
     def __init__(self, *args, **kwargs):
         #One static variable here is self.instance, which is the event this Form should model.
         super(EventForm,self).__init__(*args,**kwargs)
-        
         logger = logging.getLogger('EventForm')
         logger.debug('constructing new EventForm')
+        
+        self.fields['description'].widget = forms.Textarea()
         
         self.fields['url'].required = False
         self.fields['router'].required = False

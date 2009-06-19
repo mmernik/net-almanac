@@ -10,27 +10,36 @@
 {% block navigate %} : Create Filter {% endblock %}
 
 
-{% block body %} 
+{% block body %}
+<h3>Specify one or more options below to create a custom filter.</h3> 
+<hr />
 
-<form action="/net_almanac/event/" method="GET">
-	<select multiple="TRUE" size="10" name="tag">
+<form action="/net_almanac/event/" method="get">
+<h5> Specify Tags</h5>
+	Select any number of tags (hold ctrl to select multiple tags): <select multiple="multiple" size="5" name="tag">
 		{% for tag in tag_list %}
 			<option value="{{tag.name}}">{{tag.name}}</option>
 		{% endfor %}
 	</select>
 	<hr />
-	date: <input type="text" name="date" onclick="scwShow(this,event);" />
-	<hr />
-	begin_date: <input type="text" name="begin_date" onclick="scwShow(this,event);" />
-	<hr />
-	end_date: <input type="text" name="end_date" onclick="scwShow(this,event);" />
-	<hr />
-	<input type="submit" />
-</form>
+<h5>Specify date </h5>
+	The event falls on this date: <input type="text" name="date" onclick="scwShow(this,event);" />
 
+<p>-OR-</p>
+
+The event falls in between: <input type="text" name="begin_date" onclick="scwShow(this,event);" />
+
+	and <input type="text" name="end_date" onclick="scwShow(this,event);" />
+	<hr />
+	<input type="submit" value="Create Filter"/>
+</form>
+<hr />
+Please use YYYY-MM-DD format for the date.
+<h6><a target = 'blank' href="http://www.tarrget.info/calendar/scw.htm">
+ Simple Calendar Widget by Anthony Garrett
+</a></h6>
 {% endblock %}
 
 {% block side_options %}
-side
 {% endblock %}
 

@@ -7,31 +7,46 @@
 {% block body %}
 <table >
     <tr>
-        <th>id</th>
-        <th>name</th>
-        <th>description</th>
-        <th>begin time</th>
-        <th>end time</th>
-        <th>url</th>
-        <th>router</th>
-        <th>iface</th>
-        <th>tags</th>
-    </tr>
-
-    <tr>
+        <th>Database ID</th>
         <td>{{event.id}}</td>
+    </tr>
+    <tr>
+        <th>Name</th>
         <td>{{event.name}}</td>
+    </tr>
+    <tr>
+        <th>Description</th>
         <td>{{event.description}}</td>
+    </tr>
+    <tr>
+        <th>Begin Datetime</th>
         <td>{{event.begin_datetime}}</td>
+    </tr>
+    <tr>
+        <th>End Datetime</th>
         <td>{{event.end_datetime}}</td>
+    </tr>
+    <tr>
+        <th>URL</th>
         <td>{{event.url}}</td>
+    </tr>
+    <tr>
+        <th>Router</th>
         <td>{{event.router}}</td>
+    </tr>
+    <tr>
+        <th>Iface</th>
         <td>{{event.iface}}</td>
+    </tr>
+    <tr>
+        <th>Tags</th>
         <td>
         {% if tags %}
         <ul>
         	{% for tag in tags %}
-        		<li><a href="/net_almanac/event/?tag={{tag.name}}">{{tag.name}}</a></li>
+        	<li>
+        	<a href="/net_almanac/event/?tag={{tag.name}}" title="See other events with tag '{{tag.name}}'">{{tag.name}}</a>
+        	</li>
         	{% endfor %}
         </ul>
         {% else %}
@@ -46,6 +61,10 @@
 {% endblock %}
 
 {% block side_options %}
+	<a href="/net_almanac/event/?begin_date={{event.begin_datetime}}&end_date={{event.end_datetime}}">
+	See other concurrent events
+	</a>
+
 	<hr />
     <form action="/net_almanac/event/{{event.id}}/update/" method="get">
     	<input type="submit" value="Update this event" />
