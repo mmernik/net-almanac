@@ -51,7 +51,7 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
     </tr>
     {% endfor %}
 </table>
-
+<p class="small">Click on headers to sort the table</p>
 {% else %}
     <p>No Events are available.</p>
 {% endif %}
@@ -63,6 +63,6 @@ This is the parent of event_by_month.html, event_by_year.html, and tag_list.html
 {% block side_options %}
     <a href="/net_almanac/event/filter/">Filter events</a>
     <hr />
-<a href='/net_almanac/event/{{event.id}}/delete/' class="addlink">Create New Event</a>
+<a href='/net_almanac/event/create/' class="addlink">Create New Event</a>
     <hr />
 {% endblock %}
