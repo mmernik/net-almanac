@@ -4,7 +4,10 @@ Some notes to run the server.
 Dependencies are:
 django v1.0
 tags v0.3
+
+For testing, dependencies are:
 twill v0.9
+httplib2
 
 
 ** Installation Instructions **
