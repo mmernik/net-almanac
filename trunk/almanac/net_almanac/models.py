@@ -77,3 +77,15 @@ class EventForm(ModelForm):
         
         
         
+        self.fields['name'].widget.attrs['title'] = 'The name of the event.  Must be non-empty.'
+        self.fields['description'].widget.attrs['title'] = 'A description of this event.  Must be non-empty.'
+        self.fields['url'].widget.attrs['title'] = 'This field is optional.'
+        self.fields['router'].widget.attrs['title'] = 'This field is optional.'
+        self.fields['iface'].widget.attrs['title'] = 'This field is optional.'
+        self.fields['tags'].widget.attrs['title'] = 'A list of alphanumeric tags.  This field is optional.'
+        
+        self.fields['begin_date'].widget.attrs['title'] = 'Please use YYYY-MM-DD format.  This field is required.'
+        self.fields['end_date'].widget.attrs['title'] = 'Please use YYYY-MM-DD format. This field is required.'
+        self.fields['begin_time'].widget.attrs['title'] = 'Please use HH:MM[:ss] format. This field is optional.'
+        self.fields['end_time'].widget.attrs['title'] = 'Please use HH:MM[:ss] format. This field is optional.'
+        
