@@ -23,21 +23,16 @@
 	</select>
 	<hr />
 <h5>Specify date </h5>
-	The events occur on this date: <input type="text" name="date" onclick="scwShow(this,event);" />
+	The events occur on this date: <input type="text" name="date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date." />
 
 <p>-OR-</p>
 
-The events occur in between: <input type="text" name="begin_date" onclick="scwShow(this,event);" />
+The events occur in between: <input type="text" name="begin_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date." />
 
-	and <input type="text" name="end_date" onclick="scwShow(this,event);" />
+	and <input type="text" name="end_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date."/>
 	<hr />
 	<input type="submit" value="Create Filter"/>
 </form>
-<hr />
-Please use YYYY-MM-DD format for the date.
-<h6><a target = 'blank' href="http://www.tarrget.info/calendar/scw.htm">
- Simple Calendar Widget by Anthony Garrett
-</a></h6>
 {% endblock %}
 
 {% block side_options %}
