@@ -4,7 +4,7 @@
 #header { width:100%; padding: 5px; }
 #content-main { float:left; width:100%; }
 #content-related { float:right; width:18em; position:relative; margin-right:-19em; }
-#footer { clear:both; padding:10px; }
+#footer { clear:both; padding:10px; text-align:center; }
 
 /*  COLUMN TYPES  */
 .colMS { margin-right:20em !important; }
