@@ -8,10 +8,8 @@ from tagging.fields import TagField
 import logging
 import datetime
 
-
 MAX_LENGTH=100
 
-DEFAULT_TIME = '12:00:00'
 # Create your models here.
 class Event(models.Model):
     name = models.CharField(max_length=MAX_LENGTH)
@@ -58,6 +56,8 @@ class EventForm(ModelForm):
         self.fields['url'].required = False
         self.fields['router'].required = False
         self.fields['iface'].required = False
+        self.fields['end_time'].required = False
+        self.fields['begin_time'].required = False
         
         self.fields['begin_date'].widget = forms.TextInput(attrs={'onclick':'scwShow(this,event);'})
         self.fields['end_date'].widget = forms.TextInput(attrs={'onclick':'scwShow(this,event);'})
@@ -70,10 +70,7 @@ class EventForm(ModelForm):
             self.initial['end_time'] = self.instance.end_datetime.strftime("%H:%M:%S")
         else:
             self.initial['begin_date'] = datetime.date.today().strftime('%Y-%m-%d')
-            self.initial['begin_time'] = DEFAULT_TIME
-            
             self.initial['end_date'] = datetime.date.today().strftime('%Y-%m-%d')
-            self.initial['end_time'] = DEFAULT_TIME
         
         
         
