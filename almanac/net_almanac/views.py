@@ -67,11 +67,8 @@ def tag_clean(request):
 
 def list_events(request):
     logger = logging.getLogger('view list_events')
-    
     logger.info('hit')
-    
     events = Event.objects.all()
-    
     #These variables are used to customize the rendered HTML
     is_custom_request = False
     tags_list = None
@@ -82,47 +79,10 @@ def list_events(request):
     #filter the events if we are a GET request.
     if request.method=='GET':
         get_data = request.GET
-        logger.debug('get parameters: ' + str(get_data))
-        #filter by tags
-        tags_list = get_data.getlist('tag')
-        if tags_list:
-            logger.info('tags_list: ' + str(tags_list))
-            is_custom_request = True
-            events = TaggedItem.objects.get_by_model(Event, tags_list)
-            logger.info("filtered by tags: " + str(events))
-        
-        if get_data.has_key('date') and not is_empty_or_space(get_data['date']):
-            is_custom_request = True
-            #filter by all events that fall on this date
-            date = get_data['date']
-            logger.info('filtering by date: ' + date)
-            try:
-                #try parsing the date.
-                dateutil.parser.parse(date)
-            except ValueError, e:
-                logger.info('error parsing date: ' + str(e))
-                return make_bad_request_http_response(str(e))
-            
-            events = events.filter(begin_datetime__lte=increment_day(date))
-            events = events.filter(end_datetime__gte=current_day(date))
-            
-        elif (get_data.has_key('begin_date') 
-              and get_data.has_key('end_date')
-              and not is_empty_or_space(get_data['begin_date'])
-              and not is_empty_or_space(get_data['end_date'])):
-            is_custom_request = True
-            logger.info('has begin and end date')
-            begin_date = get_data['begin_date']
-            end_date = get_data['end_date']
-            try:
-                #try parsing the dates.
-                dateutil.parser.parse(begin_date)
-                dateutil.parser.parse(end_date)
-            except ValueError, e:
-                logger.info('error parsing dates: ' + str(e))
-                return make_bad_request_http_response(str(e))
-            events = events.filter(begin_datetime__lte=increment_day(end_date))
-            events = events.filter(end_datetime__gte=current_day(begin_date))
+        try:
+            events = get_filtered_events(get_data)
+        except ValueError, e:
+            return make_bad_request_http_response(str(e))
     
     if is_json_request(request):
         #return serialized objects.
@@ -140,14 +100,14 @@ def list_events(request):
                 
                 validate_event(deserialized_event) #raises ValueError
                 
+                #check if any other event uses this id
                 filtered_list = Event.objects.filter(id=deserialized_event.id)
                 if (filtered_list):
-                    logger.debug('deserialized_event.id: ' + str(deserialized_event.id))
-                    logger.debug('other event: ' + str(filtered_list))
                     assert len(filtered_list) == 1
                     error_str = 'id is already taken by another event'
                     logger.info(error_str)
                     return make_bad_request_http_response(error_str)
+                
                 logger.debug('trying to save new event...')
                 deserialized_event.save()
                 logger.info('event saved!')
@@ -573,4 +533,50 @@ def increment_day(date_string):
 #fixes some input errors
 def current_day(date_string):
     return dateutil.parser.parse(date_string).strftime('%Y-%m-%d')
+
+#Returns either a queryset of events or raises a ValueError
+def get_filtered_events(get_data):
+    logger = logging.getLogger("get_filtered_events")
+    logger.debug('get parameters: ' + str(get_data))
+    events = Event.objects.all()
+    #filter by tags
+    tags_list = get_data.getlist('tag')
+    if tags_list:
+        logger.info('tags_list: ' + str(tags_list))
+        is_custom_request = True
+        events = TaggedItem.objects.get_by_model(Event, tags_list)
+        logger.info("filtered by tags: " + str(events))
     
+    if get_data.has_key('date') and not is_empty_or_space(get_data['date']):
+        is_custom_request = True
+        #filter by all events that fall on this date
+        date = get_data['date']
+        logger.info('filtering by date: ' + date)
+        try:
+            #try parsing the date.
+            dateutil.parser.parse(date)
+        except ValueError, e:
+            logger.info('error parsing date: ' + str(e))
+            raise ValueError(str(e))
+        
+        events = events.filter(begin_datetime__lte=increment_day(date))
+        events = events.filter(end_datetime__gte=current_day(date))
+        
+    elif (get_data.has_key('begin_date') 
+          and get_data.has_key('end_date')
+          and not is_empty_or_space(get_data['begin_date'])
+          and not is_empty_or_space(get_data['end_date'])):
+        is_custom_request = True
+        logger.info('has begin and end date')
+        begin_date = get_data['begin_date']
+        end_date = get_data['end_date']
+        try:
+            #try parsing the dates.
+            dateutil.parser.parse(begin_date)
+            dateutil.parser.parse(end_date)
+        except ValueError, e:
+            logger.info('error parsing dates: ' + str(e))
+            raise ValueError(str(e))
+        events = events.filter(begin_datetime__lte=increment_day(end_date))
+        events = events.filter(end_datetime__gte=current_day(begin_date))
+    return events
