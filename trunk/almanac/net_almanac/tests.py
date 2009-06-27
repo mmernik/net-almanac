@@ -314,6 +314,18 @@ class TestDate(TestWSGI):
         self.assertTrue(response['content-type'] == JSON_MIME)
         self.assertTrue(content.count('"description"') > 2)
 
+class TestTimelineData(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestDate")
+        h = httplib2.Http()
+        
+        url = URL_BASE + 'timeline/data/'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET')
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"iso8601"') == 1)
+
 def twill_quiet():
     twill.set_output(StringIO())
     

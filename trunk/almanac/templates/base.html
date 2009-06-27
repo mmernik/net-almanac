@@ -3,6 +3,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 <title>Almanac </title>
 <link rel="stylesheet" type="text/css" href="/site_media/css/global.css" />
 <link rel="stylesheet" type="text/css" href="/site_media/css/layout.css" />
@@ -10,7 +11,8 @@
 {% block head %}
 {% endblock %}
 </head>
-<body>
+
+{% block body_tag %}<body> {% endblock %}
 <div id="container">
 	<h1 > <a href="/net_almanac/event/">Almanac</a>{% block subtitle %} {% endblock %}</h1>
 

@@ -154,3 +154,7 @@ SortTable
 http://www.kryogenix.org/code/browser/sorttable/
 MIT License
 
+Simile_Widgets Timeline
+http://code.google.com/p/simile-widgets/
+New BSD License
+

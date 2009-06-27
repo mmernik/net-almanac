@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core import serializers
 from django.shortcuts import render_to_response, get_object_or_404
+import django.utils.simplejson as json
 
 from almanac.net_almanac.models import *
 from tagging.models import *
@@ -14,6 +15,7 @@ import dateutil.parser
 import tagging
 
 JSON_MIME = 'application/json'
+XML_MIME = 'application/xml'
 TEXT_MIME = 'text/plain'
 
 HTTP_BAD_REQUEST = 400
@@ -92,12 +94,10 @@ def list_events(request):
             return HttpResponse(json_data,mimetype=JSON_MIME)
         elif request.method == 'POST':
             logger.debug('request to POST new event object')
-            
             deserialized_event = None
             try:
                 logger.debug('parsing json')
                 deserialized_event = parse_json_request(request.raw_post_data)
-                
                 validate_event(deserialized_event) #raises ValueError
                 
                 #check if any other event uses this id
@@ -111,7 +111,6 @@ def list_events(request):
                 logger.debug('trying to save new event...')
                 deserialized_event.save()
                 logger.info('event saved!')
-                
             except ValueError, e:
                 #bad format
                 logger.info('ValueError: ' + str(e))
@@ -361,63 +360,42 @@ def filter(request):
     logger.info('hit')
     return render_to_response('net_almanac/create_filter.html',
                               {'tag_list':Tag.objects.all()})
-
-
-def view_by_year(request,year):
-    logger = logging.getLogger('view view_by_year')
+def timeline_data(request):
+    logger = logging.getLogger('view timeline_data')
     logger.info('hit')
-    year_int = int(year)
-    event_list = Event.objects.filter(begin_datetime__year=year)
-    logger.debug('event_list: ' + str(event_list))
-    return render_to_response('net_almanac/event_by_year.html',
-                              {'event_list':event_list,
-                               'year':year,
-                               'next_year':year_int+1,
-                               'last_year':year_int-1,
-                               })
+    json_data = ""
     
-def view_by_month(request,year,month):
-    logger = logging.getLogger('view view_by_month')
-    logger.info('hit')
-    year_int = int(year)
-    month_int = int(month)
-    
-    if (month_int < 1) or (month_int > 12):
-        raise Http404
-    
-    next_month = None #strings with encoding YYYY/MM
-    last_month = None
-    
-    if (month_int==12):
-        next_month = str(year_int+1) + '/01'
-    else:
-        next_month = '%04d/%02d' % (year_int, month_int+1)
+    events = Event.objects.all()
+    event_container = []
+    for event in events:
+        json_event = {}
+        json_event['title'] = event.name
+        json_event['start'] = event.begin_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+        if not event.begin_datetime == event.end_datetime:
+            json_event['durationEvent'] = True
+            json_event['end'] = event.end_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+         
+        json_event['link'] = event.get_absolute_url()
+        description_string =  event.description
+        if not is_empty_or_space(event.tags):
+            description_string += '<br /> tags: ' + event.tags
+        if not is_empty_or_space(event.url):
+            description_string += '<br /> url: ' + event.url
+        if not is_empty_or_space(event.router):
+            description_string += '<br /> router: ' + event.router
+        if not is_empty_or_space(event.iface):
+            description_string += '<br /> iface: ' + event.iface
         
-    if (month_int==1):
-        last_month = str(year_int-1) + '/12'
-    else:
-        last_month = '%04d/%02d' % (year_int, month_int-1)
+        json_event['description'] = description_string
+        event_container.append(json_event)
         
+    json_container = {}
+    #the timeline iso8601 parser requres "%Y-%m-%dT%H:%M:%S"
+    json_container['dateTimeFormat'] = "iso8601" 
+    json_container['events'] = event_container
+    json_data = json.dumps(json_container)
         
-    event_list = Event.objects.filter(begin_datetime__year=year_int,
-                                      begin_datetime__month=month_int)
-    
-    month_str = datetime.date(2000, month_int, 1).strftime('%B')
-    
-    return render_to_response('net_almanac/event_by_month.html',
-                              {'event_list':event_list,
-                               'year':year,
-                               'month':month,
-                               'next_month':next_month,
-                               'last_month':last_month,
-                               'next_year':year_int+1,
-                               'last_year':year_int-1,
-                               'month_str':month_str
-                               })
-        
-def view_by_date(request):
-    #default date view, direct to all events this year.
-    return HttpResponseRedirect('/net_almanac/event/date/' + str(datetime.date.today().year) + '/')
+    return HttpResponse(json_data, mimetype=JSON_MIME)
 
 def validate_event(event):
     """

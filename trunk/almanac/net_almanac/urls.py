@@ -46,4 +46,11 @@ urlpatterns = patterns('',
     (r'^about/$',
       'django.views.generic.simple.direct_to_template', 
       {'template': 'net_almanac/about.html'}),
+    
+    (r'^event/timeline/$',
+      'django.views.generic.simple.direct_to_template', 
+      {'template': 'net_almanac/timeline.html'}),
+      
+    (r'^event/timeline/data/$',
+      'almanac.net_almanac.views.timeline_data'),
 )

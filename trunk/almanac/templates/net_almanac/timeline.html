@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Timeline {% endblock %}
+
+{% block head %}
+ 
+<script>
+	Timeline_ajax_url="/site_media/timeline/timeline_ajax/simile-ajax-api.js";
+	Timeline_urlPrefix='/site_media/timeline/timeline_js/';       
+	Timeline_parameters='bundle=true';
+</script>
+<script src="/site_media/timeline/timeline_js/timeline-api.js"    
+	type="text/javascript">
+</script>
+<script type="text/javascript">
+var tl;
+ function onLoad() {
+  var eventSource = new Timeline.DefaultEventSource();
+ 
+   var bandInfos = [
+     Timeline.createBandInfo({
+         eventSource:    eventSource,
+         //date:           "2009-04-26T17:55:00",
+         width:          "80%", 
+         intervalUnit:   Timeline.DateTime.DAY, 
+         intervalPixels: 100,
+         timeZone: -7
+     }),
+     Timeline.createBandInfo({         
+     	eventSource:    eventSource,
+         width:          "20%", 
+         intervalUnit:   Timeline.DateTime.MONTH, 
+         intervalPixels: 500,
+         timeZone: -7
+     })
+   ];
+ 
+	bandInfos[1].syncWith = 0;
+	bandInfos[1].highlight = true;
+ 	tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
+ 	Timeline.loadJSON("data/", function(json, url) { eventSource.loadJSON(json, url); });
+   
+ }
+
+ var resizeTimerID = null;
+ function onResize() {
+     if (resizeTimerID == null) {
+         resizeTimerID = window.setTimeout(function() {
+             resizeTimerID = null;
+             tl.layout();
+         }, 500);
+     }
+ }
+</script>
+{% endblock %}
+
+
+
+{% block navigate %} : Timeline {% endblock %}
+
+{% block body_tag %} <body onload="onLoad();" onresize="onResize();"> {% endblock %}
+{% block body %} 
+
+<div id="my-timeline" style="height: 400px; border: 1px solid #aaa"></div>
+
+Click and drag with your mouse to navigate the timeline. <br />
+All times are in Pacific Standard Time.  
+<noscript>
+This page uses Javascript to show you a Timeline. Please enable Javascript in your browser to see the full page.
+</noscript>
+
+{% endblock %}
+
+{% block side_options %}
+{% endblock %}
+
