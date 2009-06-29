@@ -14,9 +14,11 @@
 <h3>Specify one or more options below to create a custom filter.</h3> 
 <hr />
 
-<form action="/net_almanac/event/" method="get">
+<form action="/net_almanac/event/process_filter/" method="get">
 <h5> Specify Tags</h5>
-	Select any number of tags (hold ctrl to select multiple tags): <select multiple="multiple" size="5" name="tag">
+	Select any number of tags (hold ctrl to select multiple tags): 
+	<select multiple="multiple" size="6" name="tag">
+		<option value="no_tag">(NONE)</option>
 		{% for tag in tag_list %}
 			<option value="{{tag.name}}">{{tag.name}}</option>
 		{% endfor %}
@@ -31,6 +33,14 @@ The events occur in between: <input type="text" name="begin_date" onclick="scwSh
 
 	and <input type="text" name="end_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date."/>
 	<hr />
+	
+	<h5>Choose Display Format </h5>
+	<input type="radio" name="display" value="table" checked="checked" / > table <br />
+	<input type="radio" name="display" value="timeline"  / > timeline <br />
+	<input type="radio" name="display" value="json"  / > JSON <br />
+
+	<hr />
+	
 	<input type="submit" value="Create Filter"/>
 </form>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block subtitle %} : 
-{% if is_custom_request %}
+{% if filter_string %}
 	Filtered Events
 {% else %}
 	Events
@@ -13,9 +13,7 @@
 {% endblock %}
 
 {% block navigate %}
-{% if is_custom_request %}
-	: Events {{tags_string}} {{date_string}}
-{% endif %}
+	: Events {{filter_string}}
 {% endblock %}
 
 {% block body %}
@@ -57,10 +55,8 @@
 {% endblock %}
 
 {% block side_options %}
-<a href='/net_almanac/event/timeline/'>View Timeline</a>
+<a href='/net_almanac/event/timeline/'>View timeline of all events</a>
     <hr />
-    <a href="/net_almanac/event/filter/">Filter events</a>
-    <hr />
-<a href='/net_almanac/event/create/' class="addlink">Create New Event</a>
+<a href='/net_almanac/event/create/' class="addlink">Create new event</a>
     <hr />
 {% endblock %}

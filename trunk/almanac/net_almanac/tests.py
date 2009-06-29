@@ -337,23 +337,46 @@ class TwillTestCaseSetup(unittest.TestCase):
     def twill_teardown(self):
         twill.remove_wsgi_intercept('127.0.0.1', TEST_PORT)
 
-class JSONTestCase(TwillTestCaseSetup):
+class TwillTestCase(TwillTestCaseSetup):
     def runTest(self):
         """
         Note we cannot connect to the twill server using urllib2 or any other third party client.
         Also, we cannot verify the header content in a twill response.
         """
         
-        logger = logging.getLogger("JSONTestCase")
+        logger = logging.getLogger("TwillTestCase")
         url = URL_BASE
         twill_quiet()
         logger.info('accessing ' + url)
         tc.go(url)
         tc.find("html") # sanity check that this is a html request.
         
+        url = URL_BASE + 'filter/'
+        logger.info('accessing ' + url)
+        tc.go(url)
+        tc.formvalue(1,'tag','esnet')
+        tc.submit(6) #simulates a click on the "create filter" button
+        tc.find("html")
+        tc.find('<table class="sortable">') #a line in event.list.html
+        tc.notfind('experiment') #should be filtered out
+        
+        tc.go(url)
+        tc.formvalue(1,'display','timeline')
+        tc.submit(6) #click should direct us to timeline.
+        tc.find("html")
+        tc.notfind('<table class="sortable">') 
+        
+        tc.go(url)
+        tc.formvalue(1,'display','json')
+        tc.submit(6) #click should give us JSON object.
+        tc.find('"pk": 1') #part of JSON string.
+        tc.notfind("html")
+        
+        #Set headers to contain only the json mime
         tc.clear_extra_headers()
         tc.add_extra_header('Accept',JSON_MIME)
         
+        url = URL_BASE
         logger.info('accessing ' + url)
         tc.go(url)
         logger.debug('JSON data:' + tc.show())
