@@ -42,14 +42,16 @@ urlpatterns = patterns('',
          
     (r'^event/filter/$',
       'almanac.net_almanac.views.filter'),
+      
+    (r'^event/process_filter/$',
+     'almanac.net_almanac.views.process_filter'),
     
     (r'^about/$',
       'django.views.generic.simple.direct_to_template', 
       {'template': 'net_almanac/about.html'}),
     
     (r'^event/timeline/$',
-      'django.views.generic.simple.direct_to_template', 
-      {'template': 'net_almanac/timeline.html'}),
+      'almanac.net_almanac.views.timeline'),
       
     (r'^event/timeline/data/$',
       'almanac.net_almanac.views.timeline_data'),

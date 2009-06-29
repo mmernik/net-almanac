@@ -1,4 +1,8 @@
-hr { height: 1px; margin: 7px 0px;}
+hr { 
+height: 1px; 
+margin: 7px 0px; 
+background-color: #AAA;
+}
 
 /* added by me */
 #columncontainer {

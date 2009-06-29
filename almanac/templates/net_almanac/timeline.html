@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
-{% block subtitle %} : Timeline {% endblock %}
+{% block subtitle %} :  
+{% if filter_string %}
+	Filtered Timeline
+{% else %}
+	Timeline
+{% endif %} 
+{% endblock %}
 
 {% block head %}
- 
-<script>
+<script type="text/javascript">
 	Timeline_ajax_url="/site_media/timeline/timeline_ajax/simile-ajax-api.js";
 	Timeline_urlPrefix='/site_media/timeline/timeline_js/';       
 	Timeline_parameters='bundle=true';
@@ -38,7 +43,7 @@ var tl;
 	bandInfos[1].syncWith = 0;
 	bandInfos[1].highlight = true;
  	tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
- 	Timeline.loadJSON("data/", function(json, url) { eventSource.loadJSON(json, url); });
+ 	Timeline.loadJSON("data/?{{get_args}}", function(json, url) { eventSource.loadJSON(json, url); });
    
  }
 
@@ -56,7 +61,7 @@ var tl;
 
 
 
-{% block navigate %} : Timeline {% endblock %}
+{% block navigate %} : Timeline {{filter_string}} {% endblock %}
 
 {% block body_tag %} <body onload="onLoad();" onresize="onResize();"> {% endblock %}
 {% block body %} 

@@ -72,19 +72,16 @@ def list_events(request):
     logger.info('hit')
     events = Event.objects.all()
     #These variables are used to customize the rendered HTML
-    is_custom_request = False
-    tags_list = None
-    date = None
-    begin_date = None
-    end_date = None
+    filter_string = ""
     
     #filter the events if we are a GET request.
     if request.method=='GET':
         get_data = request.GET
-        try:
-            events = get_filtered_events(get_data)
-        except ValueError, e:
-            return make_bad_request_http_response(str(e))
+        if get_data:
+            try:
+                events, filter_string = get_filtered_events(get_data)
+            except ValueError, e:
+                return make_bad_request_http_response(str(e))
     
     if is_json_request(request):
         #return serialized objects.
@@ -128,22 +125,10 @@ def list_events(request):
     else:
         if request.method != 'GET':
             return HTTPRESPONSE_NOT_IMPLEMENTED
-        
-        tags_string = ""
-        if tags_list:
-            tags_string = "with tags '" + "', '".join(tags_list) + "'"
-        
-        date_string = ""
-        if date:
-            date_string = "on " + date
-        elif begin_date:
-            date_string = "between " + begin_date + " and " + end_date
-        
+
         return render_to_response('net_almanac/event_list.html',
                                   {'event_list':events,
-                                   'is_custom_request':is_custom_request,
-                                   'tags_string':tags_string,
-                                   'date_string':date_string,
+                                   'filter_string':filter_string,
                                    })
 
 def create_event(request):
@@ -356,16 +341,46 @@ def detail_event(request,object_id):
         
 
 def filter(request):
+    #Creates a form for a filter.
     logger = logging.getLogger('view filter')
     logger.info('hit')
     return render_to_response('net_almanac/create_filter.html',
                               {'tag_list':Tag.objects.all()})
+    
+def process_filter(request):
+    #Redirects the filter request to the appropriate view according to user choice.
+    get_args = request.GET
+    if get_args['display'] == 'timeline':
+        return HttpResponseRedirect('/net_almanac/event/timeline?' + get_args.urlencode())
+    elif get_args['display'] == 'json':
+        events, filter_string = get_filtered_events(get_args)
+        json_data = serializers.serialize('json',events)
+        return HttpResponse(json_data,mimetype=TEXT_MIME)
+    else:
+        return HttpResponseRedirect('/net_almanac/event/?' + get_args.urlencode())
+    
+def timeline(request):
+    """
+    Renders the javascript timeline.
+    """
+    try:
+        events, filter_string = get_filtered_events(request.GET)
+    except ValueError, e:
+        return make_bad_request_http_response(str(e))
+    
+    return render_to_response('net_almanac/timeline.html',
+                              {'get_args':request.GET.urlencode(),
+                               'filter_string':filter_string})
+
 def timeline_data(request):
+    """
+    Returns data in JSON format only for the javascript timeline.  Use event_display for REST queries.
+    """
     logger = logging.getLogger('view timeline_data')
     logger.info('hit')
     json_data = ""
     
-    events = Event.objects.all()
+    events, filter_string = get_filtered_events(request.GET)
     event_container = []
     for event in events:
         json_event = {}
@@ -516,9 +531,18 @@ def current_day(date_string):
 def get_filtered_events(get_data):
     logger = logging.getLogger("get_filtered_events")
     logger.debug('get parameters: ' + str(get_data))
+    
+    date = None
+    begin_date = None
+    
     events = Event.objects.all()
     #filter by tags
     tags_list = get_data.getlist('tag')
+    
+    #remove the 'no_tag' option in the form from the list.  This is here so that
+    #the users can deselect tags if they want.
+    if tags_list.count('no_tag') > 0:
+        tags_list.remove('no_tag')
     if tags_list:
         logger.info('tags_list: ' + str(tags_list))
         is_custom_request = True
@@ -557,4 +581,17 @@ def get_filtered_events(get_data):
             raise ValueError(str(e))
         events = events.filter(begin_datetime__lte=increment_day(end_date))
         events = events.filter(end_datetime__gte=current_day(begin_date))
-    return events
+        
+    """    
+    Here is logic to create a user-readable string to display in HTML that explains what filter the user is using.
+    """
+    filter_string = ""
+    if tags_list:
+        filter_string += " with tags '" + "', '".join(tags_list) + "'"
+    
+    if date:
+        filter_string += " on " + date
+    elif begin_date:
+        filter_string += " between " + begin_date + " and " + end_date
+    
+    return events, filter_string
