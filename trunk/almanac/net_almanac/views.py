@@ -534,10 +534,24 @@ def get_filtered_events(get_data):
     
     date = None
     begin_date = None
+    name = None
+    description = None
+    search = None
     
     events = Event.objects.all()
     #filter by tags
     tags_list = get_data.getlist('tag')
+    
+    if (get_data.has_key('search') and not is_empty_or_space(get_data['search'])):
+        search = get_data['search']
+        
+        events = (Event.objects.filter(name__contains=(search)) |
+                  Event.objects.filter(description__contains=(search)) |
+                  Event.objects.filter(url__contains=(search)) |
+                  Event.objects.filter(router__contains=(search)) |
+                  Event.objects.filter(iface__contains=(search)) |
+                  Event.objects.filter(tags__contains=(search)))
+    
     
     #remove the 'no_tag' option in the form from the list.  This is here so that
     #the users can deselect tags if they want.
@@ -545,14 +559,12 @@ def get_filtered_events(get_data):
         tags_list.remove('no_tag')
     if tags_list:
         logger.info('tags_list: ' + str(tags_list))
-        is_custom_request = True
         events = TaggedItem.objects.get_by_model(Event, tags_list)
         logger.info("filtered by tags: " + str(events))
     
     if get_data.has_key('date') and not is_empty_or_space(get_data['date']):
-        is_custom_request = True
         #filter by all events that fall on this date
-        date = get_data['date']
+        date = current_day(get_data['date'])
         logger.info('filtering by date: ' + date)
         try:
             #try parsing the date.
@@ -562,16 +574,15 @@ def get_filtered_events(get_data):
             raise ValueError(str(e))
         
         events = events.filter(begin_datetime__lte=increment_day(date))
-        events = events.filter(end_datetime__gte=current_day(date))
+        events = events.filter(end_datetime__gte=date)
         
     elif (get_data.has_key('begin_date') 
           and get_data.has_key('end_date')
           and not is_empty_or_space(get_data['begin_date'])
           and not is_empty_or_space(get_data['end_date'])):
-        is_custom_request = True
         logger.info('has begin and end date')
-        begin_date = get_data['begin_date']
-        end_date = get_data['end_date']
+        begin_date = current_day(get_data['begin_date'])
+        end_date = increment_day(get_data['end_date'])
         try:
             #try parsing the dates.
             dateutil.parser.parse(begin_date)
@@ -579,19 +590,41 @@ def get_filtered_events(get_data):
         except ValueError, e:
             logger.info('error parsing dates: ' + str(e))
             raise ValueError(str(e))
-        events = events.filter(begin_datetime__lte=increment_day(end_date))
-        events = events.filter(end_datetime__gte=current_day(begin_date))
+        events = events.filter(begin_datetime__lte=end_date)
+        events = events.filter(end_datetime__gte=begin_date)
+        
+    if (get_data.has_key('name') and not is_empty_or_space(get_data['name'])):
+        name = get_data['name']
+        events = events.filter(name__contains=(name))
+    
+    if (get_data.has_key('description') and not is_empty_or_space(get_data['description'])):
+        description = get_data['description']
+        events = events.filter(description__contains=(description))
+        
+
         
     """    
     Here is logic to create a user-readable string to display in HTML that explains what filter the user is using.
     """
     filter_string = ""
+    
+    if search:
+        filter_string += " containing text '" + search + "'; "
+        
+    if name:
+        filter_string += " named '" + name + "'; "
+    
+    if description:
+        filter_string += " with description '" + description + "'; " 
+    
     if tags_list:
-        filter_string += " with tags '" + "', '".join(tags_list) + "'"
+        filter_string += " with tags '" + "', '".join(tags_list) + "'; "
     
     if date:
-        filter_string += " on " + date
+        filter_string += " on " + date + "; "
     elif begin_date:
-        filter_string += " between " + begin_date + " and " + end_date
+        filter_string += " between " + begin_date + " and " + end_date + "; "
+
+    filter_string = filter_string[:len(filter_string)-2] #chop off last two characters
     
     return events, filter_string
