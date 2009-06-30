@@ -7,10 +7,12 @@ tags v0.3
 
 For testing, dependencies are:
 twill v0.9
+wsgi_intercept
 httplib2
 
 
 ** Installation Instructions **
+
 Before you run, you need to install django v1.0: 
 http://www.djangoproject.com/download/
 and tags v0.3:
@@ -26,10 +28,11 @@ Mac OS X, it is /Library/Python/2.5/site-packages/, for cygwin it is in
 /lib/python/site-packages').  This is the same directory where django is
 installed.
 
-twill v0.9  and httplib2 are needed for running tests.  They are available
-here:
+twill v0.9 , httplib2, and wsgi-intercept are needed for running tests.  They
+are available here:
 http://twill.idyll.org/
 http://code.google.com/p/httplib2/
+http://code.google.com/p/wsgi-intercept/
 
 You might need to install dateutils depending on the version of python you
 have.  Get it here:
@@ -113,18 +116,30 @@ JSON MIME "application/json" or the server will render HTML.
       -DELETE deletes the event from the db
       -GET returns a single event as a JSON object
       
-   -URL /net_almanac/event/?tag=tag1&tag=tag2
-      -GET returns all events with 'tag1' and 'tag2'
+   -URL /net_almanac/event/?<key1>=<value1>&<key2>=<value2>
+      -GET returns all events filtered, the rules are below
       
-   -URL /net_almanac/event/?date=2009-01-01
-      -GET returns all events that fall at least partially on this date
-   
-   -URL /net_almanac/event/?begin_date=2009-01-01&end_date=2009-01-31
-      -GET returns all events that fall at least partially in January
-   
+The list of possible keys for GET filtering:
++----------------------+-------------------------------------------------------
+|name                  | Returns events whose name contains the value
++----------------------+-------------------------------------------------------
+|description           | Returns events whose description contains the value
++----------------------+-------------------------------------------------------
+|search                | Returns events whose name, description, router, iface,
+|                      | url, or tags contains the value.
++----------------------+-------------------------------------------------------
+|tag                   | Returns all events with this tag.  You can have more
+|                      | than one.
++----------------------+-------------------------------------------------------
+|date                  | Returns all events that fall at least partially on 
+|                      | this date.  Use format YYYY-MM-DD.
++----------------------+-------------------------------------------------------
+|begin_date & end_date | Returns all events that fall in between these two
+|                      | dates. Use format YYYY-MM-DD.
++----------------------+-------------------------------------------------------
       
-Tag and date GET queries can be mixed together for more precise filtering.  
-Both the field 'begin_date' and 'end_date' are required; if one is missing the
+Different GET queries can be mixed together for more precise filtering.  Both 
+the field 'begin_date' and 'end_date' are required; if one is missing the
 server will ignore the other one.
 
 ** licensing stuff, credits **
@@ -149,6 +164,10 @@ GNU Lesser General Public License
 HttpLib2
 http://code.google.com/p/httplib2/
 MIT License
+
+WSGI-intercept
+http://code.google.com/p/wsgi-intercept/
+MIT license
 
 SortTable
 http://www.kryogenix.org/code/browser/sorttable/
