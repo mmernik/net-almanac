@@ -326,6 +326,41 @@ class TestTimelineData(TestWSGI):
         self.assertTrue(response['content-type'] == JSON_MIME)
         self.assertTrue(content.count('"iso8601"') == 1)
 
+class TestTextSearch(TestWSGI):
+    def runTest(self):
+        logger = logging.getLogger("TestWSGI TestDate")
+        h = httplib2.Http()
+        
+        #empty search should be ignored
+        url = URL_BASE + '?name='
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') > 2)
+        
+        url = URL_BASE + '?name=experiment'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 1)
+        
+        url = URL_BASE + '?description=lorem'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 2)
+        
+        url = URL_BASE + '?search=xe-0/1/0.1009'
+        logger.info('accessing with GET: ' + url)
+        response, content = h.request(url,'GET', headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+        self.assertTrue(response['content-type'] == JSON_MIME)
+        self.assertTrue(content.count('"description"') == 1)
+        
+
 def twill_quiet():
     twill.set_output(StringIO())
     
@@ -355,22 +390,30 @@ class TwillTestCase(TwillTestCaseSetup):
         logger.info('accessing ' + url)
         tc.go(url)
         tc.formvalue(1,'tag','esnet')
-        tc.submit(6) #simulates a click on the "create filter" button
+        tc.submit(9) #simulates a click on the "create filter" button
         tc.find("html")
         tc.find('<table class="sortable">') #a line in event.list.html
         tc.notfind('experiment') #should be filtered out
         
         tc.go(url)
         tc.formvalue(1,'display','timeline')
-        tc.submit(6) #click should direct us to timeline.
+        tc.submit(9) #click should direct us to timeline.
         tc.find("html")
         tc.notfind('<table class="sortable">') 
         
         tc.go(url)
         tc.formvalue(1,'display','json')
-        tc.submit(6) #click should give us JSON object.
+        tc.submit(9) #click should give us JSON object.
         tc.find('"pk": 1') #part of JSON string.
         tc.notfind("html")
+        
+        tc.go(url)
+        tc.formvalue(1,'name','upgrade')
+        tc.formvalue(1,'search','xe-0/1/0.1009')
+        tc.formvalue(1,'description','infrastructure')
+        tc.submit(9)
+        tc.find('html')
+        tc.find('router2') #part of the upgrade event.
         
         #Set headers to contain only the json mime
         tc.clear_extra_headers()

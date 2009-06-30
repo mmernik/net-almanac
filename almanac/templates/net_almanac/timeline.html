@@ -35,7 +35,7 @@ var tl;
      	eventSource:    eventSource,
          width:          "20%", 
          intervalUnit:   Timeline.DateTime.MONTH, 
-         intervalPixels: 500,
+         intervalPixels: 300,
          timeZone: -7
      })
    ];
@@ -61,7 +61,7 @@ var tl;
 
 
 
-{% block navigate %} : Timeline {{filter_string}} {% endblock %}
+{% block navigate %} : Timeline of Events {{filter_string}} {% endblock %}
 
 {% block body_tag %} <body onload="onLoad();" onresize="onResize();"> {% endblock %}
 {% block body %} 

@@ -18,12 +18,22 @@ e = events[0]
 f = EventForm(instance=e)
 http = httplib2.Http()
 
-from event.testdata import *
-
-JSON_MIME = 'application/json'
-
+import twill
+from twill import commands as tc
+from twill.shell import TwillCommandLoop
+from django.test import TestCase
+from django.core import serializers
+from django.core.servers.basehttp import AdminMediaHandler
+from django.core.handlers.wsgi import WSGIHandler
 url = 'http://127.0.0.1:8000/net_almanac/event/'
 json_string = serializers.serialize('json',[e])
+
+app = AdminMediaHandler(WSGIHandler())
+TEST_PORT = 33399
+twill.add_wsgi_intercept('127.0.0.1', TEST_PORT, lambda: app)
+URL_BASE = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/'
+JSON_MIME = 'application/json'
+
 
 e=Event(name='1',description='2',begin_datetime=datetime.datetime.now(),end_datetime=datetime.datetime.now(),url='3',router='4',iface='5',tags='')
 

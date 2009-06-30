@@ -13,8 +13,12 @@
 {% block body %}
 <h3>Specify one or more options below to create a custom filter.</h3> 
 <hr />
-
 <form action="/net_almanac/event/process_filter/" method="get">
+<h5> Text Search </h5>
+The event has the text: <input type="text" name="search" /> <br />
+The event is named: <input type="text" name="name" /> <br />
+The event has the description: <input type="text" name="description" /> <br />
+<hr />
 <h5> Specify Tags</h5>
 	Select any number of tags (hold ctrl to select multiple tags): 
 	<select multiple="multiple" size="6" name="tag">
@@ -32,6 +36,7 @@
 The events occur in between: <input type="text" name="begin_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date." />
 
 	and <input type="text" name="end_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date."/>
+	<p class="tiny"> <br /> Please use YYYY-MM-DD format for the date. </p>
 	<hr />
 	
 	<h5>Choose Display Format </h5>
@@ -43,6 +48,7 @@ The events occur in between: <input type="text" name="begin_date" onclick="scwSh
 	
 	<input type="submit" value="Create Filter"/>
 </form>
+
 {% endblock %}
 
 {% block side_options %}
