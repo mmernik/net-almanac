@@ -123,9 +123,11 @@ def list_events(request):
             return HTTPRESPONSE_NOT_IMPLEMENTED
         
     else:
+        #Not a JSON request
         if request.method != 'GET':
             return HTTPRESPONSE_NOT_IMPLEMENTED
         
+        #shorten description length on the table.
         for event in events:
             if len(event.description) > 50:
                 event.short_description = event.description[:47] + '...'
@@ -139,6 +141,7 @@ def list_events(request):
 
 def create_event(request):
     #a GET request returns a new form, and a POST request attempts to create a new event
+    #This view is not used in REST queries
     logger = logging.getLogger('view create_event')
     
     logger.info('hit')
@@ -193,6 +196,7 @@ def create_event(request):
         
 def update_event(request,object_id):
     #a GET request returns a new form, and a POST request attempts to edit an event
+    #This view is not used in REST queries
     logger = logging.getLogger('view update_event')
     logger.info('hit')
     logger.debug('request.method='+request.method)
@@ -408,6 +412,10 @@ def timeline_data(request):
             description_string += '<br /> iface: ' + event.iface
         
         json_event['description'] = description_string
+        
+        #color an event red if it has the tag 'important'
+        if Tag.objects.get_for_object(event).filter(name='important'):
+            json_event['color'] = '#F00'
         event_container.append(json_event)
         
     json_container = {}
