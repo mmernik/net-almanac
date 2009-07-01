@@ -25,14 +25,15 @@ var tl;
    var bandInfos = [
      Timeline.createBandInfo({
          eventSource:    eventSource,
-         //date:           "2009-04-26T17:55:00",
+         date:           {{ default_date }},
          width:          "79%", 
          intervalUnit:   Timeline.DateTime.DAY, 
          intervalPixels: 100,
          timeZone: -7
      }),
      Timeline.createBandInfo({         
-     	eventSource:    eventSource,
+         eventSource:    eventSource,
+         date:           {{ default_date }},
          width:          "21%", 
          intervalUnit:   Timeline.DateTime.MONTH, 
          intervalPixels: 300,

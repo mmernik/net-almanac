@@ -263,14 +263,14 @@ class TestDate(TestWSGI):
         logger = logging.getLogger("TestWSGI TestDate")
         h = httplib2.Http()
         
-        url = URL_BASE + '?date=2000-01-15'
+        url = URL_BASE + '?date=2009-01-15'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
         self.assertTrue(response['content-type'] == JSON_MIME)
         self.assertTrue(content.count('"description"') == 2)
 
-        url = URL_BASE + '?date=2000-01-16'
+        url = URL_BASE + '?date=2009-01-16'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -278,28 +278,28 @@ class TestDate(TestWSGI):
         self.assertTrue(content.count('"description"') == 1)
         
         #malformed date but dateutil deals with it
-        url = URL_BASE + '?date=2000-01-15a'
+        url = URL_BASE + '?date=2009-01-15a'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
         self.assertTrue(response['content-type'] == JSON_MIME)
         
         #bad date
-        url = URL_BASE + '?date=2000-01-s5'
+        url = URL_BASE + '?date=2009-01-s5'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
         self.assertTrue(response['content-type'] == TEXT_MIME)
         
         #another bad date
-        url = URL_BASE + '?date=2000-02-30'
+        url = URL_BASE + '?date=2009-02-30'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
         self.assertTrue(response['content-type'] == TEXT_MIME)
         
         #use begin//end dates
-        url = URL_BASE + '?begin_date=2000-01-01&end_date=2000-01-30'
+        url = URL_BASE + '?begin_date=2009-01-01&end_date=2009-01-30'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -307,7 +307,7 @@ class TestDate(TestWSGI):
         self.assertTrue(content.count('"description"') == 2)
         
         #no begin date: end date is ignored.
-        url = URL_BASE + '?end_date=2000-01-30'
+        url = URL_BASE + '?end_date=2009-01-30'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
