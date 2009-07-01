@@ -373,14 +373,23 @@ def timeline(request):
     """
     Renders the javascript timeline.
     """
+    logger = logging.getLogger('view timeline_data')
+    logger.info('hit')
     try:
         events, filter_string = get_filtered_events(request.GET)
     except ValueError, e:
         return make_bad_request_http_response(str(e))
     
+    first_event = events.order_by('begin_datetime')[0].begin_datetime #ascending
+    
+    #This is the javascript Date object constructor
+    default_date = 'new Date(Date.UTC(' + str(first_event.year) + ', ' + str(first_event.month - 1) + ', ' + str(first_event.day) + '))'
+    
     return render_to_response('net_almanac/timeline.html',
                               {'get_args':request.GET.urlencode(),
-                               'filter_string':filter_string})
+                               'filter_string':filter_string,
+                               'default_date':default_date,
+                               })
 
 def timeline_data(request):
     """
@@ -440,7 +449,6 @@ def validate_event(event):
         raise ValueError('Object is not of type Event')
     
     logger.debug('checking event with name: ' + event.name)
-    
     if is_empty_or_space(event.name):
         raise ValueError("'name' property cannot be empty.")
     if is_empty_or_space(event.description):
@@ -451,9 +459,7 @@ def validate_event(event):
         #normally commas are delimiters, but if they are between double-quotes they become tags
         if not tag.isalnum():
             raise ValueError('Tags must be alphanumeric [a-z][A-Z][0-9].')
-        
     event.tags = format_tag_string(event.tags)
-    
     logger.debug('checking datetime')
     if event.end_datetime < event.begin_datetime:
         raise ValueError('The end date cannot be before the begin date.')
@@ -639,6 +645,8 @@ def get_filtered_events(get_data):
     elif begin_date:
         filter_string += " between " + begin_date + " and " + end_date + "; "
 
-    filter_string = filter_string[:len(filter_string)-2] #chop off last two characters
+    if filter_string:
+        filter_string += str(len(events)) + " events total"
+        
     
     return events, filter_string
