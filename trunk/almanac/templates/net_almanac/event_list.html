@@ -23,6 +23,7 @@
     <tr >
         <th>id</th>
         <th>name</th>
+        <th>description</th>
         <th>begin time</th>
         <th>end time</th>
         <th>url</th>
@@ -36,6 +37,7 @@
         <td>
         	<a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a>
         </td>
+        <td>{{event.short_description}}</td>
         <td>{{event.begin_datetime}}</td>
         <td>{{event.end_datetime}}</td>
         <td>{{event.url}}</td>
