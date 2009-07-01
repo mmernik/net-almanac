@@ -125,6 +125,12 @@ def list_events(request):
     else:
         if request.method != 'GET':
             return HTTPRESPONSE_NOT_IMPLEMENTED
+        
+        for event in events:
+            if len(event.description) > 50:
+                event.short_description = event.description[:47] + '...'
+            else:
+                event.short_description = event.description
 
         return render_to_response('net_almanac/event_list.html',
                                   {'event_list':events,

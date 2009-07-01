@@ -2,6 +2,7 @@
 Some notes to run the server. 
 
 Dependencies are:
+python 2.5
 django v1.0
 tags v0.3
 
@@ -38,6 +39,9 @@ You might need to install dateutils depending on the version of python you
 have.  Get it here:
 
 http://labix.org/python-dateutil
+
+All of the module dependencies are available through easy_install except for 
+tagging v0.3, which you must checkout using svn.
 
 ** Running Instructions **
 
@@ -141,6 +145,9 @@ The list of possible keys for GET filtering:
 Different GET queries can be mixed together for more precise filtering.  Both 
 the field 'begin_date' and 'end_date' are required; if one is missing the
 server will ignore the other one.
+
+The URL of all valid GET queries is also a valid HTML page.  Navigate to it
+with your web browser to view the events in a human-usable UI.
 
 ** licensing stuff, credits **
 

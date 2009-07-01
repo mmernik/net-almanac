@@ -22,6 +22,7 @@ The event has the description: <input type="text" name="description" /> <br />
 <h5> Specify Tags</h5>
 	Select any number of tags (hold ctrl to select multiple tags): 
 	<select multiple="multiple" size="6" name="tag">
+		<!--We know there will be no tag collisions with no_tag since all tags are alphanumeric-->
 		<option value="no_tag">(NONE)</option>
 		{% for tag in tag_list %}
 			<option value="{{tag.name}}">{{tag.name}}</option>
