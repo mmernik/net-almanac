@@ -156,8 +156,6 @@ class TestDelete(TestWSGI):
         
         h = httplib2.Http()
         
-        events = Event.objects.all()
-        
         logger.info('accessing with DELETE: ' + url)
         response, content = h.request(url,'DELETE', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
