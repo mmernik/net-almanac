@@ -36,7 +36,7 @@ var tl;
          date:           {{ default_date }},
          width:          "21%", 
          intervalUnit:   Timeline.DateTime.MONTH, 
-         intervalPixels: 300,
+         intervalPixels: 200,
          timeZone: -7
      })
    ];
@@ -62,7 +62,7 @@ var tl;
 
 
 
-{% block navigate %} : Timeline of Events {{filter_string}} {% endblock %}
+{% block navigate %} : Timeline of Events {{filter_string|safe}} {% endblock %}
 
 {% block body_tag %} <body onload="onLoad();" onresize="onResize();"> {% endblock %}
 {% block body %} 

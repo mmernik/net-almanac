@@ -8,6 +8,7 @@ bad_json_strings = ('aaaa', #not a JSON strong
                     '[{"pk": 2, "model": "net_almanac.event", "fields": {"iface": "Ethernet0", "name": "experiment", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-03 15:01:01", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": "a physics experiment"}}]', #wrong pk
                     '[{"pk": 1, "model": "net_almanac.event", "fields": {"iface": "Ethernet0", "name": "experiment", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-03 15:01:01", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": ""}}]', #empty description
                     '[{"pk": 1, "model": "net_almanac.event", "fields": {"iface": "Ethernet0", "name": "experiment", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-03 15:01:01", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": "a physics experiment", "owner": "andy"}}]', #extra field
+                    '[{"pk": 1, "model": "net_almanac.event", "fields": {"iface": "Ethernet0", "name": "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", "tags": "lbnl, experiment", "url": "http://www.lbl.gov", "end_datetime": "2009-06-03 15:01:01", "begin_datetime": "2009-06-01 12:21:15", "router": "router1", "description": "a physics experiment"}}]', #name field too long
                     
                     )
 
