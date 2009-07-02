@@ -6,7 +6,7 @@ from django.core import serializers
 from django.shortcuts import render_to_response, get_object_or_404
 import django.utils.simplejson as json
 
-from almanac.net_almanac.models import *
+from almanac.net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION
 from tagging.models import *
 
 import logging
@@ -443,7 +443,6 @@ def validate_event(event):
     """
     logger = logging.getLogger('validate_event')
     
-    
     if (event.__class__ != Event):
         logger.info('Object is not of type Event')
         raise ValueError('Object is not of type Event')
@@ -453,6 +452,13 @@ def validate_event(event):
         raise ValueError("'name' property cannot be empty.")
     if is_empty_or_space(event.description):
         raise ValueError("'description' property cannot be empty.")
+    
+    if (len(event.name) > MAX_LENGTH_FIELD
+        or len(event.url) > MAX_LENGTH_FIELD
+        or len(event.router) > MAX_LENGTH_FIELD
+        or len(event.iface) > MAX_LENGTH_FIELD
+        or len(event.description) > MAX_LENGTH_DESCRIPTION):
+        raise ValueError("Field data too long")
     
     logger.debug('parsing tags')
     for tag in tagging.utils.parse_tag_input(event.tags):

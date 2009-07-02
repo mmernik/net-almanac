@@ -8,18 +8,19 @@ from tagging.fields import TagField
 import logging
 import datetime
 
-MAX_LENGTH=100
+MAX_LENGTH_FIELD = 100
+MAX_LENGTH_DESCRIPTION = 500
 
 # Create your models here.
 class Event(models.Model):
-    name = models.CharField(max_length=MAX_LENGTH)
-    description = models.CharField(max_length=500)
+    name = models.CharField(max_length=MAX_LENGTH_FIELD)
+    description = models.CharField(max_length=MAX_LENGTH_DESCRIPTION)
     begin_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     
-    url = models.CharField(max_length=MAX_LENGTH)
-    router = models.CharField(max_length=MAX_LENGTH)
-    iface = models.CharField(max_length=MAX_LENGTH)
+    url = models.CharField(max_length=MAX_LENGTH_FIELD)
+    router = models.CharField(max_length=MAX_LENGTH_FIELD)
+    iface = models.CharField(max_length=MAX_LENGTH_FIELD)
     
     tags = TagField()
     

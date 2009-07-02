@@ -6,7 +6,7 @@ import os
 import time
 
 from django.test.client import Client
-from net_almanac.models import *
+from net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION
 from net_almanac.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_string, json_headers
 from tagging.models import *
 
@@ -23,6 +23,8 @@ import wsgi_intercept.httplib2_intercept
 wsgi_intercept.httplib2_intercept.install()
 import wsgi_intercept
 import httplib2
+
+import api.almanac_api
 
 EVENT_NAME = "testevent"
 EVENT_DESCRIPTION = "testdescription"
@@ -432,3 +434,7 @@ class TwillTestCase(TwillTestCaseSetup):
         tc.find('"name": "experiment"') 
         tc.notfind('"tags": "esnet"') 
         
+class TestAPI(unittest.TestCase):
+    def runTest(self):
+        self.assertTrue(api.almanac_api.MAX_LENGTH_FIELD == MAX_LENGTH_FIELD)
+        self.assertTrue(api.almanac_api.MAX_LENGTH_DESCRIPTION == MAX_LENGTH_DESCRIPTION)
