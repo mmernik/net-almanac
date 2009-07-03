@@ -76,9 +76,9 @@ class EventForm(ModelForm):
         
         
         self.fields['name'].widget.attrs['title'] = 'The name of the event.  Must be non-empty.'
-        self.fields['name'].help_text = 'required'
+        self.fields['name'].help_text = '*required'
         self.fields['description'].widget.attrs['title'] = 'A description of this event.  Must be non-empty.'
-        self.fields['description'].help_text = 'required'
+        self.fields['description'].help_text = '*required'
         self.fields['url'].widget.attrs['title'] = 'This field is optional.'
         self.fields['router'].widget.attrs['title'] = 'This field is optional.'
         self.fields['iface'].widget.attrs['title'] = 'This field is optional.'
