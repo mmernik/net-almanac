@@ -26,6 +26,8 @@ HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this 
                                             mimetype=TEXT_MIME,
                                             status=HTTP_NOT_IMPLEMENTED)
 
+FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
+
 ONE_DAY = datetime.timedelta(1)
 
 INVALID_ERROR_STRING = "Submitted form is not valid"
@@ -463,8 +465,8 @@ def validate_event(event):
     logger.debug('parsing tags')
     for tag in tagging.utils.parse_tag_input(event.tags):
         #normally commas are delimiters, but if they are between double-quotes they become tags
-        if not tag.isalnum():
-            raise ValueError('Tags must be alphanumeric [a-z][A-Z][0-9].')
+        if not is_valid_tag(tag):
+            raise ValueError('Tags cannot contain whitespace or any special symbols: [\'&"$+,;#+]')
     event.tags = format_tag_string(event.tags)
     logger.debug('checking datetime')
     if event.end_datetime < event.begin_datetime:
@@ -472,6 +474,13 @@ def validate_event(event):
     
 def is_empty_or_space(input_string):
     return (input_string == None or input_string == '' or input_string.isspace())
+
+def is_valid_tag(tag_string):
+    for char in tag_string:
+        for c in FORBIDDEN_CHARS:
+            if c == char:
+                return False
+    return True
     
 def get_event_by_id(event_id):
     #returns an event or None if none exists.
