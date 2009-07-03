@@ -434,7 +434,75 @@ class TwillTestCase(TwillTestCaseSetup):
         tc.find('"name": "experiment"') 
         tc.notfind('"tags": "esnet"') 
         
-class TestAPI(unittest.TestCase):
+class TestAPI(TestWSGI):
     def runTest(self):
         self.assertTrue(api.almanac_api.MAX_LENGTH_FIELD == MAX_LENGTH_FIELD)
         self.assertTrue(api.almanac_api.MAX_LENGTH_DESCRIPTION == MAX_LENGTH_DESCRIPTION)
+        
+        almanac = api.almanac_api.NetAlmanac(URL_BASE)
+        
+        #test get all events
+        api_events = almanac.get_all_events()
+        self.assertTrue(len(api_events)>2)
+        for api_event in api_events:
+            self.assertTrue(api.almanac_api.validate_event(api_event))
+        
+        #test get single event    
+        self.assertTrue(almanac.get_event(1).name == "experiment")
+        self.assertTrue(almanac.get_event(200) == None)
+        
+        #test filtering
+        filtered = almanac.get_filtered_events(name="experiment")
+        self.assertTrue(len(filtered)==1)
+        filtered = almanac.get_filtered_events(tags=["esnet","january"])
+        self.assertTrue(len(filtered)==2)  
+        filtered = almanac.get_filtered_events(search="xe-0/1/0.1009", description="upgrading%20infrastructure")
+        self.assertTrue(len(filtered)==1)
+        filtered = almanac.get_filtered_events(tags=["notag","faketag"])
+        self.assertTrue(len(filtered)==0)
+        
+        #test saves
+        event = almanac.get_filtered_events(name="experiment")[0]
+        self.assertTrue(event.url=="http://www.lbl.gov")
+        event.url = "http://www.es.net"
+        almanac.save_event(event)
+        event = almanac.get_filtered_events(name="experiment")[0]
+        self.assertTrue(event.url=="http://www.es.net")
+        event.url = "http://www.lbl.gov"
+        almanac.save_event(event)
+        event = almanac.get_filtered_events(name="experiment")[0]
+        self.assertTrue(event.url=="http://www.lbl.gov")
+        
+        event.name = ""
+        try:
+            #Try to save a bad event and induce a specific error message
+            almanac.save_event(event)
+            self.assertTrue(False)
+        except ValueError, e:
+            if str(e).count("'name' property cannot be empty") == 0:
+                self.assertTrue(False)
+        
+        #test create_event
+        to_create = api.almanac_api.Event(20,
+                                          'api_created',
+                                          'description',
+                                          datetime.datetime(2009,2,2),
+                                          datetime.datetime(2009,2,3),
+                                          'url',
+                                          'iface',
+                                          'router',
+                                          'tags')
+        almanac.create_event(to_create)
+        event = almanac.get_filtered_events(name="api_created")[0]
+        self.assertTrue(event.description == 'description')
+        
+        #induce a id number collision.
+        to_create.id=1
+        try:
+            almanac.create_event(to_create)
+            self.assertTrue(False)
+        except ValueError, e:
+            if str(e).count("id is already taken by another event") == 0:
+                self.assertTrue(False)
+            
+        
