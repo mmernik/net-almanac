@@ -100,7 +100,7 @@ string.
 
 "tags": a space-delimited list of tags.  The server will automatically parse
 any input string into this format.  See tagging documentation for more detail
-on this.  This must be alphanumeric.
+on this.  This must not contain the characters: .
 
 "begin_datetime" and "end_datetime": ISO 8601-formatted dates using
 YYYY-MM-DD [HH:MM:SS].  If the input string isn't as precise, the server will

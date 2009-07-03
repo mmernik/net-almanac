@@ -15,6 +15,8 @@ JSON_HEADERS = {'accept':'application/json'}
 
 MAX_LENGTH_FIELD = 100
 MAX_LENGTH_DESCRIPTION = 500
+FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
+
 
 class NetAlmanac():
     """
@@ -27,10 +29,6 @@ class NetAlmanac():
 
     def get_all_events(self):
         """
-        given the root URL of a net_almanac server, such as 
-        
-        http://www.example.com/net_almanac/event/
-        
         returns a list of Events
         """
         http = httplib2.Http()
@@ -160,8 +158,8 @@ def validate_event(event):
         or len(event.description) > MAX_LENGTH_DESCRIPTION):
         raise ValueError("Field data too long")
     
-    if not is_alnum_or_space(event.tags):
-        raise ValueError('Tags must be alphanumeric [a-z][A-Z][0-9].')
+    if not is_valid_tag(event.tags):
+        raise ValueError('Tags cannot contain whitespace or any special symbols: [\'&"$+,;#+]')
     
     if event.end_datetime < event.begin_datetime:
         raise ValueError('The end date cannot be before the begin date.')
@@ -216,10 +214,13 @@ def deserialize_events(json_string):
 def is_empty_or_space(input_string):
     return (input_string == None or input_string == '' or input_string.isspace())
 
-def is_alnum_or_space(input_string):
-    for char in input_string:
-        if (not char.isalnum() and not char.isspace()):
-            return False
+#We won't parse tags like in views.py, so allow whitespaces.
+def is_valid_tag(tag_string):
+    for char in tag_string:
+        if char == ' ':
+             continue
+        for c in FORBIDDEN_CHARS:
+            if c == char:
+                return False
     return True
     
-               
