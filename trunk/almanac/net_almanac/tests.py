@@ -504,5 +504,14 @@ class TestAPI(TestWSGI):
         except ValueError, e:
             if str(e).count("id is already taken by another event") == 0:
                 self.assertTrue(False)
-            
         
+        #test deletes
+        to_create.id=20
+        almanac.delete_event(to_create)
+        filtered = almanac.get_filtered_events(name="api_created")
+        self.assertTrue(len(filtered) == 0)
+        try:
+            almanac.delete_event(to_create)
+            self.assertTrue(False)
+        except ValueError, e:
+            self.assertTrue(str(e).index('404') != -1)

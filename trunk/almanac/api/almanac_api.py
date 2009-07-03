@@ -100,6 +100,14 @@ class NetAlmanac():
         if response.status != HTTP_OK:
             raise ValueError('Event not created correctly. Message from server: ' + content)
         
+    def delete_event(self,
+                     event):
+        http = httplib2.Http()
+        response, content = http.request(self.url + str(event.id) + '/' , 'DELETE', headers = JSON_HEADERS)
+        
+        if response.status != HTTP_OK:
+            raise ValueError('Event not deleted correctly. Message from server: ' + content)
+        
 
 class Event():
     """
