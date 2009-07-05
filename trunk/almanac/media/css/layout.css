@@ -1,7 +1,6 @@
 /* PAGE STRUCTURE */
 #container { position:relative; width:100%; min-width:760px; padding:0; }
 #content { margin:10px 15px; }
-#header { width:100%; padding: 5px; }
 #content-main { float:left; width:100%; }
 #content-related { float:right; width:18em; position:relative; margin-right:-19em; }
 #footer { clear:both; padding:10px; text-align:center; }
@@ -16,7 +15,7 @@
 .dashboard #content { width:500px; }
 
 /*  HEADER  */
-#header { background:#417690; color:#ffc; overflow:hidden; }
+#header { background:#417690; color:#ffc; overflow:hidden; padding:4px; font-size: 13px; }
 #header a:link, #header a:visited { color:white; }
 #header a:hover { text-decoration:underline; }
 #branding h1 { padding:0 10px; font-size:18px; margin:8px 0; font-weight:normal; color:#f4f379; }

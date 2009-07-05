@@ -27,7 +27,6 @@
         <th>begin time</th>
         <th>end time</th>
         <th>url</th>
-        <th>router</th>
         <th>iface</th>
         <th>tags</th>
     </tr>
@@ -41,7 +40,6 @@
         <td>{{event.begin_datetime}}</td>
         <td>{{event.end_datetime}}</td>
         <td>{{event.url}}</td>
-        <td>{{event.router}}</td>
         <td>{{event.iface}}</td>
         <td>{{event.tags}}</td>
     </tr>
@@ -57,11 +55,10 @@
 {% endblock %}
 
 {% block side_options %}
-
-    <a href="/net_almanac/event/tag/"> View all tags</a> 
+<a href='/net_almanac/event/timeline/?{{get_args}}'>View timeline for these events</a>
     <hr />
-<a href='/net_almanac/event/timeline/'>View timeline of all events</a>
+<a href="/net_almanac/event/tag/"> View all tags</a> 
     <hr />
-<a href='/net_almanac/event/create/' class="addlink"><strong>Create new event</strong></a>
+<a href='/net_almanac/event/create/' class="addlink">Create new event</a>
     <hr />
 {% endblock %}
