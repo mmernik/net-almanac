@@ -4,7 +4,6 @@ margin: 7px 0px;
 background-color: #AAA;
 }
 
-/* added by me */
 #columncontainer {
 margin:0;
 min-width:760px;
@@ -14,7 +13,6 @@ min-width:760px;
 float:left;
 width:75%;
 height:80%;
-background-color:#F9F9FF;
 padding:5px 5px;
 }
 
@@ -27,4 +25,32 @@ background-color:#F6FCFE;
 height:80%;
 padding:5px 5px;
 border: 2px solid #6196B0; 
+}
+
+#titlecontainer {
+width:100%;
+float: top;
+height: 92px; /* added for chrome */
+}
+
+#titlecontainer #col1 {
+float:left;
+width:40%;
+}
+
+#titlecontainer #col2 {
+float:right;
+width:40%;
+height:100%;
+position:relative;
+}
+
+#titlecontainer #col2 #searchbox {
+position:absolute;
+bottom: 0;
+right: 0;
+}
+
+table.sortable td, th {
+font-size:13px;
 }

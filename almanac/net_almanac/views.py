@@ -139,7 +139,7 @@ def list_events(request):
         return render_to_response('net_almanac/event_list.html',
                                   {'event_list':events,
                                    'filter_string':filter_string,
-                                   })
+                                   'get_args':request.GET.urlencode(),})
 
 def create_event(request):
     #a GET request returns a new form, and a POST request attempts to create a new event

@@ -379,6 +379,7 @@ class TwillTestCase(TwillTestCaseSetup):
         Note we cannot connect to the twill server using urllib2 or any other third party client.
         Also, we cannot verify the header content in a twill response.
         """
+        FILTER_FORM = 2
         
         logger = logging.getLogger("TwillTestCase")
         url = URL_BASE
@@ -390,31 +391,31 @@ class TwillTestCase(TwillTestCaseSetup):
         url = URL_BASE + 'filter/'
         logger.info('accessing ' + url)
         tc.go(url)
-        tc.formvalue(1,'tag','esnet')
+        tc.formvalue(FILTER_FORM,'tag','esnet')
         tc.submit(9) #simulates a click on the "create filter" button
         tc.find("html")
         tc.find('<table class="sortable">') #a line in event.list.html
         tc.notfind('experiment') #should be filtered out
         
         tc.go(url)
-        tc.formvalue(1,'display','timeline')
+        tc.formvalue(FILTER_FORM,'display','timeline')
         tc.submit(9) #click should direct us to timeline.
         tc.find("html")
         tc.notfind('<table class="sortable">') 
         
         tc.go(url)
-        tc.formvalue(1,'display','json')
+        tc.formvalue(FILTER_FORM,'display','json')
         tc.submit(9) #click should give us JSON object.
         tc.find('"pk": 1') #part of JSON string.
         tc.notfind("html")
         
         tc.go(url)
-        tc.formvalue(1,'name','upgrade')
-        tc.formvalue(1,'search','xe-0/1/0.1009')
-        tc.formvalue(1,'description','infrastructure')
+        tc.formvalue(FILTER_FORM,'name','upgrade')
+        tc.formvalue(FILTER_FORM,'search','xe-0/1/0.1009')
+        tc.formvalue(FILTER_FORM,'description','infrastructure')
         tc.submit(9)
         tc.find('html')
-        tc.find('router2') #part of the upgrade event.
+        tc.find('www.es.net') #part of the upgrade event.
         
         #Set headers to contain only the json mime
         tc.clear_extra_headers()

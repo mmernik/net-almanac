@@ -15,8 +15,17 @@
 
 {% block body_tag %}<body> {% endblock %}
 <div id="container">
-	<a href="/net_almanac/event/"><img src="/site_media/img/title.png" alt="Almanac"/></a>
 
+<div id="titlecontainer">
+<div id="col1">
+<a href="/net_almanac/event/"><img src="/site_media/img/title.png" alt="Almanac" align="left"/></a>
+</div>
+
+<div id="col2"><div id="searchbox">
+<form action="" method="get">Search Events: <input type="text" name="search"/></form>
+</div></div>
+
+</div>
 	<div id="header">
 		Navigate: <a href="/net_almanac/event/">Home</a>
 		{% block navigate %}
