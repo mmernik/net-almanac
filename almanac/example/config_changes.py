@@ -146,8 +146,6 @@ for k,v in event_tab.events.iteritems():
                               val.timestamp,
                               val.timestamp,
                               '',
-                              '',
-                              '',
                               tag_string)
         
         events.append(e)

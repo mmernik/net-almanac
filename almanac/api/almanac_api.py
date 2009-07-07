@@ -124,8 +124,6 @@ class Event():
              begin_datetime,
              end_datetime,
              url,
-             iface,
-             router,
              tags,
              ):
         self.id = id #immutable, unique.  Can be None for a new object.
@@ -134,8 +132,6 @@ class Event():
         self.begin_datetime = begin_datetime #datetime object
         self.end_datetime = end_datetime #datetime object
         self.url = url #any string
-        self.iface = iface #any string
-        self.router = router #any string
         self.tags = tags #any list of strings
     
     def __str__(self):
@@ -156,8 +152,6 @@ def validate_event(event):
     
     if (len(event.name) > MAX_LENGTH_FIELD
         or len(event.url) > MAX_LENGTH_FIELD
-        or len(event.router) > MAX_LENGTH_FIELD
-        or len(event.iface) > MAX_LENGTH_FIELD
         or len(event.description) > MAX_LENGTH_DESCRIPTION):
         raise ValueError("Field data too long")
     
@@ -185,8 +179,6 @@ def serialize_events(events):
         fields['begin_datetime'] = event.begin_datetime.strftime("%Y-%m-%d %H:%M:%S")
         fields['end_datetime'] = event.end_datetime.strftime("%Y-%m-%d %H:%M:%S")
         fields['url'] = event.url
-        fields['iface'] = event.iface
-        fields['router'] = event.router
         fields['tags'] =' '.join(event.tags)
         json_event['fields'] = fields
         json_container.append(json_event)
@@ -208,8 +200,6 @@ def deserialize_events(json_string):
                   dateutil.parser.parse(fields['begin_datetime']),
                   dateutil.parser.parse(fields['end_datetime']),
                   fields['url'],
-                  fields['iface'],
-                  fields['router'],
                   fields['tags'].split(' '))
         to_return.append(e)
     return to_return
