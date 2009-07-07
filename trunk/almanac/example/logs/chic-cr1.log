@@ -1,0 +1,341 @@
+ 2007-05-03 18:15: Renamed from chi-cr1 and most interfaces replaced	Saved by oberman
+ 2007-05-03 21:34: Clean up old interface and disable non-connected new ones	Saved by oberman
+ 2007-05-04 08:11: Change re0 and re1 host-name to chic and remove global host-name	Saved by oberman
+ 2007-05-04 13:47: Clean up mpls, pim, and rsvp interfaces	Saved by oberman
+ 2007-05-05 22:18: Update chi-cr1 to chic-cr1	Saved by oberman
+ 2007-05-08 16:59: Removing old eqx testing config	Saved by yhines
+ 2007-05-21 14:49: Update ntp server list, esnet-ntp-access and bogons prefix-lists	Saved by yhines
+ 2007-05-22 15:14: Adding EQX-CHI-RT1 to iBGP mesh	Saved by yhines
+ 2007-05-22 16:25: Adding ORNL-RT2 to iBGP mesh	Saved by yhines
+ 2007-05-23 13:32: Adding WASH-PR1 to iBGP mesh	Saved by metzger
+ 2007-05-29 11:20: Adding ATLA-CR1 to iBGP mesh	Saved by yhines
+ 2007-05-29 12:46: Enable CoS on xe-*	Saved by chin
+ 2007-05-30 10:56: Adding DC-AR1 to iBGP mesh	Saved by metzger
+ 2007-05-30 14:16: Removing DC-CR1 from the iBGP mesh	Saved by metzger
+ 2007-06-05 21:21: Correct ISIS costs and configs	Saved by oberman
+ 2007-06-06 16:05: Add missing bgp with albu-cr1 134.55.200.80	Saved by yhines
+ 2007-06-08 00:16: Nightly catch-all run	Saved by oberman
+ 2007-06-08 16:06: commit full for JTAC Case #2007-0427-0358	Saved by jdugan
+ 2007-06-08 17:45: further testing for JTAC Case #2007-0427-0358	Saved by jdugan
+ 2007-06-12 12:43: Configure and enable CHIC-WASH 10GE for SDN use	Saved by oberman
+ 2007-06-18 10:48: Updating ntp servers and acls	Saved by yhines
+ 2007-06-20 12:23: bring up denv-cr1	Saved by jdugan
+ 2007-06-20 16:20: User password update	Saved by yhines
+ 2007-06-21 11:16: password update	Saved by yhines
+ 2007-06-21 18:01: setup static path for DENV acceptance testing	Saved by jdugan
+ 2007-06-21 23:49: MTU tweak for DENV testing	Saved by jdugan
+ 2007-06-22 00:08: denv testing tewaks	Saved by jdugan
+ 2007-06-23 00:18: Nightly catch-all run	Saved by oberman
+ 2007-06-23 00:36: acceptance testing setup	Saved by jdugan
+ 2007-06-25 09:39: Seattle MSDP peer 134.55.3.6	Saved by moc
+ 2007-06-25 14:04: snmp update	Saved by yhines
+ 2007-06-25 20:56: firewall counter tweaks	Saved by jdugan
+ 2007-06-27 00:19: Nightly catch-all run	Saved by oberman
+ 2007-06-28 11:38: User password update	Saved by yhines
+ 2007-06-28 14:19: User password update	Saved by yhines
+ 2007-06-28 15:32: remove denver acceptance test goo	Saved by jdugan
+ 2007-06-29 16:04: Fix description of SDSC peering	Saved by oberman
+ 2007-07-03 14:59: Put correct filter on ESnet stub	Saved by oberman
+ 2007-07-06 10:30: snmp updates	Saved by yhines
+ 2007-07-09 14:33: multicast DMZ routing	Saved by moc
+ 2007-07-10 11:42: bringing up v6 to denv	Saved by jdugan
+ 2007-07-10 14:53: bring up v6 and isis to denv-cr1	Saved by jdugan
+ 2007-07-10 15:46: Adding DENV-CR1 to iBGP mesh	Saved by jdugan
+ 2007-07-14 00:18: Nightly catch-all run	Saved by oberman
+ 2007-07-16 14:00: removed one FNAL MSDP peer	Saved by moc
+ 2007-07-17 11:50: remove vlan tagging from denv-cr1 interfaces	Saved by jdugan
+ 2007-07-17 12:15: Config isu-rt1 to Chicago via BOREAS	Saved by chin
+ 2007-07-18 15:37: set up acceptance testing for DENV-SUNN and ALBU-SUNN circuits	Saved by dart
+ 2007-07-19 06:47: Removed Kirk & mecox from Spectrum Trap group	Saved by moc
+ 2007-07-23 11:28: clean out acceptance test config	Saved by dart
+ 2007-07-24 00:18: Nightly catch-all run	Saved by oberman
+ 2007-07-24 13:35: late save for acceptance testing config done yesterday     Saved by metzger
+ 2007-07-24 13:49: Move traffic off of SNV-CHI OC192 and onto ESnet4 via SNV-DENV-CHIC	Saved by dart
+ 2007-07-24 13:58: fix MPLS to DENV	Saved by dart
+ 2007-07-25 00:19: Nightly catch-all run	Saved by oberman
+ 2007-07-25 17:04: Fixing lo0 inet6 config and adding rib inet6.0 aggregate	Saved by yhines
+ 2007-08-09 00:17: Nightly catch-all run	Saved by oberman
+ 2007-08-09 09:56: Adding SUNN-SDN1 to iBGP mesh	Saved by dart
+ 2007-08-10 00:18: Nightly catch-all run	Saved by oberman
+ 2007-08-14 13:55: cleaned up OSPF traceoptions	Saved by metzger
+ 2007-08-14 14:32: Bring up OSPF over BOREAS links since the T3 disconnect order is pending	Saved by metzger
+ 2007-08-15 11:12: rename snv-cr1 to sunn-cr1, update bogon filter	Saved by dart
+ 2007-08-23 20:45: Prep for bringing BOREAS into production	Saved by metzger
+ 2007-08-24 11:59: Bring BOREAS circuits into full production	Saved by metzger
+ 2007-08-24 13:59: Set up second 10GE between chic-cr1 and chic-sdn1	Saved by oberman
+ 2007-08-27 08:57: fix OSPF metric to DENV	Saved by dart
+ 2007-08-27 15:53: more IGP cleanup	Saved by dart
+ 2007-08-29 14:31: Adjust IGP metrics to prefer longer but more direct route between CHIC and AOFA	Saved by metzger
+ 2007-09-05 18:14: Removing SNV2-MR1 from the iBGP mesh	Saved by oberman
+ 2007-09-07 10:26: Nightly catch-all run	Saved by oberman
+ 2007-09-07 11:19: Checking get-config	Saved by metzger
+ 2007-09-07 11:20: Checking get-config	Saved by metzger
+ 2007-09-07 13:47: Adjusting TELIANET as1299 max prefix-limit to 60000 teardown warning at 85 %	Saved by yhines
+ 2007-09-21 00:18: Nightly catch-all run	Saved by oberman
+ 2007-09-29 00:19: Nightly catch-all run	Saved by oberman
+ 2007-10-08 09:15: Removing LVK-RT1 from the iBGP mesh	Saved by metzger
+ 2007-10-08 15:01: Removing NERSC-RT1 from the iBGP mesh	Saved by metzger
+ 2007-10-16 21:05: BAMAN unmeshing	Saved by metzger
+ 2007-10-27 00:18: Nightly catch-all run	Saved by oberman
+ 2007-10-28 19:28: deactivated xe-5/1/0 until wave fdp info is updated     Saved by jvg
+ 2007-10-29 15:45: bring up second link between chic-sdn1 and chic-cr1 in routed mode	Saved by dart
+ 2007-10-29 16:35: remove VLAN 1813 from chic-cr1 to chic-sdn1 link	Saved by dart
+ 2007-10-29 18:25: Updating ntp servers, bogons and ntp-access	Saved by yhines
+ 2007-10-30 14:22: Pre-config for chiccr1-nashcr1 10ge link and description update	Saved by yhines
+ 2007-10-30 15:02: Prep for bringing ameslab-rt1 online	Saved by metzger
+ 2007-10-31 07:14: Prefer ames -> starlight while ames -> chic is bouncing	Saved by metzger
+ 2007-10-31 13:47: Removing CHI-AR1 from the iBGP mesh	Saved by oberman
+ 2007-10-31 14:44: Brought up BGP with ameslab-rt1	Saved by metzger
+ 2007-11-01 15:10: fix asymmetry between devices	Saved by dart
+ 2007-11-02 09:02: Ameslab cleanup	Saved by metzger
+ 2007-11-06 20:26: Setting up testing chic-pt1 to chic-cr1<->nash-cr1<->atla-cr1 to atla-pt1	Saved by yhines
+ 2007-11-07 09:14: Removing FNAL-RT1 from the iBGP mesh	Saved by oberman
+ 2007-11-08 00:16: Nightly catch-all run	Saved by oberman
+ 2007-11-08 08:58: Preparing for chic-cr1 to nash-cr1 to atla-cr1 circuit testing on 11/07/2007     Saved by yhines
+ 2007-11-08 11:30: Set track-igp-metric for LDP	Saved by chin
+ 2007-11-08 20:08: Setting destination-port on firewall filter for testing	Saved by yhines
+ 2007-11-09 00:18: Nightly catch-all run	Saved by oberman
+ 2007-11-09 00:22: Removing destination-port      Saved by yhines
+ 2007-11-12 00:19: Nightly catch-all run	Saved by oberman
+ 2007-11-12 08:39: SNMP config for Spectrum Alpha9.0 testing	Saved by moc
+ 2007-11-12 13:09: setting hide in fxp0 description	Saved by metzger
+ 2007-11-12 14:02: Added SNMP Location	Saved by metzger
+ 2007-11-15 00:20: Nightly catch-all run	Saved by oberman
+ 2007-11-15 06:08: Spectrum testing     Saved by moc
+ 2007-11-19 14:39: Adding NASH-CR1 to iBGP mesh	Saved by yhines
+ 2007-11-26 12:14: Preparing to activate circuits chiccr1<->nashcr1 and nashcr1<->atlacr1	Saved by yhines
+ 2007-11-29 17:03: enable CHIMAN interfaces in prep for turnup	Saved by dart
+ 2007-11-30 15:52: Turn up new CHIMAN circuits	Saved by dart
+ 2007-12-07 16:09:  move traffic for the weekend	Saved by dart
+ 2007-12-07 17:21: User password update	Saved by oberman
+ 2007-12-12 12:35: Adding SUNN-SDN2 to iBGP mesh	Saved by dart
+ 2007-12-12 18:03: Removing SUNN-SDN1 from the iBGP mesh	Saved by dart
+ 2007-12-12 19:38: Brought up ospf isis mpls and rsvp chiccr1-nashcr1 and nashcr1-atlacr1	Saved by yhines
+ 2007-12-13 09:50: OS Upgrade	Saved by metzger
+ 2007-12-13 10:02: Enable LDP on interfaces	Saved by chin
+ 2007-12-19 08:53: Enable OSCARS L2circuit configuration	Saved by chin
+ 2007-12-19 15:20: Add maint. permission to config class	Saved by oberman
+ 2007-12-20 10:19: Fixed next-hop settings for ameslab-rt1.	Saved by metzger
+ 2008-01-03 14:17: User password update	Saved by yhines
+ 2008-01-07 15:11: Update ACL for OSCARS new hosts	Saved by chin
+ 2008-01-23 13:49: Bring up IPv4 unicast and muticast peering and MSDP with the Indiana GigaPOP via the new CIC connection	Saved by oberman
+ 2008-01-23 13:55: Add date to MSDP annotation	Saved by oberman
+ 2008-02-02 00:15: Nightly catch-all run	Saved by oberman
+ 2008-02-03 00:17: Nightly catch-all run	Saved by oberman
+ 2008-02-13 13:11: Removing ELP-CR1 from the iBGP mesh	Saved by yhines
+ 2008-02-23 00:18: Nightly catch-all run	Saved by oberman
+ 2008-02-23 08:57: temp filter to test ICCN connectivity     Saved by oberman
+ 2008-02-26 00:15: Nightly catch-all run	Saved by oberman
+ 2008-02-26 08:28: Test settings fot line to FNAL     Saved by oberman
+ 2008-02-26 13:45: Remove static test route	Saved by oberman
+ 2008-03-04 00:18: Nightly catch-all run	Saved by oberman
+ 2008-03-04 08:00: Correct typo in description     Saved by oberman
+ 2008-03-06 00:18: Nightly catch-all run	Saved by oberman
+ 2008-03-07 09:08: Removing ALB-RT1 from the iBGP mesh	Saved by dart
+ 2008-03-24 11:23: Clean up site-interface-group	Saved by oberman
+ 2008-03-24 11:50: Go back to old way of doing site-interface-group	Saved by oberman
+ 2008-03-26 11:00: Adding PAIX-PA-RT2 to iBGP mesh	Saved by yhines
+ 2008-03-27 14:51: Removing PAIX-PA-RT1 from the iBGP mesh	Saved by yhines
+ 2008-03-31 08:05: Removed secondary MREN MSDP peer.	Saved by moc
+ 2008-04-03 15:07: Removing SNV2-AR1 from the iBGP mesh	Saved by dart
+ 2008-04-03 18:20: LDP updates	Saved by yhines
+ 2008-04-25 12:55: move mirror.anl.gov scavenger taggging to Junipers due to high Cisco CPU load	Saved by dart
+ 2008-04-25 13:15: next term on mirror filter terms	Saved by dart
+ 2008-05-01 00:17: Nightly catch-all run	Saved by oberman
+ 2008-05-06 15:10: adding lo0 to ldp	Saved by yhines
+ 2008-05-08 11:31: Add reject-all to filtered external import policies	Saved by oberman
+ 2008-05-08 14:52: Removing ORNL-RT2 from the iBGP mesh	Saved by oberman
+ 2008-05-12 13:06: Update bogons prefix-list	Saved by yhines
+ 2008-05-15 10:38: Updating ip name-server list removing ns2 134.55.6.130	Saved by yhines
+ 2008-05-29 13:04: Clean up testing statics	Saved by yhines
+ 2008-06-03 15:32: Removing ATL-CR1 from the iBGP mesh	Saved by yhines
+ 2008-06-17 00:18: Nightly catch-all run	Saved by oberman
+ 2008-06-18 00:17: Nightly catch-all run	Saved by oberman
+ 2008-06-18 09:14: Test config for OC-192 to ORNL     Saved by oberman
+ 2008-06-18 09:20: Final config for OC-192 to ORNL	Saved by oberman
+ 2008-06-27 15:43: Prep for move of eqx-chi-rt1 to chic-cr1	Saved by oberman
+ 2008-06-28 00:17: Nightly catch-all run	Saved by oberman
+ 2008-06-28 00:24: Complete setup to test eqx-chi circuit     Saved by oberman
+ 2008-06-28 03:12: Eqx-chi connection moved from chi-sl-sdn1 to chic-cr1	Saved by oberman
+ 2008-06-28 09:21: renamed interfaces from lastnights hot-cut	Saved by jvg
+ 2008-06-28 10:02: Complete configuration of chic-cr1<->eqx-shi-rt1 circuit and protocols	Saved by oberman
+ 2008-06-29 00:18: Nightly catch-all run	Saved by oberman
+ 2008-06-29 12:16: Fix configuratio for testing the link to eqx-chi.rt1. All test config is now on this rotuer.     Saved by oberman
+ 2008-06-30 10:25: Adding STAR-CR1 to iBGP mesh	Saved by oberman
+ 2008-06-30 12:06: Removing CHI-SL-SDN1 from the iBGP mesh	Saved by oberman
+ 2008-06-30 15:30: Adding STAR-SDN1 to iBGP mesh	Saved by oberman
+ 2008-07-01 11:18: bring up IP link between fnal-mr1 and chic-cr1	Saved by dart
+ 2008-07-01 14:16: Remove chi-sl-mr1 from the iBGP mesh	Saved by oberman
+ 2008-07-01 15:49: clean up interface descriptions	Saved by dart
+ 2008-07-02 08:46: Removing CHIC-SDN1 from the iBGP mesh	Saved by oberman
+ 2008-07-02 10:40: Adding CHIC-SDN2 to iBGP mesh	Saved by oberman
+ 2008-07-02 12:05: initial config of private OC192 to Internet2 as11537	Saved by dart
+ 2008-07-02 16:47: Restore rancid copy of config lost in last get-config	Saved by oberman
+ 2008-07-02 20:17: Remove temporary address ffrom stub Ethernet	Saved by oberman
+ 2008-07-04 00:15: Nightly catch-all run	Saved by oberman
+ 2008-07-09 15:07: Add Vangelis	Saved by chin
+ 2008-07-13 14:54: Correct stub firewall filter for owamp	Saved by oberman
+ 2008-07-14 21:00: User password update	Saved by oberman
+ 2008-07-15 15:17: Correct descriptions and annotations	Saved by oberman
+ 2008-07-21 13:04: Updating bogons prefix-list	Saved by yhines
+ 2008-07-28 11:39: Adding ATLA-SDN1 to iBGP mesh	Saved by yhines
+ 2008-07-28 17:53: Adding DENV-SDN1 to iBGP mesh	Saved by jdugan
+ 2008-07-29 14:08: Updated a couple interface descriptions where :sdn: was missing	Saved by haniotak
+ 2008-07-31 07:59: Adding NASH-SDN1 to iBGP mesh	Saved by oberman
+ 2008-07-31 17:20: IP/SDN CoS config	Saved by chin
+ 2008-08-04 16:26: Set preferences for MPLS/LDP	Saved by chin
+ 2008-08-05 00:14: Adding PNWG-SDN1 to iBGP mesh	Saved by jdugan
+ 2008-08-05 13:20: Adjust metric for anl-mr1 - chic-cr1 link	Saved by chin
+ 2008-08-07 09:15: Update list of ESnet infrastructure addresses	Saved by oberman
+ 2008-08-08 10:02: Removing WASH-PR1 from the iBGP mesh	Saved by metzger
+ 2008-08-12 08:10: Removing WASH-SDN1 from the iBGP mesh	Saved by metzger
+ 2008-08-12 12:28: Adding WASH-SDN2 to iBGP mesh	Saved by metzger
+ 2008-08-13 10:04: Removing DC-AR1 from the iBGP mesh	Saved by metzger
+ 2008-08-14 15:49: Removing AOA-PR1 from the iBGP mesh	Saved by oberman
+ 2008-08-14 16:26: User password update	Saved by oberman
+ 2008-08-25 12:35: Adding AOFA-CR2 to iBGP mesh	Saved by dart
+ 2008-08-25 16:26: Adding NEWY-SDN1 to iBGP mesh	Saved by dart
+ 2008-08-26 12:23: Changed OSPF and ISIS cost on ge-0/1/0.0 to 100	Saved by haniotak
+ 2008-08-26 12:29: chic-sdn2 Changed OSPF and ISIS cost on SDN link between chic-sdn2 and chic-cr1 to 1000	Saved by haniotak
+ 2008-08-27 10:11: Link moves and costing at AofA, remove test goo	Saved by dart
+ 2008-08-27 15:26: Removing AOFA-MR1 from the iBGP mesh	Saved by dart
+ 2008-08-28 15:42: Inbound update	Saved by yhines
+ 2008-09-02 17:58: Updating ntp config	Saved by yhines
+ 2008-09-04 17:00: Inbound update	Saved by yhines
+ 2008-09-08 13:53: Adding BOST-CR1 to iBGP mesh	Saved by chin
+ 2008-09-09 10:16: User password update	Saved by yhines
+ 2008-09-10 11:52: Adding CLEV-CR1 to iBGP mesh	Saved by chin
+ 2008-09-10 15:31: Adding CLEV-SDN1 to iBGP mesh	Saved by chin
+ 2008-09-11 11:33: update interface description	Saved by yhines
+ 2008-09-12 09:42: Normalize IP path costs	Saved by oberman
+ 2008-09-12 09:48: Normalize IPv6 path costs	Saved by oberman
+ 2008-09-16 15:49: Inbound update	Saved by yhines
+ 2008-09-22 16:55: Adding KANS-CR1 to iBGP mesh	Saved by metzger
+ 2008-09-23 13:20: inserted kans-cr1 into chic-denv-ip	Saved by metzger
+ 2008-09-24 19:48: Adding HOUS-SDN1 to iBGP mesh	Saved by metzger
+ 2008-09-24 21:53: Normalized IGP metrics for IP through Kansas	Saved by metzger
+ 2008-09-25 16:31: set RE failover	Saved by dart
+ 2008-09-30 18:11: Inbound update	Saved by yhines
+ 2008-10-02 15:44: Updating esnet-management-access	Saved by yhines
+ 2008-10-03 17:31: User password update	Saved by oberman
+ 2008-10-06 12:53: Adding ELPA-SDN1 to iBGP mesh	Saved by haniotak
+ 2008-10-06 13:29: Adding ELPA-CR1 to iBGP mesh	Saved by haniotak
+ 2008-10-07 15:45: Cleanup circuit testing config	Saved by yhines
+ 2008-10-08 16:39: Fix for scheduler, BGP for albu-sdn1	Saved by haniotak
+ 2008-10-09 14:56: Inbound update	Saved by yhines
+ 2008-10-14 14:55: Adding PPPL-RT2 to iBGP mesh	Saved by oberman
+ 2008-10-15 16:08: fix e-stub for chic-sdn2 re[01]	Saved by jdugan
+ 2008-10-16 02:08: deleted orphan med policies	Saved by metzger
+ 2008-10-20 18:25: configure IPv4 /30 on OC192 to Internet2	Saved by dart
+ 2008-10-22 14:31: User password update	Saved by oberman
+ 2008-10-22 15:08: Inbound update	Saved by yhines
+ 2008-10-27 08:03: Loading IGP med policy	Saved by metzger
+ 2008-10-27 13:06: Loading IGP med policy	Saved by metzger
+ 2008-10-27 15:50: Setting MEDS based on IGP	Saved by metzger
+ 2008-10-28 10:20: Removed location based communities	Saved by metzger
+ 2008-10-28 12:29: removed Location based communities	Saved by metzger
+ 2008-10-28 13:45: More location community config removal...	Saved by metzger
+ 2008-10-29 10:00: Removed orphan igp-med policy	Saved by metzger
+ 2008-10-29 11:14: Make disallowed-prefixes work	Saved by oberman
+ 2008-10-29 13:02: Adding LOSA-SDN1 to iBGP mesh	Saved by yhines
+ 2008-10-30 09:04: Update bogon list for latest allocation of 197/8	Saved by oberman
+ 2008-10-30 12:09: Adding SDSC-SDN2 to iBGP mesh	Saved by haniotak
+ 2008-10-30 14:18: Removing SDSC-SDN1 from the iBGP mesh	Saved by haniotak
+ 2008-11-03 10:46: Fixing isis prefix-lenght	Saved by yhines
+ 2008-11-03 11:06: Inbound update	Saved by yhines
+ 2008-11-03 15:03: User password update	Saved by oberman
+ 2008-11-05 15:31: bring up private peering over OC192 with Internet2 AS 11537	Saved by dart
+ 2008-11-05 15:39: remove unused BGP authentication	Saved by dart
+ 2008-11-06 14:36: Add ESnet anycast /24 to outbound-to-peers-routes	Saved by oberman
+ 2008-11-10 13:23: Adding BOIS-CR1 to iBGP mesh	Saved by moc
+ 2008-11-12 11:44: Adding DENV-CR2 to iBGP mesh	Saved by yhines
+ 2008-11-13 09:36: Disabled and deactivated ORNL as50 config circuit moved to nash-cr1 xe-3/0/0	Saved by yhines
+ 2008-11-13 15:23: User password update	Saved by yhines
+ 2008-11-19 14:28: User password update	Saved by yhines
+ 2008-11-20 10:09: Inbound update	Saved by yhines
+ 2008-11-21 11:30: Adding aofa-gw to esnet-management-access prefix list	Saved by metzger
+ 2008-11-24 11:31: sshacler forced update	Saved by haniotak
+ 2008-11-24 15:46: Allow outbound TCP sessions from all boxes on the stub	Saved by metzger
+ 2008-11-25 15:43: User password update	Saved by metzger
+ 2008-11-26 08:55: Updating Stub Filters	Saved by metzger
+ 2008-11-26 09:30: Applying uniform stub filter group	Saved by metzger
+ 2008-11-26 16:27: User password update	Saved by yhines
+ 2008-12-01 10:58: Inbound update	Saved by yhines
+ 2008-12-01 12:50: User password update	Saved by yhines
+ 2008-12-02 12:37: more cleanup of Stub Filters	Saved by metzger
+ 2008-12-02 14:56: Removing 134.55.0.0/16 from the firewall filter	Saved by metzger
+ 2008-12-03 21:56: User password update	Saved by oberman
+ 2008-12-04 16:25: User password update	Saved by oberman
+ 2008-12-09 09:13: User password update	Saved by yhines
+ 2008-12-09 11:54: Inbound update	Saved by yhines
+ 2008-12-11 09:20: Updating bogons	Saved by yhines
+ 2008-12-16 10:43: User password update	Saved by yhines
+ 2008-12-16 13:06: Inbound update	Saved by yhines
+ 2008-12-22 14:27: User password update	Saved by dart
+ 2009-01-06 13:10: Inbound update	Saved by yhines
+ 2009-01-06 16:16: Cleanup old ornl as50 config	Saved by yhines
+ 2009-01-13 00:17: Nightly catch-all run	Saved by oberman
+ 2009-01-15 12:54: Adding SNV-MR2 to iBGP mesh	Saved by haniotak
+ 2009-01-15 17:22: Updating asw-stub-addresses and policy cleanup remove snv1-mr1 134.55.200.46	Saved by yhines
+ 2009-01-26 13:00: Inbound update	Saved by yhines
+ 2009-02-04 16:28: Inbound update	Saved by yhines
+ 2009-02-09 16:38: Adding FNAL-MR2 to iBGP mesh	Saved by oberman
+ 2009-02-10 11:49: Updating bogons prefix-list	Saved by yhines
+ 2009-02-12 10:02: Move OWAMP server from stub Ethernet to dorect connection on a /30	Saved by oberman
+ 2009-02-12 17:07: Updates after fnal-mr2 installs	Saved by metzger
+ 2009-02-13 09:42: Removing FNAL-MR1 from the iBGP mesh	Saved by oberman
+ 2009-02-18 10:28: Inbound update	Saved by yhines
+ 2009-02-23 07:58: Adding FNAL-MR3 to iBGP mesh	Saved by oberman
+ 2009-02-24 12:53: Removing DC-PR1 from the iBGP mesh	Saved by metzger
+ 2009-02-24 14:12: Inbound update	Saved by yhines
+ 2009-02-25 13:59: Update annotations	Saved by oberman
+ 2009-03-04 09:57: Cleaning up test interface group & filters	Saved by metzger
+ 2009-03-04 14:14: Deleted old test group	Saved by metzger
+ 2009-03-09 14:11: Inbound update	Saved by yhines
+ 2009-03-17 11:37: Adding BNL-MR2 to iBGP mesh	Saved by moc
+ 2009-03-17 17:08: Inbound update	Saved by yhines
+ 2009-03-19 18:25: User password update	Saved by jdugan
+ 2009-03-25 00:18: Nightly catch-all run	Saved by oberman
+ 2009-03-25 17:50: get-config after RE swap; fix for IGMP version mismatch with anl-mr1	Saved by haniotak
+ 2009-03-25 17:52: now specifying IGMP version for the correct interface	Saved by haniotak
+ 2009-03-26 08:52: Removed deprecated ospf authentication-type config	Saved by haniotak
+ 2009-03-26 14:49: After RE0 upgrade	Saved by haniotak
+ 2009-03-27 00:19: Nightly catch-all run	Saved by oberman
+ 2009-03-30 10:51: Disambiguate routes out of FNAL/ANL via CHIC and Startlight	Saved by oberman
+ 2009-03-30 12:44: Disambiguate ISIS routes out of FNAL/ANL via CHIC and Startlight	Saved by oberman
+ 2009-03-31 08:28: Removing BNL-MR1 from the iBGP mesh	Saved by moc
+ 2009-03-31 11:17: Adding BNL-MR3 to iBGP mesh	Saved by moc
+ 2009-04-06 12:11: User password update	Saved by metzger
+ 2009-04-06 18:07: Delete ESnet-BAMAN-mesh	Saved by dart
+ 2009-04-07 14:34: Adding ORAU-RT1 to iBGP mesh	Saved by oberman
+ 2009-04-09 13:57: Inbound update	Saved by yhines
+ 2009-04-14 13:36: User password update	Saved by chin
+ 2009-04-23 11:31: adjust metrics to debug scavenger tagging	Saved by dart
+ 2009-04-25 00:17: Nightly catch-all run	Saved by oberman
+ 2009-05-07 13:57: Removing PAIX-PA-RT2 from the iBGP mesh	Saved by yhines
+ 2009-05-07 16:33: Add paix-pa-rt1 134.55.200.58 to iBGP mesh     Saved by yhines
+ 2009-05-08 09:27: Updating prefix-list bogons	Saved by yhines
+ 2009-05-08 12:37: Inbound update	Saved by yhines
+ 2009-05-12 12:58: Inbound update	Saved by yhines
+ 2009-05-19 15:21: Inbound update	Saved by yhines
+ 2009-05-21 12:16: update v6 access prefix-list	Saved by dart
+ 2009-05-27 15:05: normalize IGP metric	Saved by dart
+ 2009-05-28 10:33: SNMP IPv6 access and trap sever	Saved by moc
+ 2009-05-28 13:49: Inbound update	Saved by yhines
+ 2009-06-01 14:57: Inbound update	Saved by yhines
+ 2009-06-02 16:38: Netlint clean up	Saved by yhines
+ 2009-06-09 13:42: Inbound update	Saved by yhines
+ 2009-06-10 15:10: Block stub access to the hidden ssh port on EX4200s	Saved by oberman
+ 2009-06-16 14:36: Updating ntp config	Saved by yhines
+ 2009-06-18 10:37: SNMP v6 filter	Saved by moc
+ 2009-06-22 12:20: IPv6 addrs protocols etc.	Saved by moc
+ 2009-06-25 00:19: Nightly catch-all run	Saved by oberman
+ 2009-06-26 00:17: Nightly catch-all run	Saved by oberman
+ 2009-06-26 11:32: Disable PMTU for IPv6	Saved by oberman
+ 2009-06-26 11:46: Disable PMTU for IPv6	Saved by oberman
+ 2009-06-29 00:19: Nightly catch-all run	Saved by oberman
+ 2009-06-29 12:51: Adding ANL-MR2 to iBGP mesh	Saved by moc
+ 2009-06-29 16:30: Removing ANL-MR1 from the iBGP mesh	Saved by moc
+ 2009-06-30 18:40: Updated OS to 93.I20090625_1810_aronen	Saved by metzger
+ 2009-07-01 00:18: Nightly catch-all run	Saved by oberman
+ 2009-07-02 07:24: Removed v6 PMTU workaround	Saved by moc
