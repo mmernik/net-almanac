@@ -29,11 +29,12 @@ Mac OS X, it is /Library/Python/2.5/site-packages/, for cygwin it is in
 /lib/python/site-packages').  This is the same directory where django is
 installed.
 
-twill v0.9 , httplib2, and wsgi-intercept are needed for running tests.  They
-are available here:
+twill v0.9 , httplib2, wsgi-intercept, and simplejson are needed for running tests.  
+They are available here:
 http://twill.idyll.org/
 http://code.google.com/p/httplib2/
 http://code.google.com/p/wsgi-intercept/
+http://www.undefined.org/python/
 
 You might need to install dateutils depending on the version of python you
 have.  Get it here:
@@ -81,7 +82,9 @@ pretty format if not convenient:
 }]
 <end JSON>
 
-"pk": the object's id in the database.  It must be an integer and unique.
+"pk": the object's id in the database.  It must be an integer and unique. When
+creating a new object, this value may be null.  If so, an id will be
+automatically assigned.
 
 "model": the name of the object request.  Only "net_almanac.event" is 
 implemented so far.
@@ -100,11 +103,13 @@ string.
 
 "tags": a space-delimited list of tags.  The server will automatically parse
 any input string into this format.  See tagging documentation for more detail
-on this.  This must not contain the characters: .
+on this.  This must not contain the characters: [[&$+,;#+"]]
 
 "begin_datetime" and "end_datetime": ISO 8601-formatted dates using
 YYYY-MM-DD [HH:MM:SS].  If the input string isn't as precise, the server will
 generate the rest.  The end datetime cannot be before the begin datetime.
+
+** REST api **
 
 URLs where JSON requests are accepted.  The header "accept" must contain the
 JSON MIME "application/json" or the server will render HTML.
@@ -148,6 +153,59 @@ server will ignore the other one.
 
 The URL of all valid GET queries is also a valid HTML page.  Navigate to it
 with your web browser to view the events in a human-usable UI.
+
+** Using almanac_api.py **
+
+almanac_api.py is a python-based API for almanac.  It uses no code from the
+main branch; just add it to your python path to install.  
+
+It requires the httplib2 and simplejson packages.
+
+Here is the structure:
+
+Event: An object corresponding to one event.  Its fields are slightly
+different from the JSON object outlined above:
+
+  id: same as JSON 'pk' field.  Use the python None value when creating a new
+  event.
+  
+  name, description, url, router, iface: same rules as JSON apply here.
+  
+  tags: a python list of strings instead of a space-delimited string.
+  
+  begin_datetime, end_datetime: a datetime object.
+
+
+NetAlmanac: An object that stores the URL of the server.  This has several
+methods, all of which correspond to a particular http query:
+
+  get_all_events(): Accesses the server and returns a list of Event objects.
+  
+  get_event(event_id): Returns only the event with this id as an Event object.
+  
+  get_filtered_events(args): Creates a corresponding GET filter request with the
+  same parameters allowed in the previous section (name, search, etc.)
+  
+  save_event(event): saves a pre-existing event.
+  
+  delete_event(event): deletes an event.
+  
+  create_event(event): creates a new event in the database.
+  
+ 
+There are also a few utility functions:
+
+validate(event): Checks an event for basic value errors.
+
+deserialize_event(json_string): takes in a JSON string from the server and 
+creates a list of Events.
+
+serialize_event(events): Takes in a list of Events and returns a JSON string.
+
+An example implementation of almanac_api.py is example/config_changes.py.  Run
+it by simply typing
+'python config_changes.py'
+into the terminal while the development server is running.
 
 ** licensing stuff, credits **
 

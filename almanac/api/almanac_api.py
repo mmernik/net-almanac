@@ -2,6 +2,7 @@ import datetime
 import httplib2
 import simplejson
 import dateutil.parser
+import urllib
 
 """
 A python interface to almanac's REST requests.
@@ -23,6 +24,8 @@ class NetAlmanac():
     given the root URL of a net_almanac server, such as 
     
     http://www.example.com/net_almanac/event/
+    
+    Every function in this class responds to an HTTP request to the server using the root URL.
     """
     def __init__(self, url):
         self.url = url
@@ -57,11 +60,11 @@ class NetAlmanac():
         
         filters = []
         if search:
-            filters.append("search=" + search)
+            filters.append("search=" + urllib.quote(search))
         if name:
-            filters.append("name=" + name)
+            filters.append("name=" + urllib.quote(name))
         if description:
-            filters.append("description=" + description)
+            filters.append("description=" + urllib.quote(description))
         if date:
             filters.append("date=" + date.strftime('%Y-%M-%d'))
         if begin_date:
@@ -71,7 +74,7 @@ class NetAlmanac():
         
         if tags:
             for tag in tags:
-                filters.append("tag=" + tag)
+                filters.append("tag=" + urllib.quote(tag))
         
         url = self.url + "?" + "&".join(filters)
         
@@ -125,7 +128,7 @@ class Event():
              router,
              tags,
              ):
-        self.id = id #immutable, unique
+        self.id = id #immutable, unique.  Can be None for a new object.
         self.name = name #nonempty string
         self.description = description #nonempty string
         self.begin_datetime = begin_datetime #datetime object
@@ -133,7 +136,7 @@ class Event():
         self.url = url #any string
         self.iface = iface #any string
         self.router = router #any string
-        self.tags = tags #any string
+        self.tags = tags #any list of strings
     
     def __str__(self):
         return self.name + ", id: " + str(self.id)
@@ -158,8 +161,9 @@ def validate_event(event):
         or len(event.description) > MAX_LENGTH_DESCRIPTION):
         raise ValueError("Field data too long")
     
-    if not is_valid_tag(event.tags):
-        raise ValueError('Tags cannot contain whitespace or any special symbols: [\'&"$+,;#+]')
+    for tag in event.tags:
+        if not is_valid_tag(tag):
+            raise ValueError('Tags cannot contain whitespace or any special symbols: [\'&"$+,;#+]')
     
     if event.end_datetime < event.begin_datetime:
         raise ValueError('The end date cannot be before the begin date.')
@@ -183,7 +187,7 @@ def serialize_events(events):
         fields['url'] = event.url
         fields['iface'] = event.iface
         fields['router'] = event.router
-        fields['tags'] = event.tags
+        fields['tags'] =' '.join(event.tags)
         json_event['fields'] = fields
         json_container.append(json_event)
     
@@ -206,21 +210,18 @@ def deserialize_events(json_string):
                   fields['url'],
                   fields['iface'],
                   fields['router'],
-                  fields['tags'])
+                  fields['tags'].split(' '))
         to_return.append(e)
     return to_return
     
-        
-def is_empty_or_space(input_string):
-    return (input_string == None or input_string == '' or input_string.isspace())
 
-#We won't parse tags like in views.py, so allow whitespaces.
 def is_valid_tag(tag_string):
     for char in tag_string:
-        if char == ' ':
-             continue
         for c in FORBIDDEN_CHARS:
             if c == char:
                 return False
     return True
+
+def is_empty_or_space(input_string):
+    return (input_string == None or input_string == '' or input_string.isspace())
     

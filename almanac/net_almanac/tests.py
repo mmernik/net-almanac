@@ -8,7 +8,7 @@ import time
 from django.test.client import Client
 import net_almanac.views
 from net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION
-from net_almanac.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_string, json_headers
+from net_almanac.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_strings, json_headers
 from tagging.models import *
 
 import twill
@@ -218,14 +218,23 @@ class TestPost(TestWSGI):
         logger.info('got expected error message: ' + content)
         
         logger.info('accessing with POST with good string: ' + url)
-        response, content = h.request(url,'POST', good_create_string, headers=json_headers)
+        response, content = h.request(url,'POST', good_create_strings[0], headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
         
         #The 'good' string is now bad since there is now an object with that ID
         logger.info('accessing with POST with bad string: ' + url)
-        response, content = h.request(url,'POST', good_create_string, headers=json_headers) 
+        response, content = h.request(url,'POST', good_create_strings[0], headers=json_headers) 
         self.assertTrue(response.status == HTTP_BAD_REQUEST)
         logger.info('got expected error message: ' + content)
+        
+        #The second good string has a null id, so we should be able to create it twice.
+        logger.info('accessing with POST with good string: ' + url)
+        response, content = h.request(url,'POST', good_create_strings[1], headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
+            
+        logger.info('accessing with POST with good string: ' + url)
+        response, content = h.request(url,'POST', good_create_strings[1], headers=json_headers)
+        self.assertTrue(response.status == HTTP_OK)
 
         
 class TestTags(TestWSGI):
@@ -459,7 +468,7 @@ class TestAPI(TestWSGI):
         self.assertTrue(len(filtered)==1)
         filtered = almanac.get_filtered_events(tags=["esnet","january"])
         self.assertTrue(len(filtered)==2)  
-        filtered = almanac.get_filtered_events(search="xe-0/1/0.1009", description="upgrading%20infrastructure")
+        filtered = almanac.get_filtered_events(search="xe-0/1/0.1009", description="upgrading infrastructure")
         self.assertTrue(len(filtered)==1)
         filtered = almanac.get_filtered_events(tags=["notag","faketag"])
         self.assertTrue(len(filtered)==0)
@@ -494,7 +503,7 @@ class TestAPI(TestWSGI):
                                           'url',
                                           'iface',
                                           'router',
-                                          'tags')
+                                          ['tags','anothertag'])
         almanac.create_event(to_create)
         event = almanac.get_filtered_events(name="api_created")[0]
         self.assertTrue(event.description == 'description')
