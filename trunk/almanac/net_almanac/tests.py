@@ -30,8 +30,6 @@ import api.almanac_api
 EVENT_NAME = "testevent"
 EVENT_DESCRIPTION = "testdescription"
 EVENT_URL = "testurl"
-EVENT_ROUTER = "testrouter"
-EVENT_IFACE = "testiface"
 
 EVENT_BEGINDATETIME = datetime.datetime(2008,1,1)
 EVENT_ENDDATETIME = datetime.datetime(2008,1,5)
@@ -67,8 +65,6 @@ class EventTestCaseSetup(unittest.TestCase):
                          begin_datetime=EVENT_BEGINDATETIME,
                          end_datetime=EVENT_ENDDATETIME,
                          url=EVENT_URL, 
-                         router=EVENT_ROUTER,
-                         iface=EVENT_IFACE,
                          tags=TAG_STRING
                          )
         self.test_event.save()
@@ -112,8 +108,6 @@ class DatabaseTestCase(EventTestCaseSetup):
         testevent = events.get(name = EVENT_NAME)
         self.assertTrue(testevent.description == EVENT_DESCRIPTION)
         self.assertTrue(testevent.url == EVENT_URL)
-        self.assertTrue(testevent.router == EVENT_ROUTER)
-        self.assertTrue(testevent.iface == EVENT_IFACE)
         self.assertTrue(testevent.begin_datetime == EVENT_BEGINDATETIME)
         self.assertTrue(testevent.end_datetime == EVENT_ENDDATETIME)
         
@@ -363,7 +357,7 @@ class TestTextSearch(TestWSGI):
         self.assertTrue(response['content-type'] == JSON_MIME)
         self.assertTrue(content.count('"description"') == 2)
         
-        url = URL_BASE + '?search=xe-0/1/0.1009'
+        url = URL_BASE + '?search=http://www.es.net'
         logger.info('accessing with GET: ' + url)
         response, content = h.request(url,'GET', headers=json_headers)
         self.assertTrue(response.status == HTTP_OK)
@@ -420,7 +414,7 @@ class TwillTestCase(TwillTestCaseSetup):
         
         tc.go(url)
         tc.formvalue(FILTER_FORM,'name','upgrade')
-        tc.formvalue(FILTER_FORM,'search','xe-0/1/0.1009')
+        tc.formvalue(FILTER_FORM,'search','www.es.net')
         tc.formvalue(FILTER_FORM,'description','infrastructure')
         tc.submit(9)
         tc.find('html')
@@ -468,7 +462,7 @@ class TestAPI(TestWSGI):
         self.assertTrue(len(filtered)==1)
         filtered = almanac.get_filtered_events(tags=["esnet","january"])
         self.assertTrue(len(filtered)==2)  
-        filtered = almanac.get_filtered_events(search="xe-0/1/0.1009", description="upgrading infrastructure")
+        filtered = almanac.get_filtered_events(search="www.es.net", description="upgrading infrastructure")
         self.assertTrue(len(filtered)==1)
         filtered = almanac.get_filtered_events(tags=["notag","faketag"])
         self.assertTrue(len(filtered)==0)
@@ -501,8 +495,6 @@ class TestAPI(TestWSGI):
                                           datetime.datetime(2009,2,2),
                                           datetime.datetime(2009,2,3),
                                           'url',
-                                          'iface',
-                                          'router',
                                           ['tags','anothertag'])
         almanac.create_event(to_create)
         event = almanac.get_filtered_events(name="api_created")[0]

@@ -19,8 +19,6 @@ class Event(models.Model):
     end_datetime = models.DateTimeField()
     
     url = models.CharField(max_length=MAX_LENGTH_FIELD)
-    router = models.CharField(max_length=MAX_LENGTH_FIELD)
-    iface = models.CharField(max_length=MAX_LENGTH_FIELD)
     
     tags = TagField()
     
@@ -55,8 +53,6 @@ class EventForm(ModelForm):
         self.fields['description'].widget = forms.Textarea()
         
         self.fields['url'].required = False
-        self.fields['router'].required = False
-        self.fields['iface'].required = False
         self.fields['end_time'].required = False
         self.fields['begin_time'].required = False
         
@@ -73,15 +69,11 @@ class EventForm(ModelForm):
             self.initial['begin_date'] = datetime.date.today().strftime('%Y-%m-%d')
             self.initial['end_date'] = datetime.date.today().strftime('%Y-%m-%d')
         
-        
-        
         self.fields['name'].widget.attrs['title'] = 'The name of the event.  Must be non-empty.'
         self.fields['name'].help_text = '*required'
         self.fields['description'].widget.attrs['title'] = 'A description of this event.  Must be non-empty.'
         self.fields['description'].help_text = '*required'
         self.fields['url'].widget.attrs['title'] = 'This field is optional.'
-        self.fields['router'].widget.attrs['title'] = 'This field is optional.'
-        self.fields['iface'].widget.attrs['title'] = 'This field is optional.'
         self.fields['tags'].widget.attrs['title'] = 'A list of alphanumeric tags.  This field is optional.'
         self.fields['tags'].help_text = 'Use spaces to separate tags.'
         self.fields['begin_date'].widget.attrs['title'] = 'This field is required.'

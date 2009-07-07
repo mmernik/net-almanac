@@ -174,8 +174,6 @@ def create_event(request):
                               begin_datetime=dateutil.parser.parse(begin_datetime_string),
                               end_datetime=dateutil.parser.parse(end_datetime_string),
                               url=post_data['url'],
-                              router=post_data['router'],
-                              iface=post_data['iface'],
                               tags = post_data['tags'])
             
             validate_event(new_event) #raises ValueError
@@ -231,8 +229,6 @@ def update_event(request,object_id):
             event.name = post_data['name']
             event.description = post_data['description']
             event.url = post_data['url']
-            event.router = post_data['router']
-            event.iface = post_data['iface']
             
             begin_datetime_string = post_data['begin_date'] + ' ' + post_data['begin_time']
             event.begin_datetime = dateutil.parser.parse(begin_datetime_string)
@@ -395,7 +391,7 @@ def timeline(request):
 
 def timeline_data(request):
     """
-    Returns data in JSON format only for the javascript timeline.  Use event_display for REST queries.
+    Returns data in JSON format only for the javascript timeline.  Use list_events or detail_event for REST queries.
     """
     logger = logging.getLogger('view timeline_data')
     logger.info('hit')
@@ -414,13 +410,9 @@ def timeline_data(request):
         json_event['link'] = event.get_absolute_url()
         description_string =  event.description
         if not is_empty_or_space(event.tags):
-            description_string += '<br /> tags: ' + event.tags
+            description_string += '<br /> <strong>tags</strong>: ' + event.tags
         if not is_empty_or_space(event.url):
-            description_string += '<br /> url: ' + event.url
-        if not is_empty_or_space(event.router):
-            description_string += '<br /> router: ' + event.router
-        if not is_empty_or_space(event.iface):
-            description_string += '<br /> iface: ' + event.iface
+            description_string += '<br /> <strong>url</strong>: ' + event.url
         
         json_event['description'] = description_string
         
@@ -457,8 +449,6 @@ def validate_event(event):
     
     if (len(event.name) > MAX_LENGTH_FIELD
         or len(event.url) > MAX_LENGTH_FIELD
-        or len(event.router) > MAX_LENGTH_FIELD
-        or len(event.iface) > MAX_LENGTH_FIELD
         or len(event.description) > MAX_LENGTH_DESCRIPTION):
         raise ValueError("Field data too long")
     
@@ -533,7 +523,10 @@ def parse_json_request(json_string):
     return event
 
 def make_bad_request_http_response(error_string):
-    return HttpResponse(error_string,mimetype=TEXT_MIME,status=HTTP_BAD_REQUEST)
+    return HttpResponse(error_string,
+                        mimetype=TEXT_MIME,
+                        status=HTTP_BAD_REQUEST
+                        )
 
 def tag_compare(tag1, tag2):
     if tag1.frequency > tag2.frequency:
@@ -567,6 +560,7 @@ def get_filtered_events(get_data):
     logger = logging.getLogger("get_filtered_events")
     logger.debug('get parameters: ' + str(get_data))
     
+    #These variables are used in constructing the filter_string later on.
     date = None
     begin_date = None
     name = None
@@ -583,15 +577,13 @@ def get_filtered_events(get_data):
         events = (Event.objects.filter(name__contains=(search)) |
                   Event.objects.filter(description__contains=(search)) |
                   Event.objects.filter(url__contains=(search)) |
-                  Event.objects.filter(router__contains=(search)) |
-                  Event.objects.filter(iface__contains=(search)) |
                   Event.objects.filter(tags__contains=(search)))
     
     
     #remove the 'no_tag' option in the form from the list.  This is here so that
     #the users can deselect tags if they want.
     if tags_list.count('no_tag') > 0:
-        tags_list.remove('no_tag')
+        tags_list = []
     if tags_list:
         logger.info('tags_list: ' + str(tags_list))
         events = TaggedItem.objects.get_by_model(Event, tags_list)
@@ -639,29 +631,22 @@ def get_filtered_events(get_data):
 
         
     """    
-    Here is logic to create a user-readable string to display in HTML that explains what filter the user is using.
+    Here is logic to create a user-readable string that explains what filter the user is using.
     """
     filter_string = ""
-    
     if search:
         filter_string += " containing text '" + search + "'; "
-        
     if name:
         filter_string += " named '" + name + "'; "
-    
     if description:
         filter_string += " with description '" + description + "'; " 
-    
     if tags_list:
         filter_string += " with tags '" + "', '".join(tags_list) + "'; "
-    
     if date:
         filter_string += " on " + date + "; "
     elif begin_date:
         filter_string += " between " + begin_date + " and " + end_date + "; "
-
     if filter_string:
         filter_string += str(len(events)) + " events total"
-        
     
     return events, filter_string
