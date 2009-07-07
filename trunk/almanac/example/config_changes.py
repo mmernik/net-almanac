@@ -138,7 +138,7 @@ for k,v in event_tab.events.iteritems():
         
         tag_string = [val.who,'example']
         for dev in val.devices:
-            tag_string.append('rtr=' + val.who)
+            tag_string.append('rtr=' + dev)
         
         e = almanac_api.Event(None,
                               val.msg,
