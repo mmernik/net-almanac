@@ -8,7 +8,6 @@ import django.utils.simplejson as json
 
 from almanac.net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION
 from tagging.models import *
-
 import logging
 import datetime
 import dateutil.parser
@@ -26,32 +25,17 @@ HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this 
                                             mimetype=TEXT_MIME,
                                             status=HTTP_NOT_IMPLEMENTED)
 
+#These chars cause problems with locating URLs
 FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
 
 ONE_DAY = datetime.timedelta(1)
 
 INVALID_ERROR_STRING = "Submitted form is not valid"
 
-def root(request):
-    #for now, just a redirect
-    return HttpResponseRedirect('/net_almanac/event/')
-
-def tag(request,tag_name):
-    #filters objects by tags, then returns.  Only supports GET
-    logger = logging.getLogger('view tag')
-    logger.debug('hit')
-    tag = Tag.objects.get(name=tag_name)
-    events = TaggedItem.objects.get_by_model(Event,tag)
-    if is_json_request(request):
-        json_data = serializers.serialize('json',events)
-        return HttpResponse(json_data,mimetype=JSON_MIME)
-    else:
-        return render_to_response('net_almanac/tag_detail.html',
-                                  {'tag':tag,
-                                   'event_list':events})
-
 def tag_list(request):
-    #only supports GET.  Orders tags by the most common
+    """
+    only supports GET.  Orders tags by the most common first.
+    """
     logger = logging.getLogger('view tag_list')
     logger.debug('hit')
     tags_list = get_all_tags_with_frequency()
@@ -60,7 +44,9 @@ def tag_list(request):
                               {'tag_list':tags_list,})
     
 def tag_clean(request):
-    #deletes all unused tags
+    """
+    deletes all unused tags.
+    """
     if request.method == 'POST':
         for tag in Tag.objects.all():
             if get_tag_frequency(tag) == 0:
@@ -70,12 +56,22 @@ def tag_clean(request):
         return HTTPRESPONSE_NOT_IMPLEMENTED
 
 def list_events(request):
+    """
+    With an HTML request, we display events as tabular data.  Some data is hidden 
+    in the detail_event page to have a cleaner table.
+    
+    There are 2 types of REST JSON queries accepted here:
+    GET-> Returns a list of JSON events
+    POST-> Creates a new event in the database
+    
+    In both the REST JSON and HTML case, we will read in GET data to filter the events
+    if it is available.
+    """
     logger = logging.getLogger('view list_events')
     logger.info('hit')
     events = Event.objects.all()
     #These variables are used to customize the rendered HTML
     filter_string = ""
-    
     #filter the events if we are a GET request.
     if request.method=='GET':
         get_data = request.GET
@@ -142,8 +138,11 @@ def list_events(request):
                                    'get_args':request.GET.urlencode(),})
 
 def create_event(request):
-    #a GET request returns a new form, and a POST request attempts to create a new event
-    #This view is not used in REST queries
+    """
+    a GET request returns a new form, and a POST request attempts to create a new event.
+    If the form is invalid, it will render the form again with appropriate error messages.
+    This view is not used in REST queries
+    """
     logger = logging.getLogger('view create_event')
     
     logger.info('hit')
@@ -195,8 +194,11 @@ def create_event(request):
             
         
 def update_event(request,object_id):
-    #a GET request returns a new form, and a POST request attempts to edit an event
-    #This view is not used in REST queries
+    """
+    a GET request returns a new form, and a POST request attempts to edit an event.
+    If the form is invalid, we will render the HTML form again with appropriate errors.
+    This view is not used in REST queries
+    """
     logger = logging.getLogger('view update_event')
     logger.info('hit')
     logger.debug('request.method='+request.method)
@@ -262,7 +264,10 @@ def update_event(request,object_id):
             logger.error('unexpected error!')
         
 def delete_event(request,object_id):
-    #a GET request gives a confirmation page, and a POST request deletes and redirects
+    """
+    a GET request gives a confirmation page, and a POST request deletes and redirects to the main page.
+    No REST requests here; REST DELETE request should go to detail_event
+    """
     logger = logging.getLogger('view delete_event')
     
     logger.info('hit')
@@ -286,7 +291,13 @@ def delete_event(request,object_id):
         return HttpResponseRedirect('/net_almanac/event/')
 
 def detail_event(request,object_id):
-    #displays data about one object.  
+    """
+    displays data about one object if an HTML request.  
+    It accepts 3 types of REST requests: 
+    GET -> returns the event
+    PUT -> modifies the event
+    DELETE -> deletes teh event
+    """  
     logger = logging.getLogger('view detail_event')
     logger.info('hit')
     event = get_event_by_id(object_id)
@@ -356,7 +367,9 @@ def filter(request):
                               {'tag_list':Tag.objects.all()})
     
 def process_filter(request):
-    #Redirects the filter request to the appropriate view according to user choice.
+    """
+    Redirects the filter request to the appropriate view according to user choice: table, timeline, or json.
+    """
     get_args = request.GET
     if get_args['display'] == 'timeline':
         return HttpResponseRedirect('/net_almanac/event/timeline?' + get_args.urlencode())
@@ -369,7 +382,8 @@ def process_filter(request):
     
 def timeline(request):
     """
-    Renders the javascript timeline.
+    Renders the javascript timeline.  The rendered page will create a javascript request to timeline_data 
+    to get the events in timeline-readable form.
     """
     logger = logging.getLogger('view timeline_data')
     logger.info('hit')
@@ -392,6 +406,8 @@ def timeline(request):
 def timeline_data(request):
     """
     Returns data in JSON format only for the javascript timeline.  Use list_events or detail_event for REST queries.
+    The timeline requires a special date format %Y-%m-%dT%H:%M:%S which is different from the rest of almanac.
+    See http://code.google.com/p/simile-widgets/wiki/Timeline_EventSources
     """
     logger = logging.getLogger('view timeline_data')
     logger.info('hit')
@@ -429,6 +445,22 @@ def timeline_data(request):
         
     return HttpResponse(json_data, mimetype=JSON_MIME)
 
+def main_page(request):
+    """
+    Prepares some data for the main page.
+    """
+    tags = get_all_tags_with_frequency()
+    num_unused_tags = 0
+    for tag in tags:
+        if tag.frequency==0:
+            num_unused_tags += 1
+            
+    return render_to_response('net_almanac/main_page.html',
+                              {'num_events': Event.objects.count(),
+                               'num_tags': Tag.objects.count(),
+                               'num_unused_tags':num_unused_tags,
+                               'num_tagged_item':TaggedItem.objects.count()})
+
 def validate_event(event):
     """
     Always call this before saving an event!
@@ -456,7 +488,7 @@ def validate_event(event):
     for tag in tagging.utils.parse_tag_input(event.tags):
         #normally commas are delimiters, but if they are between double-quotes they become tags
         if not is_valid_tag(tag):
-            raise ValueError('Tags cannot contain whitespace or any special symbols: [\'&"$+,;#+]')
+            raise ValueError('Tags cannot contain whitespace or any special symbols: [\'&"$+,;#]')
     event.tags = format_tag_string(event.tags)
     logger.debug('checking datetime')
     if event.end_datetime < event.begin_datetime:
@@ -486,6 +518,9 @@ def get_event_by_id(event_id):
     return event
     
 def is_json_request(request):
+    """
+    Simply checks the header for the JSON MIME
+    """
     logger = logging.getLogger('is_json_request')
     
     if request.META.has_key('HTTP_ACCEPT'):
@@ -497,7 +532,7 @@ def is_json_request(request):
  
 def format_tag_string(tags_string):
     """
-    Takes in some user-inputted tag string and formats it into a pretty string.
+    Takes in some user-inputed tag string and formats it into a pretty string.
     """
     logger = logging.getLogger('format_tag_string')
     return ' '.join(tagging.utils.parse_tag_input(tags_string))
@@ -505,6 +540,7 @@ def format_tag_string(tags_string):
 
 def parse_json_request(json_string):
     """
+    Takes a JSON string and parses it into an Event object.
     raises:  ValueError
     """
     logger = logging.getLogger('parse_json_request')
@@ -557,6 +593,11 @@ def current_day(date_string):
 
 #Returns either a queryset of events or raises a ValueError
 def get_filtered_events(get_data):
+    """
+    Filters events based on get parameters.  It also returns a readable filter_string
+    which explains the results.  Any functional change here should be reflected in the 
+    README since it affects the REST API.
+    """
     logger = logging.getLogger("get_filtered_events")
     logger.debug('get parameters: ' + str(get_data))
     
@@ -579,8 +620,7 @@ def get_filtered_events(get_data):
                   Event.objects.filter(url__contains=(search)) |
                   Event.objects.filter(tags__contains=(search)))
     
-    
-    #remove the 'no_tag' option in the form from the list.  This is here so that
+    #remove the 'no_tag' option in the form from the list.  This was added so that
     #the users can deselect tags if they want.
     if tags_list.count('no_tag') > 0:
         tags_list = []

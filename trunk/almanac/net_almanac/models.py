@@ -20,6 +20,9 @@ class Event(models.Model):
     
     url = models.CharField(max_length=MAX_LENGTH_FIELD)
     
+    #This field acts like a charfield, but any update to it will be reflected 
+    #in the database's tagging structure as well.  See tagging documentation for
+    #more info.
     tags = TagField()
     
     def __unicode__(self):
@@ -29,7 +32,10 @@ class Event(models.Model):
         return "/net_almanac/event/"+str(self.id) + "/"
 
 class EventForm(ModelForm):
-    #NOTE: we need to manually set date
+    """NOTE: we need to manually set date.  We split the database datetime field into
+    two different fields in the form. This is to accomodate the calendar widget and so that
+    users don't have to fill in the time if not needed.
+    """
     begin_date = forms.DateField()
     begin_time = forms.TimeField()
     end_date = forms.DateField()
@@ -45,7 +51,8 @@ class EventForm(ModelForm):
         js = ('/site_media/js/scw.js',)
         
     def __init__(self, *args, **kwargs):
-        #One static variable here is self.instance, which is the event this Form should model.
+        #One static variable here is self.instance, which is the event this Form should create the form for.
+        #Sometimes self.instance will have empty fields: this is when we create a form without an instance.
         super(EventForm,self).__init__(*args,**kwargs)
         logger = logging.getLogger('EventForm')
         logger.debug('constructing new EventForm')
