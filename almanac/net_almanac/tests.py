@@ -79,6 +79,7 @@ class EventTestCaseSetup(unittest.TestCase):
 
 class LoggingTestCase(EventTestCaseSetup):
     def runTest(self):
+        #Log an error and then make sure it's there.
         logging.error(LOG_STRING)
         from settings import LOG_FILENAME
         try:
@@ -129,7 +130,7 @@ class TagsTestCase(EventTestCaseSetup):
         
 class HTMLResponseTestCase(EventTestCaseSetup):
     def runTest(self):
-        #some sanity HTML tests not using twill but the provided test client
+        #some sanity HTML tests using the provided test client
         c = Client()
         response = c.get('/net_almanac/event/')
         self.assertTrue(response.status_code == HTTP_OK)
@@ -139,6 +140,10 @@ class HTMLResponseTestCase(EventTestCaseSetup):
         
 
 class TestWSGI(unittest.TestCase):
+    """
+    We use WSGI intercept so that we can hook it up to httplib2, a library that
+    supports PUT and DELETE http requests.
+    """
     def setUp(self):
         app = AdminMediaHandler(WSGIHandler())
         wsgi_intercept.add_wsgi_intercept('127.0.0.1', TEST_PORT, lambda: app)
@@ -441,6 +446,7 @@ class TwillTestCase(TwillTestCaseSetup):
         
 class TestAPI(TestWSGI):
     def runTest(self):
+        #check if some constants are the same.
         self.assertTrue(api.almanac_api.MAX_LENGTH_FIELD == MAX_LENGTH_FIELD)
         self.assertTrue(api.almanac_api.MAX_LENGTH_DESCRIPTION == MAX_LENGTH_DESCRIPTION)
         self.assertTrue(api.almanac_api.FORBIDDEN_CHARS == net_almanac.views.FORBIDDEN_CHARS)

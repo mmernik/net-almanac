@@ -14,7 +14,7 @@ tags_dict = {
 urlpatterns = patterns('',
     #Default homepage displays a list.
     (r'^$', 
-     'almanac.net_almanac.views.root'),
+     'almanac.net_almanac.views.main_page'),
     
     (r'^event/$', 
      'almanac.net_almanac.views.list_events'),

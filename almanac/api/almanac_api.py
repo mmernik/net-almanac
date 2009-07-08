@@ -9,13 +9,10 @@ A python interface to almanac's REST requests.
 This shouldn't refer to any files in the main branch.
 """
 
-
 HTTP_OK = 200
-JSON_HEADERS = {'accept':'application/json'}
-
-
 MAX_LENGTH_FIELD = 100
 MAX_LENGTH_DESCRIPTION = 500
+JSON_HEADERS = {'accept':'application/json'}
 FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
 
 
@@ -32,7 +29,7 @@ class NetAlmanac():
 
     def get_all_events(self):
         """
-        returns a list of Events
+        returns a list of Events.  A simple GET http command to the server command.
         """
         http = httplib2.Http()
         response, content = http.request(self.url, 'GET', headers = JSON_HEADERS)
@@ -56,6 +53,11 @@ class NetAlmanac():
                             date=None,
                             begin_date=None,
                             end_date=None):
+        """
+        Gets a list of events filtered by any number of options.  With no options, it's functionality
+        should be the same as get_all_events().  See the readme for what each field does.
+        This is a GET http request with various GET arguments in the URL.  The
+        """
         http = httplib2.Http()
         
         filters = []
@@ -83,6 +85,10 @@ class NetAlmanac():
     
     def save_event(self,
                    event):
+        """
+        Saves an event.  This even needs to exist beforehand, and its id should be unchanged.
+        Generates a PUT http request to the server.
+        """
         http = httplib2.Http()
        
         input = serialize_events([event])
@@ -94,6 +100,10 @@ class NetAlmanac():
     def create_event(self,
                      event):
         http = httplib2.Http()
+        """
+        Creates a new event.  The id of the Event should be either unused or None.
+        Generates at POST http request to the server.
+        """
        
         input = serialize_events([event])
         response, content = http.request(self.url , 'POST', input, headers = JSON_HEADERS)
@@ -103,9 +113,13 @@ class NetAlmanac():
         
     def delete_event(self,
                      event):
+        """
+        Deletes an event that exists in the server.
+        Generates a DELETE http request to the server.
+        """
+        
         http = httplib2.Http()
         response, content = http.request(self.url + str(event.id) + '/' , 'DELETE', headers = JSON_HEADERS)
-        
         if response.status != HTTP_OK:
             raise ValueError('Event not deleted correctly. Message from server: ' + content)
         
@@ -142,7 +156,7 @@ def validate_event(event):
     """
     Always call this before saving an event!
     
-    raises ValueError when there is some inconsistency
+    raises ValueError when there is some problem
     """
     
     if is_empty_or_space(event.name):

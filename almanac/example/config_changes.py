@@ -128,7 +128,6 @@ events = netalmanac.get_filtered_events(tags=['example'])
 for e in events:
     netalmanac.delete_event(e)
     
-
 events = []
 
 for k,v in event_tab.events.iteritems():
@@ -151,5 +150,6 @@ for k,v in event_tab.events.iteritems():
         events.append(e)
         
 for e in events:
+    almanac_api.validate_event(e)
     netalmanac.create_event(e)
 
