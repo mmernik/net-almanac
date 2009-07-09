@@ -2,7 +2,6 @@
 
 {% block subtitle %} : Event Delete Confirm {% endblock %}
 
-{% block navigate %} : <a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a> : Delete Event {% endblock %}
 
 {% block head %}
 <script language="javascript" type="text/javascript">
@@ -18,7 +17,7 @@ else
 {% endblock %}
 
 {% block body %} 
-<p align="center">Delete event named: {{event.name}}?</p>
+<p align="center"><strong>Delete event named: <a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a>?</strong></p>
 <form action="" method="post" >
 	<p align="center"><input type="submit" onclick="return confirm_delete();" value="Delete"></p>
 </form>

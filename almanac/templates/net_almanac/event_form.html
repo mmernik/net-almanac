@@ -7,6 +7,7 @@
 
 
 {% block body %} 
+<h3>{% block formtitle %} {% endblock %}</h3>
 <form action="" method="post">
 	<table>
 		{{ form_table }}
@@ -25,6 +26,4 @@ Please use HH:MM[:ss] format for the time. <br />
 {% endblock %}
 
 {% block side_options %}
-<a href="/net_almanac/event/tag/"> View all tags</a> 
-    <hr />
 {% endblock %}

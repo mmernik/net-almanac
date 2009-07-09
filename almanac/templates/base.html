@@ -27,10 +27,13 @@
 
 </div>
 	<div id="header">
-		Navigate: <a href="/net_almanac/">Home</a>
-		{% block navigate %}
+	<div class="navigatecell" onclick="location.href='/net_almanac/';"><a href="/net_almanac/">Home</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/';"><a href="/net_almanac/event/">Event Table</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/timeline/';"><a href="/net_almanac/event/timeline/">Event Timeline</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/filter/';"><a href="/net_almanac/event/filter/">Filter Events</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/tag/';"><a href="/net_almanac/event/tag/">Tags</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/create/';"><a href="/net_almanac/event/create/">Create Event</a></div> 
 		
-		{% endblock %}
 	</div>
 	
 	<div id="columncontainer">
@@ -46,8 +49,6 @@
 		<h4>Management Options:</h4>
 		<hr />
 		<a href="/net_almanac/">Go to Top</a>
-    	<hr />
-    	<a href="/net_almanac/event/filter/">Filter events</a>
     	<hr />
 		{% block side_options %}
 		{% endblock %}

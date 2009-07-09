@@ -2,10 +2,9 @@
 
 {% block subtitle %} : Event Detail {% endblock %}
 
-{% block navigate %} : <a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a> {% endblock %}
-
 {% block body %}
-<table >
+<h3> Detailing Event: <a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a> </h3>
+<table class="description">
     <tr>
         <th>Database ID</th>
         <td>{{event.id}}</td>

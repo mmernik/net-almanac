@@ -2,8 +2,6 @@
 
 {% block subtitle %} : Tag List {% endblock %}
 
-{% block navigate %} : <a href="/net_almanac/event/tag/">Tags</a> {% endblock %}
-
 
 {% block head %}
 <script language="javascript" type="text/javascript">
@@ -21,7 +19,7 @@ else
 {% block body %} 
 
 {% if tag_list %}
-	<h4>All tags (most common listed first):</h4>
+	<h3>All tags (most common listed first):</h3>
 	<ul>
 	{% for tag in tag_list %}
 		<li><a href="/net_almanac/event/?tag={{tag.name}}">{{tag.name}}  ({{tag.frequency}} total)</a></li>
