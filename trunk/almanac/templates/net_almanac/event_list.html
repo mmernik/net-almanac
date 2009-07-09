@@ -13,12 +13,11 @@
 {% endblock %}
 
 {% block navigate %}
-	: Events {{filter_string}}
 {% endblock %}
 
 {% block body %}
 {% if event_list %}
-
+<h3> Displaying Events {{filter_string}}</h3> <br />
 <table class="sortable">
     <tr >
         <th>id</th>

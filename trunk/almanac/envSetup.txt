@@ -35,6 +35,6 @@ URL_BASE = 'http://127.0.0.1:' + str(TEST_PORT) + '/net_almanac/event/'
 JSON_MIME = 'application/json'
 
 
-e=Event(name='1',description='2',begin_datetime=datetime.datetime.now(),end_datetime=datetime.datetime.now(),url='3',router='4',iface='5',tags='')
+e=Event(id=1,name='1',description='2',begin_datetime=datetime.datetime.now(),end_datetime=datetime.datetime.now(),url='3',tags='')
 
 

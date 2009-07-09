@@ -61,12 +61,9 @@ var tl;
 {% endblock %}
 
 
-
-{% block navigate %} : Timeline of Events {{filter_string|safe}} {% endblock %}
-
 {% block body_tag %} <body onload="onLoad();" onresize="onResize();"> {% endblock %}
 {% block body %} 
-
+<h3>Timeline of Events {{filter_string}} </h3>
 <div id="my-timeline" style="height: 400px; border: 1px solid #aaa"></div>
 
 Click and drag with your mouse to navigate the timeline. You may click on an event for more detail. <br />
