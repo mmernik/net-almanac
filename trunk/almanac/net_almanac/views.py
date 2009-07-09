@@ -285,6 +285,7 @@ def delete_event(request,object_id):
         
         #we need to delete tags because they are not automatically deleted with delete()
         event.tags = ""
+        event.save()
         event.delete()
         logger.info('delete successful! event delete: ' + event.name)
         
@@ -341,7 +342,9 @@ def detail_event(request,object_id):
             return HttpResponse('event updated',mimetype=TEXT_MIME)
 
         elif (request.method == 'DELETE'):
-            logger.info('got DELETE request...deleting selected event: ' + event.name)      
+            logger.info('got DELETE request...deleting selected event: ' + event.name)     
+            event.tags=""
+            event.save() 
             event.delete()
             return HttpResponse('event deleted',mimetype=TEXT_MIME) 
    
