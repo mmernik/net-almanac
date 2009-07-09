@@ -27,6 +27,7 @@ HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this 
 
 #These chars cause problems with locating URLs
 FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
+DESCRIPTION_DISPLAY_SIZE = 100
 
 ONE_DAY = datetime.timedelta(1)
 
@@ -127,8 +128,8 @@ def list_events(request):
         
         #shorten description length on the table.
         for event in events:
-            if len(event.description) > 50:
-                event.short_description = event.description[:47] + '...'
+            if len(event.description) > DESCRIPTION_DISPLAY_SIZE:
+                event.short_description = event.description[:DESCRIPTION_DISPLAY_SIZE-3] + '...'
             else:
                 event.short_description = event.description
 
