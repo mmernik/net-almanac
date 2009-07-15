@@ -2,8 +2,10 @@
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+PRODUCTION = False
 
 #Change these variables to customize logging
+import sys
 import logging
 LOG_FILENAME = "logs/almanac_logs.out"
 LOGGING_LEVEL = logging.DEBUG
@@ -87,7 +89,14 @@ INSTALLED_APPS = (
     
 )
 
+logging_configured = False
 
+try:
+    from almanac.local_settings import *
+except ImportError:
+    print >>sys.stderr, "unable to import local_settings.py, using defaults"
+
+# this only has an effect if no other logging has been configured
 logging.basicConfig(
     level = LOGGING_LEVEL,
     format = '%(asctime)s %(levelname)s [%(name)s]: %(message)s',
