@@ -11,7 +11,7 @@ This shouldn't refer to any files in the main branch.
 
 HTTP_OK = 200
 MAX_LENGTH_FIELD = 100
-MAX_LENGTH_DESCRIPTION = 500
+MAX_LENGTH_DESCRIPTION = 8192
 JSON_HEADERS = {'accept':'application/json'}
 FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
 
@@ -164,10 +164,12 @@ def validate_event(event):
     if is_empty_or_space(event.description):
         raise ValueError("'description' property cannot be empty.")
     
-    if (len(event.name) > MAX_LENGTH_FIELD
-        or len(event.url) > MAX_LENGTH_FIELD
-        or len(event.description) > MAX_LENGTH_DESCRIPTION):
-        raise ValueError("Field data too long")
+    if len(event.name) > MAX_LENGTH_FIELD:
+        raise ValueError("name field too long")
+    if len(event.url) > MAX_LENGTH_FIELD:
+        raise ValueError("url field too long")
+    if len(event.description) > MAX_LENGTH_DESCRIPTION:
+        raise ValueError("description field too long")
     
     for tag in event.tags:
         if not is_valid_tag(tag):
