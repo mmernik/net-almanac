@@ -9,7 +9,7 @@ import logging
 import datetime
 
 MAX_LENGTH_FIELD = 100
-MAX_LENGTH_DESCRIPTION = 500
+MAX_LENGTH_DESCRIPTION = 8192
 
 # Create your models here.
 class Event(models.Model):
