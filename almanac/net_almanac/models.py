@@ -10,6 +10,7 @@ import datetime
 
 MAX_LENGTH_FIELD = 100
 MAX_LENGTH_DESCRIPTION = 8192
+MAX_LENGTH_TAGS = 8192
 
 # Create your models here.
 class Event(models.Model):
@@ -23,7 +24,7 @@ class Event(models.Model):
     #This field acts like a charfield, but any update to it will be reflected 
     #in the database's tagging structure as well.  See tagging documentation for
     #more info.
-    tags = TagField()
+    tags = TagField(max_length=MAX_LENGTH_TAGS)
     
     def __unicode__(self):
         return self.name
