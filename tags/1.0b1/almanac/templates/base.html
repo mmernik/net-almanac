@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>Almanac {% block subtitle %} {% endblock %}</title>
+<link rel="shortcut icon" href="/site_media/img/almanac.ico" />
+<link rel="stylesheet" type="text/css" href="/site_media/css/global.css" />
+<link rel="stylesheet" type="text/css" href="/site_media/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="/site_media/css/net_almanac.css" />
+{% block head %}
+{% endblock %}
+</head>
+
+{% block body_tag %}<body> {% endblock %}
+<div id="container">
+
+<div id="titlecontainer">
+<div id="col1">
+<a href="/net_almanac/"><img src="/site_media/img/title.png" alt="Almanac" align="left"/></a>
+</div>
+
+<div id="col2"><div id="searchbox">
+<form action="/net_almanac/event/" method="get">Search Events: <input type="text" name="search"/></form>
+</div></div>
+
+</div>
+	<div id="header">
+	<div class="navigatecell" onclick="location.href='/net_almanac/';"><a href="/net_almanac/">Home</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/';"><a href="/net_almanac/event/">Event Table</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/timeline/';"><a href="/net_almanac/event/timeline/">Event Timeline</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/filter/';"><a href="/net_almanac/event/filter/">Filter Events</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/tag/';"><a href="/net_almanac/event/tag/">Tags</a></div> 
+	<div class="navigatecell" onclick="location.href='/net_almanac/event/create/';"><a href="/net_almanac/event/create/">Create Event</a></div> 
+		
+	</div>
+	
+	<div id="columncontainer">
+	
+	
+		<div class="col1">
+		{% block body %}
+		Nothing here!
+		{% endblock %}
+		
+		</div>
+		<div class="col2">
+		<h4>Management Options:</h4>
+		<hr />
+		<a href="/net_almanac/">Go to Top</a>
+    	<hr />
+		{% block side_options %}
+		{% endblock %}
+		</div>
+
+		
+	</div>
+</div>
+<div id="footer">
+<p class="tiny">
+<a href="http://www.energy.gov/">U.S. Department of Energy</a> -
+<a href="http://www.es.net/">ESNet</a> -
+<a href="http://www.lbl.gov/">LBNL</a> -
+<a href="/net_almanac/about/">About</a>
+
+
+
+</p>
+</div>
+</body>
+</html>

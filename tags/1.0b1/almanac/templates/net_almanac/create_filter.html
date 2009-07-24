@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Create Filter {% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="/site_media/js/scw.js"></script>
+{% endblock %}
+
+
+{% block body %}
+<h3>Specify one or more options below to create a custom filter.</h3> 
+<hr />
+<form action="/net_almanac/event/process_filter/" method="get">
+<h5> Text Search </h5>
+The event has the text: <input type="text" name="search" /> <br />
+The event is named: <input type="text" name="name" /> <br />
+The event has the description: <input type="text" name="description" /> <br />
+<hr />
+<h5> Specify Tags</h5>
+	Select any number of tags (hold ctrl to select multiple tags): 
+	<select multiple="multiple" size="6" name="tag">
+		<!--We know there will be no tag collisions with no_tag since all tags are alphanumeric-->
+		<option value="no_tag">(NONE)</option>
+		{% for tag in tag_list %}
+			<option value="{{tag.name}}">{{tag.name}}</option>
+		{% endfor %}
+	</select>
+	<hr />
+<h5>Specify date </h5>
+	The events occur on this date: <input type="text" name="date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date." />
+
+<p>-OR-</p>
+
+The events occur in between: <input type="text" name="begin_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date." />
+
+	and <input type="text" name="end_date" onclick="scwShow(this,event);" title ="Please use YYYY-MM-DD format for the date."/>
+	<p class="tiny"> <br /> Please use YYYY-MM-DD format for the date. </p>
+	<hr />
+	
+	<h5>Choose Display Format </h5>
+	<input type="radio" name="display" value="table" checked="checked" /> table <br />
+	<input type="radio" name="display" value="timeline"  /> timeline <br />
+	<input type="radio" name="display" value="json"  /> JSON <br />
+
+	<hr />
+	
+	<input type="submit" value="Create Filter"/>
+</form>
+
+{% endblock %}
+
+{% block side_options %}
+{% endblock %}
+

@@ -1,0 +1,91 @@
+hr { 
+height: 1px; 
+margin: 7px 0px; 
+background-color: #AAA;
+}
+
+#columncontainer {
+margin:0;
+min-width:760px;
+}
+
+#columncontainer .col1 {
+float:left;
+width:75%;
+height:80%;
+padding:5px 5px;
+}
+
+#columncontainer .col2 {
+float:left;
+width:20%;
+margin:5px;
+margin-left:10px;
+background-color:#F6FCFE;
+height:80%;
+padding:5px 5px;
+border: 2px solid #6196B0; 
+}
+
+#titlecontainer {
+width:100%;
+float: top;
+height: 92px; /* added for chrome */
+}
+
+#titlecontainer #col1 {
+float:left;
+width:40%;
+}
+
+#titlecontainer #col2 {
+float:right;
+width:40%;
+height:100%;
+position:relative;
+}
+
+#titlecontainer #col2 #searchbox {
+position:absolute;
+bottom: 0;
+right: 0;
+}
+
+table.sortable td, th {
+font-size:13px;
+}
+
+.navigatecell{
+float:left;
+height:100%;
+background-color:#255068;
+position:relative;
+margin:0px 3px;
+padding:3px;
+min-width:100px;
+}
+
+.navigatecell:hover{
+background-color:#6196B0;
+cursor:pointer;
+text-decoration:underline;
+}
+
+.navigatecell a:link, .navigatecell a:visited {
+color:#ffc;
+}
+
+table.sortable th:hover {
+cursor:pointer;
+background-color:#6196B0;
+}
+
+table.sortable th {
+font-size:13px;
+}
+
+table.description td {
+font-size:13px;
+}
+
+

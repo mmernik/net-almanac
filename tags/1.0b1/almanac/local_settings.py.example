@@ -1,0 +1,24 @@
+import logging
+import logging.handlers
+
+# example local_settings.py
+
+DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = 'net_almanac'             # Or path to database file if using sqlite3.
+DATABASE_USER = 'net_almanac'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'PASSWORD'         # Not used with sqlite3.
+DATABASE_HOST = 'DATABASE_HOST'             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+# log to syslog rather than to a file
+LOGGING_LEVEL = logging.DEBUG
+log = logging.getLogger()
+log.setLevel(LOGGING_LEVEL)
+syslog = logging.handlers.SysLogHandler("/var/run/log")
+syslog.setFormatter(
+        logging.Formatter('%(asctime)s %(levelname)s [%(name)s]: %(message)s'))
+log.addHandler(syslog)
+
+TEMPLATE_DIRS = ('PATH/TO/TEMPLATES')
+
+PRODUCTION = True

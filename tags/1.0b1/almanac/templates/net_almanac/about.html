@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : About {% endblock %}
+
+{% block head %}
+{% endblock %}
+
+
+
+
+{% block body %} 
+
+
+Often when analyzing network performance measurements it is desirable to know what other events might be going on in the network that may cause anomalies in traffic patterns. For example, down circuits or scheduled maintenance may cause higher load on certain paths. net-almanac provides a simple RESTish API for tracking these sort of time related events and is intended to be used with some other network statistics package as a metadata provider. Initially it is being developed to work with ESxSNMP but there is no reason it couldn't be used with other systems such as Cactus, MRTG or Cricket.
+
+<br /><br />
+Net-almanac uses several open-source projects:
+<ul>
+<li>
+<a href="http://www.djangoproject.com/">
+django v1.0
+</a>
+</li><li>
+<a href="http://code.google.com/p/django-tagging/">
+django tagging library v0.3
+</a>
+</li><li>
+<a href="http://twill.idyll.org/">
+twill v0.9
+</a>
+</li><li>
+<a href="http://www.tarrget.info/calendar/scw.htm">
+Simple Calendar Widget by Anthony Garrett
+</a>
+</li><li>
+<a href="http://code.google.com/p/httplib2/">
+HttpLib2
+</a>
+</li><li>
+<a href="http://code.google.com/p/wsgi-intercept/">
+WSGI-intercept
+</a>
+</li><li>
+<a href="http://www.kryogenix.org/code/browser/sorttable/">
+SortTable
+</a>
+</li><li>
+<a href="http://code.google.com/p/simile-widgets/">
+Simile Widgets Timeline
+</a>
+</li>
+</ul>
+{% endblock %}
+
+{% block side_options %}
+{% endblock %}
+

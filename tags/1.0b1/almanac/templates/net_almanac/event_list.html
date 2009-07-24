@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : 
+{% if filter_string %}
+	Filtered Events
+{% else %}
+	Events
+{% endif %} 
+{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="/site_media/js/sorttable.js"></script>
+{% endblock %}
+
+{% block navigate %}
+{% endblock %}
+
+{% block body %}
+{% if event_list %}
+<h3> Displaying Events {{filter_string}}</h3> <br />
+<table class="sortable">
+    <tr >
+        <th>id</th>
+        <th>name</th>
+        <th>description</th>
+        <th>begin time</th>
+        <th>end time</th>
+        <th>tags</th>
+    </tr>
+    {% for event in event_list %}
+    <tr >
+        <td>{{event.id}}</td>
+        <td>
+        	<a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a>
+        </td>
+        <td>{{event.short_description}}</td>
+        <td>{{event.begin_datetime}}</td>
+        <td>{{event.end_datetime}}</td>
+        <td>{{event.tags}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<p class="small">Click on headers to sort the table</p>
+{% else %}
+    <p>No Events are available.</p>
+{% endif %}
+
+    
+
+{% endblock %}
+
+{% block side_options %}
+<a href='/net_almanac/event/timeline/?{{get_args}}'>View timeline for these events</a>
+    <hr />
+{% endblock %}

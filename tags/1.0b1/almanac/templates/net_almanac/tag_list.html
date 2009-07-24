@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Tag List {% endblock %}
+
+
+{% block head %}
+<script language="javascript" type="text/javascript">
+function confirm_clean()
+{
+var agree=confirm("Delete unused tags?");
+if (agree)
+	return true ;
+else
+	return false ;
+}
+</script>
+{% endblock %}
+
+{% block body %} 
+
+{% if tag_list %}
+	<h3>All tags (most common listed first):</h3>
+	<ul>
+	{% for tag in tag_list %}
+		<li><a href="/net_almanac/event/?tag={{tag.name}}">{{tag.name}}  ({{tag.frequency}} total)</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+		No tags found.
+{% endif %}
+
+
+
+{% endblock %}
+
+{% block side_options %}
+<form action="/net_almanac/event/tag/clean/" method="post">
+<input type="submit" onclick="return confirm_clean()" value="Clean Unused Tags" />
+</form>
+<hr />
+{% endblock %}

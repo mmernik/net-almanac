@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : Event Detail {% endblock %}
+
+{% block body %}
+<h3> Detailing Event: <a href="/net_almanac/event/{{event.id}}/">{{event.name}}</a> </h3>
+<table class="description">
+    <tr>
+        <th>Database ID</th>
+        <td>{{event.id}}</td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>{{event.name}}</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>{{event.description}}</td>
+    </tr>
+    <tr>
+        <th>Begin Datetime</th>
+        <td>{{event.begin_datetime}}</td>
+    </tr>
+    <tr>
+        <th>End Datetime</th>
+        <td>{{event.end_datetime}}</td>
+    </tr>
+    <tr>
+        <th>URL</th>
+        <td>{{event.url}}</td>
+    </tr>
+    <tr>
+        <th>Tags</th>
+        <td>
+        {% if tags %}
+        <ul class="description">
+        	{% for tag in tags %}
+        	<li>
+        	<a href="/net_almanac/event/?tag={{tag.name}}" title="See other events with tag '{{tag.name}}'">{{tag.name}}</a>
+        	</li>
+        	{% endfor %}
+        </ul>
+        {% else %}
+        	None
+        {% endif %}
+        </td>
+    </tr>
+    
+</table>
+
+
+{% endblock %}
+
+{% block side_options %}
+	<a href="/net_almanac/event/?begin_date={{event.begin_datetime}}&amp;end_date={{event.end_datetime}}">
+	See other concurrent events
+	</a>
+
+	<hr />
+	<a href='/net_almanac/event/{{event.id}}/update/' class="changelink">Edit this event</a>
+    <hr /> 
+    <a href='/net_almanac/event/{{event.id}}/delete/' class="deletelink">Delete this event</a>
+    <hr />
+{% endblock %}
