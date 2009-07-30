@@ -10,8 +10,16 @@ This shouldn't refer to any files in the main branch.
 """
 
 HTTP_OK = 200
+
+"""
+These variables should be the same as those in net_almanac/models.py and
+net_almanac/views.py.  Run tests after any change to make sure the variables
+are consistent.
+"""
 MAX_LENGTH_FIELD = 100
 MAX_LENGTH_DESCRIPTION = 8192
+MAX_LENGTH_TAGS = 8192
+
 JSON_HEADERS = {'accept':'application/json'}
 FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
 
@@ -170,6 +178,8 @@ def validate_event(event):
         raise ValueError("url field too long")
     if len(event.description) > MAX_LENGTH_DESCRIPTION:
         raise ValueError("description field too long")
+    if len(event.tags) > MAX_LENGTH_TAGS:
+        raise ValueError("tags field too long")
     
     for tag in event.tags:
         if not is_valid_tag(tag):
