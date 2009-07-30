@@ -70,13 +70,11 @@ pretty format if not convenient:
 	  "pk":1,
 	  "model":"net_almanac.event",
 	  "fields":{
-		     "iface":"Ethernet0",
 		     "name":"experiment",
 		     "tags":"lbnl experiment",
 		     "url":"http://www.lbl.gov",
 		     "end_datetime":"2009-06-03 15:01:01",
 		     "begin_datetime":"2009-06-01 12:21:15",
-		     "router":"router1",
 		     "description":"a physics experiment"
 	  }
 }]
@@ -92,11 +90,7 @@ implemented so far.
 "name": a name for the event.  Must be a non-empty string (does not need to
 be unique).
 
-"iface": the interface.  Can be any string.
-
 "url": a URL link for more information.  Can be any string.
-
-"router": the router where the event occurs.  Can be any string.
 
 "description": a human-readable description of the event.  Must be a non-empty
 string.
@@ -134,8 +128,8 @@ The list of possible keys for GET filtering:
 +----------------------+-------------------------------------------------------
 |description           | Returns events whose description contains the value
 +----------------------+-------------------------------------------------------
-|search                | Returns events whose name, description, router, iface,
-|                      | url, or tags contains the value.
+|search                | Returns events whose name, description, url, or tags
+|                      | contains the value.
 +----------------------+-------------------------------------------------------
 |tag                   | Returns all events with this tag.  You can have more
 |                      | than one.
@@ -169,7 +163,7 @@ different from the JSON object outlined above:
   id: same as JSON 'pk' field.  Use the python None value when creating a new
   event.
   
-  name, description, url, router, iface: same rules as JSON apply here.
+  name, description, url: same rules as JSON apply here.
   
   tags: a python list of strings instead of a space-delimited string.
   
