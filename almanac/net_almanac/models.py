@@ -8,6 +8,11 @@ from tagging.fields import TagField
 import logging
 import datetime
 
+"""
+If you change these variables, you will need to regenerate your database and also update
+the ones in /api/almanac_api.py.  Run tests afterwards to make sure the constants are
+consistent.
+"""
 MAX_LENGTH_FIELD = 100
 MAX_LENGTH_DESCRIPTION = 8192
 MAX_LENGTH_TAGS = 8192

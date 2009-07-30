@@ -6,13 +6,12 @@ from django.core import serializers
 from django.shortcuts import render_to_response, get_object_or_404
 import django.utils.simplejson as json
 
-from almanac.net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION
+from almanac.net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION, MAX_LENGTH_TAGS
 from tagging.models import *
 import logging
 import datetime
 import dateutil.parser
 import tagging
-
 JSON_MIME = 'application/json'
 XML_MIME = 'application/xml'
 TEXT_MIME = 'text/plain'
@@ -21,17 +20,20 @@ HTTP_BAD_REQUEST = 400
 HTTP_SERVER_ERROR = 500
 HTTP_NOT_IMPLEMENTED = 501
 
+DESCRIPTION_DISPLAY_SIZE = 100
+ONE_DAY = datetime.timedelta(1)
+INVALID_ERROR_STRING = "Submitted form is not valid"
+
 HTTPRESPONSE_NOT_IMPLEMENTED = HttpResponse('request type not supported at this URL',
                                             mimetype=TEXT_MIME,
                                             status=HTTP_NOT_IMPLEMENTED)
 
-#These chars cause problems with locating URLs
+"""
+If you change these FORBIDDEN_CHARS, you will need to regenerate your database and also update
+the FORBIDDEN_CHARS in /api/almanac_api.py.  Run tests afterwards to make sure the constants are
+consistent.
+"""
 FORBIDDEN_CHARS = ['&','$','+',',',';','#','+','"',' ','\t']
-DESCRIPTION_DISPLAY_SIZE = 100
-
-ONE_DAY = datetime.timedelta(1)
-
-INVALID_ERROR_STRING = "Submitted form is not valid"
 
 def tag_list(request):
     """
@@ -485,7 +487,8 @@ def validate_event(event):
     
     if (len(event.name) > MAX_LENGTH_FIELD
         or len(event.url) > MAX_LENGTH_FIELD
-        or len(event.description) > MAX_LENGTH_DESCRIPTION):
+        or len(event.description) > MAX_LENGTH_DESCRIPTION
+        or len(event.tags) > MAX_LENGTH_TAGS):
         raise ValueError("Field data too long")
     
     logger.debug('parsing tags')

@@ -7,7 +7,7 @@ import time
 
 from django.test.client import Client
 import net_almanac.views
-from net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION
+from net_almanac.models import Event, EventForm, MAX_LENGTH_FIELD, MAX_LENGTH_DESCRIPTION, MAX_LENGTH_TAGS
 from net_almanac.testdata import bad_json_strings, NEW_DESCRIPTION, good_json_string, bad_create_string, good_create_strings, json_headers
 from tagging.models import *
 
@@ -449,6 +449,7 @@ class TestAPI(TestWSGI):
         #check if some constants are the same.
         self.assertTrue(api.almanac_api.MAX_LENGTH_FIELD == MAX_LENGTH_FIELD)
         self.assertTrue(api.almanac_api.MAX_LENGTH_DESCRIPTION == MAX_LENGTH_DESCRIPTION)
+        self.assertTrue(api.almanac_api.MAX_LENGTH_TAGS == MAX_LENGTH_TAGS)
         self.assertTrue(api.almanac_api.FORBIDDEN_CHARS == net_almanac.views.FORBIDDEN_CHARS)
         
         almanac = api.almanac_api.NetAlmanac(URL_BASE)
