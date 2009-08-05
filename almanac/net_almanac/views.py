@@ -467,6 +467,39 @@ def main_page(request):
                                'num_unused_tags':num_unused_tags,
                                'num_tagged_item':TaggedItem.objects.count()})
 
+def logs(request):
+    """
+    displays the log file for remote debugging.  We may add more options to this page later
+    """
+    logger = logging.getLogger('view logs')
+    logger.info('hit')
+    
+    from almanac.settings import LOG_FILENAME
+    log_data = []
+    
+    lines = 50
+    try:
+        if request.GET.has_key('lines'):
+            lines = int(request.GET['lines'])
+    except Exception:
+        lines = 50
+        
+    try:
+        f = open(LOG_FILENAME,'r')
+        log_data = f.readlines()
+        #truncate the log
+        log_data = log_data[len(log_data)-lines:]
+    except IOError, e:
+        logger.error('Problem encountered while reading log file: ' + str(e))
+        log_data = ['Problem encountered while reading log file: ' + str(e)]
+    finally:
+        f.close()
+    
+    return render_to_response('net_almanac/logs.html',
+                              {'log_data' : log_data,
+                               'lines' : lines})
+    
+
 def validate_event(event):
     """
     Always call this before saving an event!

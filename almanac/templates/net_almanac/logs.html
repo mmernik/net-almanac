@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block subtitle %} : View Logs {% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %} 
+<h5> Displaying last {{lines}} log lines </h5>
+
+<div style="font-family:monospace">
+{% for line in log_data %}
+{{line}} <br />
+{% endfor %}
+</div>
+<hr />
+<form action="/net_almanac/logs" method="get">Set number of lines: <input type="text" name="lines" value="{{lines}}"/></form>
+
+{% endblock %}
+
+{% block side_options %}
+{% endblock %}
+
