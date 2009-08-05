@@ -55,4 +55,7 @@ urlpatterns = patterns('',
       
     (r'^event/timeline/data/$',
       'almanac.net_almanac.views.timeline_data'),
+      
+    (r'^logs/$',
+     'almanac.net_almanac.views.logs'),
 )
