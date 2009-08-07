@@ -88,4 +88,13 @@ table.description td {
 font-size:13px;
 }
 
+#logdiv {
+font-family:monospace;
+border: 2px solid #222222; 
+padding: 3px;
+background-color: #DDDDDD;
+color: #111111;
+}
+
+
 
