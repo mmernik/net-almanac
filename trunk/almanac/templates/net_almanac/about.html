@@ -14,6 +14,9 @@
 Often when analyzing network performance measurements it is desirable to know what other events might be going on in the network that may cause anomalies in traffic patterns. For example, down circuits or scheduled maintenance may cause higher load on certain paths. net-almanac provides a simple RESTish API for tracking these sort of time related events and is intended to be used with some other network statistics package as a metadata provider. Initially it is being developed to work with ESxSNMP but there is no reason it couldn't be used with other systems such as Cactus, MRTG or Cricket.
 
 <br /><br />
+Net-almanac is an open-source project!  Visit us at: <a href="http://code.google.com/p/net-almanac/">http://code.google.com/p/net-almanac/</a>.
+
+<br /><br />
 Net-almanac uses several open-source projects:
 <ul>
 <li>
@@ -50,6 +53,100 @@ Simile Widgets Timeline
 </a>
 </li>
 </ul>
+<hr />
+<h3> Interfacing with programs </h3>
+
+Net-almanac can interface with any program that knows how to make HTTP requests and can decode JSON objects.  
+If the http header "accept" contains the string "application/json", then we
+will return a JSON response.  Otherwise it will return the HTML response.<br /><br />
+
+<h5>The API for JSON objects</h5>
+A typical JSON event example is below.  Note that we do not need to use a
+pretty format if not convenient:
+<pre>
+[{
+	  "pk":1,
+	  "model":"net_almanac.event",
+	  "fields":{
+		     "name":"experiment",
+		     "tags":"lbnl experiment",
+		     "url":"http://www.lbl.gov",
+		     "end_datetime":"2009-06-03 15:01:01",
+		     "begin_datetime":"2009-06-01 12:21:15",
+		     "description":"a physics experiment"
+	  }
+}]
+</pre>
+
+<tt>pk</tt>: the object's id in the database.  It must be an integer and unique. When
+creating a new object, this value may be null.  If so, an id will be
+automatically assigned.<br /><br />
+
+<tt>model</tt>: the name of the object request.  Only "net_almanac.event" is 
+implemented so far.<br /><br />
+
+<tt>name</tt>: a name for the event.  Must be a non-empty string (does not need to
+be unique).<br /><br />
+
+<tt>url</tt>: a URL link for more information.  Can be any string.<br /><br />
+
+<tt>description</tt>: a human-readable description of the event.  Must be a non-empty
+string.<br /><br />
+
+<tt>tags</tt>: a space-delimited list of tags.  The server will automatically parse
+any input string into this format.  See tagging documentation for more detail
+on this.  This must not contain the characters: [[&amp;$+,;#+"]]<br /><br />
+
+<tt>begin_datetime</tt> and <tt>end_datetime</tt>: ISO 8601-formatted dates using
+YYYY-MM-DD [HH:MM:SS].  If the input string isn't as precise, the server will
+generate the rest.  The end datetime cannot be before the begin datetime.<br /><br />
+
+<h5> REST api </h5>
+
+URLs where JSON requests are accepted.  The header "accept" must contain the
+JSON MIME "application/json" or the server will render HTML.
+<pre>
+   -URL /net_almanac/event/
+      -POST creates a new event from the JSON object in request
+         -You must provide an unused id
+      -GET returns all known events as JSON objects
+      
+   -URL /net_almanac/event/&lt;id&gt;/
+      -PUT updates the event in the db from the JSON object in request
+         -The id in the request must match the id in the URL
+      -DELETE deletes the event from the db
+      -GET returns a single event as a JSON object
+      
+   -URL /net_almanac/event/?&lt;key1&gt;=&lt;value1&gt;&amp;&lt;key2&gt;=&lt;value2&gt;
+      -GET returns all events filtered, the rules are below
+</pre>
+The list of possible keys for GET filtering:
+<pre>
++----------------------+-------------------------------------------------------
+|name                  | Returns events whose name contains the value
++----------------------+-------------------------------------------------------
+|description           | Returns events whose description contains the value
++----------------------+-------------------------------------------------------
+|search                | Returns events whose name, description, url, or tags
+|                      | contains the value.
++----------------------+-------------------------------------------------------
+|tag                   | Returns all events with this tag.  You can have more
+|                      | than one.
++----------------------+-------------------------------------------------------
+|date                  | Returns all events that fall at least partially on 
+|                      | this date.  Use format YYYY-MM-DD.
++----------------------+-------------------------------------------------------
+|begin_date &amp; end_date | Returns all events that fall in between these two
+|                      | dates. Use format YYYY-MM-DD.
++----------------------+-------------------------------------------------------
+</pre>
+      
+Different GET queries can be mixed together for more precise filtering.  Both 
+the field 'begin_date' and 'end_date' are required; if one is missing the
+server will ignore the other one.<br /><br />
+
+The URL of all valid GET queries is also a valid HTML page.  Navigate to it
+with your web browser to view the events in a human-usable UI.<br /><br />
 {% endblock %}
 
 {% block side_options %}
