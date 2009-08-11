@@ -230,7 +230,6 @@ def update_event(request,object_id):
                 logger.debug(INVALID_ERROR_STRING)
                 raise ValueError(INVALID_ERROR_STRING)
             
-            
             event.name = post_data['name']
             event.description = post_data['description']
             event.url = post_data['url']
@@ -253,7 +252,6 @@ def update_event(request,object_id):
             event.tags=post_data['tags']
             
             return HttpResponseRedirect('/net_almanac/event/' + str(event.id) + '/')
-        
         
         except ValueError, e:
             #TODO: include old user input
@@ -637,6 +635,14 @@ def get_filtered_events(get_data):
     Filters events based on get parameters.  It also returns a readable filter_string
     which explains the results.  Any functional change here should be reflected in the 
     README since it affects the REST API.
+    
+    Fields it filters by:
+    tag: events have this tag
+    search: events have this string in its name, description, url, or tags
+    date: events fall on this date
+    begin_date and end_date: events overlap on this range
+    name: name contains this string
+    description: description contains this string
     """
     logger = logging.getLogger("get_filtered_events")
     logger.debug('get parameters: ' + str(get_data))

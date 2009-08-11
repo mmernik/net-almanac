@@ -82,6 +82,9 @@ class EventForm(ModelForm):
             self.initial['begin_date'] = datetime.date.today().strftime('%Y-%m-%d')
             self.initial['end_date'] = datetime.date.today().strftime('%Y-%m-%d')
         
+        """
+        These fields are displayed to the user when we call the as_table() function.
+        """
         self.fields['name'].widget.attrs['title'] = 'The name of the event.  Must be non-empty.'
         self.fields['name'].help_text = '*required'
         self.fields['description'].widget.attrs['title'] = 'A description of this event.  Must be non-empty.'
