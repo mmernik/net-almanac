@@ -142,7 +142,7 @@ class HTMLResponseTestCase(EventTestCaseSetup):
 class TestWSGI(unittest.TestCase):
     """
     We use WSGI intercept so that we can hook it up to httplib2, a library that
-    supports PUT and DELETE http requests.
+    supports PUT and DELETE http requests.  Most REST API tests use WSGI.
     """
     def setUp(self):
         app = AdminMediaHandler(WSGIHandler())
@@ -384,6 +384,7 @@ class TwillTestCaseSetup(unittest.TestCase):
 class TwillTestCase(TwillTestCaseSetup):
     def runTest(self):
         """
+        The twill test case is useful for emulating a user using HTML forms and clicking on buttons.
         Note we cannot connect to the twill server using urllib2 or any other third party client.
         Also, we cannot verify the header content in a twill response.
         """
