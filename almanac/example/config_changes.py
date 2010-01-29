@@ -7,11 +7,11 @@ import pprint
 import simplejson
 
 """
-Here is an example script that makes use of almanac_api.py.  It reads and parses the raw text file in logs/chic-cr1.log,
-deletes all previous example events, and then repopulates almanac with the newly-read logs.  Actual implementation of
-the API code does not begin until near the bottom.  This example is coded to hit http://localhost:8000/net_almanac/event/
-
-Note: add the file almanac_api.py to the pythonpath first.
+Here is an example script that makes use of the almanac API.  It reads and
+parses the raw text file in logs/chic-cr1.log, deletes all previous example
+events, and then repopulates almanac with the newly-read logs.  Actual
+implementation of the API code does not begin until near the bottom.  This
+example is coded to hit http://localhost:8000/net_almanac/event/
 """
 
 
@@ -129,8 +129,8 @@ for device in get_active_devices():
 Begin API code here.
 Note: add the file almanac_api.py to the pythonpath first.
 """
-import almanac_api
-netalmanac = almanac_api.NetAlmanac('http://localhost:8000/net_almanac/event/')
+import almanac.api
+netalmanac = almanac.api.NetAlmanac('http://localhost:8000/net_almanac/event/')
 
 #delete previously created events with the example
 events = netalmanac.get_filtered_events(tags=['example'])
@@ -148,7 +148,7 @@ for k,v in event_tab.events.iteritems():
         for dev in val.devices:
             tag_string.append('rtr=' + dev)
         
-        e = almanac_api.Event(None,
+        e = almanac.api.Event(None,
                               val.msg,
                               'device: ' + ','.join(val.devices) + '; user: ' + val.who,
                               val.timestamp,
@@ -159,6 +159,6 @@ for k,v in event_tab.events.iteritems():
         events.append(e)
         
 for e in events:
-    almanac_api.validate_event(e)
+    almanac.api.validate_event(e)
     netalmanac.create_event(e)
 

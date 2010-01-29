@@ -25,7 +25,7 @@ wsgi_intercept.httplib2_intercept.install()
 import wsgi_intercept
 import httplib2
 
-import api.almanac_api
+import almanac.api
 
 EVENT_NAME = "testevent"
 EVENT_DESCRIPTION = "testdescription"
@@ -448,18 +448,18 @@ class TwillTestCase(TwillTestCaseSetup):
 class TestAPI(TestWSGI):
     def runTest(self):
         #check if some constants are the same.
-        self.assertTrue(api.almanac_api.MAX_LENGTH_FIELD == MAX_LENGTH_FIELD)
-        self.assertTrue(api.almanac_api.MAX_LENGTH_DESCRIPTION == MAX_LENGTH_DESCRIPTION)
-        self.assertTrue(api.almanac_api.MAX_LENGTH_TAGS == MAX_LENGTH_TAGS)
-        self.assertTrue(api.almanac_api.FORBIDDEN_CHARS == net_almanac.views.FORBIDDEN_CHARS)
+        self.assertTrue(almanac.api.MAX_LENGTH_FIELD == MAX_LENGTH_FIELD)
+        self.assertTrue(almanac.api.MAX_LENGTH_DESCRIPTION == MAX_LENGTH_DESCRIPTION)
+        self.assertTrue(almanac.api.MAX_LENGTH_TAGS == MAX_LENGTH_TAGS)
+        self.assertTrue(almanac.api.FORBIDDEN_CHARS == net_almanac.views.FORBIDDEN_CHARS)
         
-        almanac = api.almanac_api.NetAlmanac(URL_BASE)
+        almanac = almanac.api.NetAlmanac(URL_BASE)
         
         #test get all events
         api_events = almanac.get_all_events()
         self.assertTrue(len(api_events)>2)
         for api_event in api_events:
-            self.assertTrue(api.almanac_api.validate_event(api_event))
+            self.assertTrue(almanac.api.validate_event(api_event))
         
         #test get single event    
         self.assertTrue(almanac.get_event(1).name == "experiment")
@@ -497,7 +497,7 @@ class TestAPI(TestWSGI):
                 self.assertTrue(False)
         
         #test create_event
-        to_create = api.almanac_api.Event(20,
+        to_create = almanac.api.Event(20,
                                           'api_created',
                                           'description',
                                           datetime.datetime(2009,2,2),
